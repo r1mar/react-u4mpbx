@@ -1,7 +1,9 @@
 .gameArea {
+  position: relative;
   width: 100em;
   height: 100em;
   background-color: black;
+  overflow: hidden;
 }
 
 .ship {
@@ -14,10 +16,19 @@
 }
 
 .planet {
-  position: absolute;
-  bottom: 10em;
-  right: 10em;
   width: 1000em;
   height: 1000em;
   background-color: orange;
+  border-radius: 500em;
+}
+
+.orbit {
+  position: absolute;
+  top: -100em;
+  left: -100em;
+  padding: 50em;
+  border-radius: 550em;
+  border-color: whitesmoke;
+  border-width: 1em;
+  border-style: dotted;
 }

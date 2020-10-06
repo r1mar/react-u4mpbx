@@ -5,7 +5,9 @@ export default function StartGame() {
   return (
     <div className="gameArea">
       <div className="ship"/>
-      <div className="planet" />
+      <div className="orbit">
+        <div className="planet" />
+      </div>
     </div>
   );
 }
