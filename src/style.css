@@ -1,3 +1,23 @@
-h1, p {
-  font-family: Lato;
+.gameArea {
+  width: 100em;
+  height: 100em;
+  background-color: black;
+}
+
+.ship {
+  position: absolute;
+  top: 10em;
+  left: 10em;
+  width: 2em;
+  height: 10em;
+  background-color: darkblue;
+}
+
+.planet {
+  position: absolute;
+  bottom: 10em;
+  right: 10em;
+  width: 1000em;
+  height: 1000em;
+  background-color: orange;
 }

@@ -1,5 +1,11 @@
-import react from "react";
+import React from "react";
+import style from "./style.css";
 
 export default function StartGame() {
-  return (<h1>Start game</h1>);
+  return (
+    <div className="gameArea">
+      <div className="ship"/>
+      <div className="planet" />
+    </div>
+  );
 }
