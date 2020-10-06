@@ -6,6 +6,7 @@
   overflow: hidden;
 }
 
+/* Massstab 1:10 */
 .ship {
   position: absolute;
   top: 10em;
@@ -15,6 +16,7 @@
   background-color: darkblue;
 }
 
+/* Venus 12.306.000m */
 .planet {
   width: 1000em;
   height: 1000em;
@@ -22,6 +24,8 @@
   border-radius: 500em;
 }
 
+/* Geostationäre Umlaufbahn der Erde
+   38.000.000 km */
 .orbit {
   position: absolute;
   top: -100em;
