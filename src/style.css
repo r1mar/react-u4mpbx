@@ -9,8 +9,6 @@
 /* Massstab 1:10 */
 .ship {
   position: absolute;
-  top: 10em;
-  left: 10em;
   width: 2em;
   height: 10em;
   background-color: darkblue;
