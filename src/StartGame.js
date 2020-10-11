@@ -8,7 +8,7 @@ extends React.Component {
 
     this.state = {
       active: {
-        class: "ship",
+        class: "ship blink",
         position: {
           x: "10em",
           y: "10em"
@@ -24,12 +24,12 @@ extends React.Component {
   return (
     <div className="gameArea" onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}
     onMouseDown={this.onTouchStart} onMouseUp={this.onTouchEnd} onMouseLeave={this.onTouchEnd} >
-      <div className="ship" style={
+      <div className={this.state.active.class} style={
         {
           top: this.state.active.position.y,
           left: this.state.active.position.x
         }
-      } />
+      } >Schiff</div>
       <div className="orbit">
         <div className="planet" />
       </div>
@@ -47,7 +47,7 @@ extends React.Component {
     let duration = new Date() - this.state.tapStartAt;
     
     if(duration > 500) {
-      
+
     }
   }
 }
