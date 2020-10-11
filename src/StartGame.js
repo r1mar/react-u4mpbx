@@ -32,4 +32,26 @@ extends React.Component {
     </div>
   );
   }
+
+  onTouchStart(e) {
+    this.setState(Object.assign({}, this.state, {
+      tapStartAt: getTime()
+    }));
+  }
+
+  onTouchEnd(e) {
+
+  }
+
+  onMouseDown(e) {
+
+  }
+
+  onMouseUp(e) {
+
+  }
+
+  onMouseLeave(e) {
+
+  }
 }
