@@ -14,12 +14,16 @@ extends React.Component {
           y: "10em"
         }
       }
-    }
+    };
+
+    this.onTouchStart = this.onTouchStart.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
   }
 
   render() {
   return (
-    <div className="gameArea">
+    <div className="gameArea" onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}
+    onMouseDown={this.onTouchStart} onMouseUp={this.onTouchEnd} onMouseLeave={this.onTouchEnd} >
       <div className="ship" style={
         {
           top: this.state.active.position.y,
@@ -40,18 +44,7 @@ extends React.Component {
   }
 
   onTouchEnd(e) {
-    let duration =
-  }
-
-  onMouseDown(e) {
-
-  }
-
-  onMouseUp(e) {
-
-  }
-
-  onMouseLeave(e) {
-
+    let duration = new Date() - this.state.tapStartAt;
+    alert(duration);
   }
 }
