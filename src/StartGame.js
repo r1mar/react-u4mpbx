@@ -45,6 +45,9 @@ extends React.Component {
 
   onTouchEnd(e) {
     let duration = new Date() - this.state.tapStartAt;
-    alert(duration);
+    
+    if(duration > 500) {
+      
+    }
   }
 }
