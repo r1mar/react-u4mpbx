@@ -35,12 +35,12 @@ extends React.Component {
 
   onTouchStart(e) {
     this.setState(Object.assign({}, this.state, {
-      tapStartAt: getTime()
+      tapStartAt: new Date()
     }));
   }
 
   onTouchEnd(e) {
-
+    let duration =
   }
 
   onMouseDown(e) {
