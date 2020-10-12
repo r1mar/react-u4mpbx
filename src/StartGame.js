@@ -14,9 +14,10 @@ extends React.Component {
       active: {
         class: "ship blink",
         position: {
-        x: 50,
-        y: 50
-        }
+        x: 100,
+        y: 100
+        },
+        rotate: 45
       }
     };
 
@@ -37,7 +38,8 @@ extends React.Component {
       <div className={this.state.active.class} style={
         {
           top: this.state.active.position.y + "px",
-          left: this.state.active.position.x + "px"
+          left: this.state.active.position.x + "px",
+          transform: "rotate(" + this.state.active.rotate + "deg)"
         }
       } >Schiff</div>
       <div className="orbit">
@@ -71,7 +73,8 @@ extends React.Component {
   }
 
   transition() {
-
+    let x = this.state.active.destination.x - this.state.active.position.x,
+    y = this.state.active.destination.y - this.state.active.position.y;
   }
 
   componentWillUnmount() {
