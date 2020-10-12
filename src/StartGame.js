@@ -8,28 +8,36 @@ extends React.Component {
 
     this.state = {
       area: {
-        width: 100,
-        height: 100
+        width: 1000,
+        height: 1000
       },
       active: {
         class: "ship blink",
+        position: {
         x: 50,
         y: 50
+        }
       }
     };
 
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.transition = this.transition.bind(this);
   }
 
   render() {
   return (
-    <div className="gameArea" onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}
+    <div className="gameArea" style={
+      {
+      width: this.state.area.width + "px", 
+      height: this.state.area.height + "px"
+      }
+      } onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}
     onMouseDown={this.onTouchStart} onMouseUp={this.onTouchEnd} onMouseLeave={this.onTouchEnd} >
       <div className={this.state.active.class} style={
         {
-          top: this.state.active.position.y,
-          left: this.state.active.position.x
+          top: this.state.active.position.y + "px",
+          left: this.state.active.position.x + "px"
         }
       } >Schiff</div>
       <div className="orbit">
@@ -48,8 +56,27 @@ extends React.Component {
   onTouchEnd(e) {
     let duration = new Date() - this.state.tapStartAt;
     
-    if(duration > 500) {
+    if(duration > 500 && !this.state.active.destination) {
+      let ship = Object.assign({}, this.state.active, {
+        destination: {
+          x: e.offsetX,
+          y: e.offsetY
+        }
+      })
+      this.setState(Object.assign({}, this.state, {
+        active: ship
+      }));
+      this.timer = setInterval(this.transition, 40);
+    }
+  }
 
+  transition() {
+
+  }
+
+  componentWillUnmount() {
+    if(this.timer) {
+    clearInterval(this.timer);
     }
   }
 }
