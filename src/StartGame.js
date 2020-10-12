@@ -74,7 +74,12 @@ extends React.Component {
 
   transition() {
     let x = this.state.active.destination.x - this.state.active.position.x,
-    y = this.state.active.destination.y - this.state.active.position.y;
+    y = this.state.active.destination.y - this.state.active.position.y
+    destRotate = Math.tan(x,y);
+
+    if(this.state.active.rotate === destRotate) {
+      clearInterval(this.timer);
+    }
   }
 
   componentWillUnmount() {
