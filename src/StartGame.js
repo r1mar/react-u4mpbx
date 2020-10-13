@@ -14,8 +14,10 @@ extends React.Component {
       active: {
         class: "ship blink",
         position: {
-        x: 100,
-        y: 100
+        x: 10,
+        y: 10,
+        width: 100,
+        height: 20
         },
         rotate: 45
       }
@@ -24,6 +26,14 @@ extends React.Component {
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
     this.transition = this.transition.bind(this);
+  }
+
+  toVwWidth(pixels) {
+    return pixels * 100 / document.documentElement.clientWidth;
+  }
+
+  toVwHeight(pixels) {
+    return pixels * 100 / document.documentElement.clientHeight;
   }
 
   render() {
@@ -39,7 +49,9 @@ extends React.Component {
         {
           top: this.state.active.position.y + "px",
           left: this.state.active.position.x + "px",
-          transform: "rotate(" + this.state.active.rotate + "deg)"
+          transform: "rotate(" + this.state.active.rotate + "deg)",
+          width: this.state.active.width + "px",
+          height: this.state.active.height + "px"
         }
       } >Schiff</div>
       <div className="orbit">
@@ -75,11 +87,11 @@ extends React.Component {
   transition() {
     let x = this.state.active.destination.x - this.state.active.position.x,
     y = this.state.active.destination.y - this.state.active.position.y
-    destRotate = Math.tan(x,y);
+    destRotate = Math.atan2(x,y);
 
-    if(this.state.active.rotate === destRotate) {
+    //if(this.state.active.rotate === destRotate) {
       clearInterval(this.timer);
-    }
+    //}
   }
 
   componentWillUnmount() {
