@@ -14,8 +14,8 @@ extends React.Component {
       active: {
         class: "ship blink",
         position: {
-        x: 10,
-        y: 10,
+        x: 60,
+        y: 60,
         width: 100,
         height: 20
         },
@@ -26,14 +26,6 @@ extends React.Component {
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
     this.transition = this.transition.bind(this);
-  }
-
-  toVwWidth(pixels) {
-    return pixels * 100 / document.documentElement.clientWidth;
-  }
-
-  toVwHeight(pixels) {
-    return pixels * 100 / document.documentElement.clientHeight;
   }
 
   render() {
