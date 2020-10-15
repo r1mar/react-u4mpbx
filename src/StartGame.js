@@ -79,11 +79,17 @@ extends React.Component {
   transition() {
     let x = this.state.active.destination.x - this.state.active.position.x,
     y = this.state.active.destination.y - this.state.active.position.y
-    destRotate = Math.atan2(x,y);
+    destRotate = Math.round(Math.atan2(x,y));
 
-    //if(this.state.active.rotate === destRotate) {
+    if(this.state.active.rotate === destRotate || ++this.beware > 100) {
       clearInterval(this.timer);
-    //}
+    }
+
+    let active = Object.assign({}, this.state.active);
+
+    
+
+    active.rotate = active.rotate >
   }
 
   componentWillUnmount() {
