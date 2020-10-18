@@ -87,7 +87,31 @@ extends React.Component {
 
     let active = Object.assign({}, this.state.active);
 
-    
+    if(active.rotate > destRotate) {
+      let diffDecrement = active.rotate - destRotate,     // 20 - 10       = 10  350 - 20       = 330
+        diffIncrement = 360 - active.rotate + destRotate; // 360 - 20 + 10 = 350 360 - 350 + 20 = 30
+
+        if(diffIncrement > diffIncrement) {
+          active.rotate++;
+
+        } else {
+          active.rotate--;
+
+        }
+
+    } else {
+      let diffDecrement = destRotate - active.rotate,     // 20 - 10       = 10  350 - 20       = 330
+        diffIncrement = 360 - destRotate + active.rotate; // 360 - 20 + 10 = 350 360 - 350 + 20 = 30
+
+        if(diffIncrement > diffIncrement) {
+          active.rotate++;
+
+        } else {
+          active.rotate--;
+
+        }
+
+    }
 
     active.rotate = active.rotate >
   }
