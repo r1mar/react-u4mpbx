@@ -4,13 +4,15 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import StartMenu from "./StartMenu";
 import NotFound from "./NotFound";
-import StartGane from "./StartGame";
+import TeamList from "./TeamList";
 
 ReactDOM.render(
   <Router>
-      <Switch>
-        <Route exact path="/" component={StartMenu} />
-        <Route path="/start-game" component={StartGane} />
-        <Route component={NotFound} />
-      </Switch>
-  </Router>, document.getElementById("root"));
+    <Switch>
+      <Route exact path="/" component={StartMenu} />
+      <Route path="/teams" component={TeamList} />
+      <Route component={NotFound} />
+    </Switch>
+  </Router>,
+  document.getElementById("root")
+);
