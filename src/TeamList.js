@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import style from "./style.css";
 
 export default class TeamList extends React.Component {
@@ -11,8 +12,12 @@ export default class TeamList extends React.Component {
   }
 
   render() {
-    let teams = this.state.teams.sort().map(team => (<li key={team}>{team}</li>));
-    
+    let teams = this.state.teams.sort().map(team => (
+      <li key={team}>
+        <Link to="/team/{team}">{team}</Link>
+      </li>
+    ));
+
     return (
       <ol>
         {teams}
