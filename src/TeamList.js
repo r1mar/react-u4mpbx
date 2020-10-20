@@ -11,11 +11,11 @@ export default class TeamList extends React.Component {
   }
 
   render() {
+    let teams = this.state.teams.sort().map(team => (<li key={team}>{team}</li>));
+    
     return (
       <ol>
-        {this.state.teams.sort().map(team => {
-          <li key={team}>{team} </li>;
-        })}
+        {teams}
       </ol>
     );
   }
