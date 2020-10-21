@@ -48,7 +48,18 @@ class Service {
   }
 
   updateTeam(team) {
-    return new Promise(resolve => resolve());
+    return new Promise((resolve, reject) => {
+      let aTeam = this.teams.find(item => item.id === team.id);
+
+      if(aTeam) {
+        Object.assign(aTeam, team);
+        resolve(team);
+
+      } else {
+        reject(new Error("Nicht gefunden"));
+
+      }
+    });
   }
 
   deleteTeam(id) {
