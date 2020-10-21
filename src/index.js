@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import StartMenu from "./StartMenu";
 import NotFound from "./NotFound";
 import TeamsView from "./TeamList";
-import TeamView from "./file2";
+import TeamView from "./TeamView";
 
 ReactDOM.render(
   <Router>
