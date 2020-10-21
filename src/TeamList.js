@@ -14,7 +14,7 @@ export default class TeamsView extends React.Component {
 
   componentDidMount() {
     service.getTeams().then(teams => {
-      setState({
+      this.setState({
         teams: teams
       });
     });

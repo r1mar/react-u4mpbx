@@ -10,11 +10,11 @@ export default class TeamView extends React.Component {
 
   componentDidMount() {
     service.readTeam(this.props.match.params.id).then(team => {
-      setState({
+      this.setState({
         team
       });
     }).catch(error) {
-      setState({
+      this.setState({
         error: error.message
       })
     }
