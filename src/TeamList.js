@@ -8,6 +8,8 @@ export default class TeamsView extends React.Component {
     super(props);
 
     this.state = {};
+
+    this.delete = this.delete.bind(this);
   }
 
   componentDidMount() {
@@ -18,10 +20,16 @@ export default class TeamsView extends React.Component {
     });
   }
 
+  delete() {
+    
+  }
+
   render() {
     let teamsSnippet = this.state.teams.map(team => (
       <li key={team.id}>
-        <Link to={"/team/" + team.id}>{team.name}</Link>
+        <input type="checkbox" id={team.id.toString()} value={team.selected} />
+        <label for={team.id.toString()}>
+        <Link to={"/team/" + team.id}>{team.name}</Link></label>
       </li>
     ));
 
