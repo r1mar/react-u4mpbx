@@ -7,9 +7,7 @@ export default class TeamsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      teams: ["Mönchen Gladbach", "Wolfsburg", "1.FC Köln", "SGE"]
-    };
+    this.state = {};
   }
 
   componentDidMount() {
