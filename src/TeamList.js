@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import style from "./style.css";
+import service from ".:file3";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
@@ -11,16 +12,24 @@ export default class TeamsView extends React.Component {
     };
   }
 
+  componentDidMount() {
+    service.getTeams().then(teams => {
+      setState({
+        teams: teams
+      });
+    });
+  }
+
   render() {
-    let teams = this.state.teams.sort().map(team => (
-      <li key={team}>
-        <Link to={"/team/" + team}>{team}</Link>
+    let teamsSnippet = this.state.teams.map(team => (
+      <li key={team.id}>
+        <Link to={"/team/" + team.id}>{team.name}</Link>
       </li>
     ));
 
     return (
       <ol>
-        {teams}
+        {teamsSnippet}
       </ol>
     );
   }

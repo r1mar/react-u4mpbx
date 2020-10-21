@@ -12,7 +12,7 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/" component={StartMenu} />
       <Route path="/teams" component={TeamsView} />
-      <Route path="/team/:name" component={TeamView} />
+      <Route path="/team/:id" component={TeamView} />
       <Route component={NotFound} />
     </Switch>
   </Router>,
