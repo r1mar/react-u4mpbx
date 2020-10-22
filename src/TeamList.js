@@ -21,7 +21,13 @@ export default class TeamsView extends React.Component {
   }
 
   delete() {
-    
+    let toDelete = [];
+
+    this.state.teams.forEach(team => {
+      if(team.selected) {
+        toDelete.push(team.id);
+      }
+    });
   }
 
   render() {
@@ -34,9 +40,11 @@ export default class TeamsView extends React.Component {
     ));
 
     return (
+      <Link to="/">Zurück</Link>
       <ol>
         {teamsSnippet}
       </ol>
+      <button click="delete">Löschen</button>
     );
   }
 }
