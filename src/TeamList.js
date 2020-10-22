@@ -40,11 +40,13 @@ export default class TeamsView extends React.Component {
     ));
 
     return (
+      <div>
       <Link to="/">Zurück</Link>
       <ol>
         {teamsSnippet}
       </ol>
       <button click="delete">Löschen</button>
+      </div>
     );
   }
 }
