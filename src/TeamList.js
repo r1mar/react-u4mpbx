@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import style from "./style.css";
-import service from "./Service";
+import { service } from "./Service";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class TeamsView extends React.Component {
   }
 
   componentDidMount() {
-    service.getTeams().then(teams => {
+    service.readTeams().then(teams => {
       this.setState({
         teams: teams
       });
@@ -44,7 +44,7 @@ export default class TeamsView extends React.Component {
   }
 
   render() {
-    let teamsSnippet = this.state.teams.map(team => (
+    let teamsSnippet = this.state.teams && this.state.teams.map(team => (
       <li key={team.id}>
         <input type="checkbox" id={team.id.toString()} value={team.selected} />
         <label for={team.id.toString()}>

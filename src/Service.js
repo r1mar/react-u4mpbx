@@ -50,7 +50,7 @@ class Service {
         resolve(Object.assign({}, result));
       }
       else {
-        reject(new Error("Verein mit der ID " + id + " nicht gefunden"));
+        reject(new Error("Nicht gefunden"));
       }
     });
   }
