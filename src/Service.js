@@ -98,4 +98,4 @@ class Service {
   }
 }
 
-export default service = new Service();
+export const service = new Service();
