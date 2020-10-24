@@ -86,6 +86,16 @@ class Service {
       }
     });
   }
+
+  deleteTeams(ids) {
+    let result = [];
+
+    ids.forEach(id => {
+      result.push(this.deleteTeam(id));
+    })
+
+    return Promise.all(result;)
+  }
 }
 
 export default service = new Service();

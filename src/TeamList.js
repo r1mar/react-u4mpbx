@@ -21,13 +21,26 @@ export default class TeamsView extends React.Component {
   }
 
   delete() {
-    let toDelete = [];
+    let toDeleteIds = [],
+      toDeleteTeams = [];
 
     this.state.teams.forEach(team => {
       if(team.selected) {
-        toDelete.push(team.id);
+        toDeleteIds.push(team.id);
+        toDeleteTeams.push(team);
       }
     });
+
+    service.deleteTeams(toDeleteIds).catch(error => {
+      this.setState(Object.assign({}, this.state, {
+        error: error.message
+      }));
+    });
+
+    this.setState({
+      teams: this.state.teams.filter(team => toDeleteTeams.indexOf(team) === -1)
+    });
+
   }
 
   render() {
@@ -45,7 +58,8 @@ export default class TeamsView extends React.Component {
       <ol>
         {teamsSnippet}
       </ol>
-      <button click="delete">Löschen</button>
+      <button click={this.delete}>Löschen</button>
+      <span className="error">{this.state.error}</span>
       </div>
     );
   }
