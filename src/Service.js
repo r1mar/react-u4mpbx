@@ -94,7 +94,7 @@ class Service {
       result.push(this.deleteTeam(id));
     })
 
-    return Promise.all(result;)
+    return Promise.all(result);
   }
 }
 
