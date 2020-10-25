@@ -27,7 +27,6 @@ export default class TeamsView extends React.Component {
 
     this.state.teams.forEach(team => {
       if(team.selected) {
-        alert("jo");
         toDeleteIds.push(team.id);
         toDeleteTeams.push(team);
       }

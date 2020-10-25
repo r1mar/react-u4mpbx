@@ -77,7 +77,7 @@ class Service {
       if(team) {
         let index = this.teams.indexOf(team);
         
-        this.teams.splice(index);
+        this.teams.splice(index, 1);
         resolve();
 
       } else {
