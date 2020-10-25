@@ -14,7 +14,7 @@ class Service {
   }
 
   readTeams() {
-    return Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       resolve(this.teams.sort((a, b) => {
         if(a > b) {
           return 1;
@@ -98,4 +98,6 @@ class Service {
   }
 }
 
-export const service = new Service();
+const service = new Service();
+
+export default service;

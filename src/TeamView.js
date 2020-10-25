@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { service } from "./Service";
+import service from "./Service";
 
 export default class TeamView extends React.Component {
   constructor(props) {

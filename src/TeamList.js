@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import style from "./style.css";
-import { service } from "./Service";
+import service from "./Service";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
