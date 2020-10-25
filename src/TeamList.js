@@ -10,6 +10,7 @@ export default class TeamsView extends React.Component {
     this.state = {};
 
     this.delete = this.delete.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
@@ -45,7 +46,7 @@ export default class TeamsView extends React.Component {
   }
 
   onChange(event) {
-    
+
   }
 
   render() {
