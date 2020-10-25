@@ -46,7 +46,9 @@ export default class TeamsView extends React.Component {
   }
 
   onChange(event) {
+    let team = this.state.teams.filter(team => team.id == event.target.id);
 
+    team.selected = event.target.value;
   }
 
   render() {
@@ -59,7 +61,7 @@ export default class TeamsView extends React.Component {
     ));
 
     return (
-      <div>
+      <div>{JSON.stringify(this.state)}
       <Link to="/">Zurück</Link>
       <ol>
         {teamsSnippet}
