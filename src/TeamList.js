@@ -73,6 +73,7 @@ export default class TeamsView extends React.Component {
     return (
       <div>{JSON.stringify(this.state)}
       <Link to="/">Zurück</Link>
+      <Link to="/team">Neu</Link>
       <ol>
         {teamsSnippet}
       </ol>

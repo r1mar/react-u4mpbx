@@ -12,6 +12,7 @@ export default class TeamView extends React.Component {
   }
 
   componentDidMount() {
+    if(this.props.match.params.id) {
     service.readTeam(this.props.match.params.id).then(team => {
       this.setState({
           original: team,
@@ -24,6 +25,14 @@ export default class TeamView extends React.Component {
       });
 
     });
+    
+    } else {
+      this.setState({
+        original: {},
+        workingCopy: {}
+      });
+
+    }
   }
 
   save(event) {
