@@ -43,8 +43,8 @@ class Service {
   }
 
   readTeam(id) {
-    return new Promise((reject, resolve) => {
-      let result = this.teams.find(team => team.id === id);
+    return new Promise((resolve, reject) => {
+      let result = this.teams.find(team => team.id == id);
 
       if(result) {
         resolve(Object.assign({}, result));
