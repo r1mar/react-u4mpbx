@@ -56,7 +56,7 @@ export default class TeamView extends React.Component {
     }
 
     return (
-      <form onSubmit={this.save}>{JSON.stringify(this.state)}
+      <form onSubmit={this.save}>
         <Link to="/teams">Zurück</Link>
         <label htmlFor="txtName" text="Name:" />
         {txtInput}
