@@ -13,10 +13,9 @@ export default class TeamView extends React.Component {
   componentDidMount() {
     service.readTeam(this.props.match.params.id).then(team => {
       this.setState({
-        team: {
           original: team,
           workingCopy: Object.assign({}, team)
-        }});
+        });
 
     }).catch(error => {
       this.setState({
@@ -27,12 +26,12 @@ export default class TeamView extends React.Component {
   }
 
   save() {
-    if(this.state.team.original.name !== this.state.team.workingCopy.name) {
-      service.updateTeam(this.state.team.workingCopy);
+    if(this.state.original.name !== this.state.workingCopy.name) {
+      service.updateTeam(this.state.workingCopy);
       this.setState({
         team: {
-          original: this.state.team.workingCopy,
-          workingCopy: Object.assign({}, this.state.team.workingCopy)
+          original: this.state.workingCopy,
+          workingCopy: Object.assign({}, this.state.workingCopy)
         }
       });
     }
@@ -41,15 +40,15 @@ export default class TeamView extends React.Component {
   render() {
     let original, workingCopy, txtInput, btnSave;
 
-    if(this.state.team) {
-    original = this.state.team.original,
-      workingCopy = this.state.team.workingCopy,
+    if(this.state.original) {
+    original = this.state.original,
+      workingCopy = this.state.workingCopy,
       txtInput = (<input id="txtName" type="text" value={workingCopy.name} />),
       btnSave = (<button click={this.save} className="save" enabled={original.name === workingCopy.name ? false : true}>Speichern</button>);
     }
 
     return (
-      <div>{JSON.stringify(this.props)}
+      <div>
         <Link to="/teams">Zurück</Link>
         <label for="txtName" text="Name:" />
         {txtInput}
