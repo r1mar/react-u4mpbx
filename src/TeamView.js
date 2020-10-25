@@ -41,7 +41,7 @@ export default class TeamView extends React.Component {
   onChange(event) {
     let newState = Object.assign({}, this.state);
 
-    newState.workingCopy = event.target.value;
+    newState.workingCopy.name = event.target.value;
     this.setState(newState);
   }
 
