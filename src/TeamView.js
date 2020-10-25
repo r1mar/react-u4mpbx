@@ -26,14 +26,14 @@ export default class TeamView extends React.Component {
     });
   }
 
-  save() {
+  save(event) {
+    event.preventDefault();
+
     if(this.state.original.name !== this.state.workingCopy.name) {
       service.updateTeam(this.state.workingCopy);
       this.setState({
-        team: {
           original: this.state.workingCopy,
           workingCopy: Object.assign({}, this.state.workingCopy)
-        }
       });
     }
   }
@@ -51,18 +51,18 @@ export default class TeamView extends React.Component {
     if(this.state.original) {
     original = this.state.original,
       workingCopy = this.state.workingCopy,
-      txtInput = (<input id="txtName" type="text" value={workingCopy.name} />),
-      btnSave = (<button onClick={this.save} className="save" onChange={this.onChange} disabled={original.name === workingCopy.name ? "disabled" : ""}>Speichern</button>);
+      txtInput = (<input id="txtName" type="text" onChange={this.onChange} value={workingCopy.name} />),
+      btnSave = (<input type="submit" className="save" disabled={original.name === workingCopy.name ? "disabled" : ""}/>);
     }
 
     return (
-      <div>{JSON.stringify(this.state)}
+      <form onSubmit={this.save}>{JSON.stringify(this.state)}
         <Link to="/teams">Zurück</Link>
         <label htmlFor="txtName" text="Name:" />
         {txtInput}
         <span className="error">{this.state.error}</span>
         {btnSave}
-      </div>
+      </form>
     );
   }
 }
