@@ -49,6 +49,7 @@ export default class TeamsView extends React.Component {
     let team = this.state.teams.filter(team => team.id == event.target.id);
 
     team.selected = event.target.value;
+    alert(event.target.value);
   }
 
   render() {
