@@ -38,10 +38,10 @@ export default class TeamView extends React.Component {
     }
   }
 
-  onChange(value) {
+  onChange(event) {
     let newState = Object.assign({}, this.state);
 
-    newState.workingCopy = value;
+    newState.workingCopy = event.target.value;
     this.setState(newState);
   }
 
@@ -52,7 +52,7 @@ export default class TeamView extends React.Component {
     original = this.state.original,
       workingCopy = this.state.workingCopy,
       txtInput = (<input id="txtName" type="text" value={workingCopy.name} />),
-      btnSave = (<button onClick={this.save} className="save" onChange={this.onChange} enabled={original.name === workingCopy.name ? "false" : "true"}>Speichern</button>);
+      btnSave = (<button onClick={this.save} className="save" onChange={this.onChange} disabled={original.name === workingCopy.name ? "disabled" : ""}>Speichern</button>);
     }
 
     return (
