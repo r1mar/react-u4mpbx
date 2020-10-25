@@ -39,17 +39,22 @@ export default class TeamView extends React.Component {
   }
 
   render() {
-    const original = this.state.team.original,
+    let original, workingCopy, txtInput, btnSave;
+
+    if(this.state.team) {
+    original = this.state.team.original,
       workingCopy = this.state.team.workingCopy,
-      mainSnippet = original && (<div><input id="txtName" type="text" value={workingCopy.name} />
-      <span className="error">{this.state.error}</span>
-      <button click={this.save} className="save" enabled={original.name === workingCopy.name ? false : true}>Speichern</button></div>);
+      txtInput = (<input id="txtName" type="text" value={workingCopy.name} />),
+      btnSave = (<button click={this.save} className="save" enabled={original.name === workingCopy.name ? false : true}>Speichern</button>);
+    }
 
     return (
-      <div>
+      <div>{JSON.stringify(this.props)}
         <Link to="/teams">Zurück</Link>
         <label for="txtName" text="Name:" />
-        {mainSnippet}
+        {txtInput}
+        <span className="error">{this.state.error}</span>
+        {btnSave}
       </div>
     );
   }
