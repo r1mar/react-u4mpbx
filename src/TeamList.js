@@ -47,7 +47,7 @@ export default class TeamsView extends React.Component {
     let teamsSnippet = this.state.teams && this.state.teams.map(team => (
       <li key={team.id}>
         <input type="checkbox" id={team.id.toString()} value={team.selected} />
-        <label for={team.id.toString()}>
+        <label htmlFor={team.id.toString()}>
         <Link to={"/team/" + team.id}>{team.name}</Link></label>
       </li>
     ));
@@ -58,7 +58,7 @@ export default class TeamsView extends React.Component {
       <ol>
         {teamsSnippet}
       </ol>
-      <button click={this.delete}>Löschen</button>
+      <button onClick={this.delete}>Löschen</button>
       <span className="error">{this.state.error}</span>
       </div>
     );
