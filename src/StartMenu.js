@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 export default function StartMenu() {
   return (
-    <ul>
+    <ul className="nav flex-column">
       <li>
-        <Link to="/teams">Vereine</Link>
+        <Link className="nav-link" to="/teams">Vereine</Link>
       </li>
     </ul>
   );

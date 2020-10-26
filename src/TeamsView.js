@@ -73,7 +73,7 @@ export default class TeamsView extends React.Component {
             onChange={this.onChange}
           />
           <label htmlFor={team.id.toString()}>
-            <Link to={"/team" + team.id}>{team.name}</Link>
+            <Link className="nav-link" to={"/team" + team.id}>{team.name}</Link>
           </label>
         </li>
       ));
@@ -82,7 +82,7 @@ export default class TeamsView extends React.Component {
       <div>
         <Link to="/">Zurück</Link>
         <Link to="/team">Neu</Link>
-        <ol>{teamsSnippet}</ol>
+        <ol className="nav flex-column">{teamsSnippet}</ol>
         <button onClick={this.delete}>Löschen</button>
         <span className="error">{this.state.error}</span>
       </div>
