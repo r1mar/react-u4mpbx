@@ -73,7 +73,7 @@ export default class TeamsView extends React.Component {
             onChange={this.onChange}
           />
           <label htmlFor={team.id.toString()}>
-            <Link className="nav-link" to={"/team" + team.id}>{team.name}</Link>
+            <Link className="nav-link" to={"/team/" + team.id}>{team.name}</Link>
           </label>
         </li>
       ));
