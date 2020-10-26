@@ -1,12 +1,15 @@
 class Service {
   constructor() {
-    this.teams = [{
+    this.teams = [
+      {
         id: 1,
         name: "Mönchen Gladbach"
-      }, {
+      },
+      {
         id: 2,
         name: "1. FC Köln"
-      }, {
+      },
+      {
         id: 3,
         name: "Bayer Leverkusen"
       }
@@ -15,16 +18,18 @@ class Service {
 
   readTeams() {
     return new Promise((resolve, reject) => {
-      resolve(this.teams.sort((a, b) => {
-        if(a > b) {
-          return 1;
-        }
-        if(a < b) {
-          return -1;
-        }
+      resolve(
+        this.teams.sort((a, b) => {
+          if (a > b) {
+            return 1;
+          }
+          if (a < b) {
+            return -1;
+          }
 
-        return 0;
-      }))
+          return 0;
+        })
+      );
     });
   }
 
@@ -34,7 +39,7 @@ class Service {
 
       this.teams.forEach(team => {
         maxId = team.id > maxId ? team.id : max.id;
-      })
+      });
 
       team.id = ++maxId;
       this.teams.push(Object.assign({}, team));
@@ -46,10 +51,9 @@ class Service {
     return new Promise((resolve, reject) => {
       let result = this.teams.find(team => team.id == id);
 
-      if(result) {
+      if (result) {
         resolve(Object.assign({}, result));
-      }
-      else {
+      } else {
         reject(new Error("Nicht gefunden"));
       }
     });
@@ -59,13 +63,11 @@ class Service {
     return new Promise((resolve, reject) => {
       let aTeam = this.teams.find(item => item.id === team.id);
 
-      if(aTeam) {
+      if (aTeam) {
         Object.assign(aTeam, team);
         resolve(team);
-
       } else {
         reject(new Error("Nicht gefunden"));
-
       }
     });
   }
@@ -74,15 +76,13 @@ class Service {
     return new Promise((resolve, reject) => {
       let team = this.teams.find(team => team.id === id);
 
-      if(team) {
+      if (team) {
         let index = this.teams.indexOf(team);
-        
+
         this.teams.splice(index, 1);
         resolve();
-
       } else {
         reject(new Error("Nicht gefunden"));
-
       }
     });
   }
@@ -92,7 +92,7 @@ class Service {
 
     ids.forEach(id => {
       result.push(this.deleteTeam(id));
-    })
+    });
 
     return Promise.all(result);
   }
