@@ -70,25 +70,32 @@ export default class TeamView extends React.Component {
             type="text"
             onChange={this.onChange}
             value={workingCopy.name}
+            className="form-control"
           />
         )),
         (btnSave = (
-          <input
+          <button
             type="submit"
-            className="save"
+            className="btn btn-primary"
             disabled={original.name === workingCopy.name ? "disabled" : ""}
-          />
+          >
+            Speichern
+          </button>
         ));
     }
 
     return (
-      <form onSubmit={this.save}>
+      <div>
         <Link to="/teams">Zurück</Link>
-        <label htmlFor="txtName" text="Name:" />
-        {txtInput}
-        <span className="error">{this.state.error}</span>
-        {btnSave}
-      </form>
+        <form onSubmit={this.save}>
+          <div className="form-group">
+            <label htmlFor="txtName">Name:</label>
+            {txtInput}
+          </div>
+          <span className="error">{this.state.error}</span>
+          {btnSave}
+        </form>
+      </div>
     );
   }
 }
