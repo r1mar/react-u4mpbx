@@ -23,9 +23,11 @@ export default class StartMenu extends React.Component {
   render() {
   return (
     <ul className="nav flex-column">
-      <li>
+      <li className="nav-item">
         <Link className="nav-link" to="/teams">Vereine</Link>
-        <button className="nav-link" onClick={this.download}>Speichern</button>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" onClick={this.download}>Speichern</a>
         <a id="downloadDummy" style={{display: "none" }} />
       </li>
     </ul>
