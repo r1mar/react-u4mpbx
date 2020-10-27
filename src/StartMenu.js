@@ -33,6 +33,11 @@ export default class StartMenu extends React.Component {
           </Link>
         </li>
         <li className="nav-item">
+          <Link className="nav-link" to="/matches">
+            Spiele
+          </Link>
+        </li>
+        <li className="nav-item">
           <a className="nav-link" onClick={this.download}>
             Speichern
           </a>

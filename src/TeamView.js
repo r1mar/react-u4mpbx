@@ -79,7 +79,7 @@ export default class TeamView extends React.Component {
             className="btn btn-primary"
             disabled={original.name === workingCopy.name ? "disabled" : ""}
           >
-            Speichern
+            Übernehmen
           </button>
         ));
     }

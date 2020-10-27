@@ -14,11 +14,18 @@ export default class MatchesView extends React.Component {
   }
 
   componentDidMount() {
-    service.readMatches().then(matches => {
-      this.setState({
-        matches: matches
+    service
+      .readMatches()
+      .then(matches => {
+        this.setState({
+          matches: matches
+        });
+      })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        });
       });
-    });
   }
 
   delete() {
@@ -41,7 +48,9 @@ export default class MatchesView extends React.Component {
     });
 
     this.setState({
-      matches: this.state.matches.filter(match => toDeleteMatches.indexOf(match) === -1)
+      matches: this.state.matches.filter(
+        match => toDeleteMatches.indexOf(match) === -1
+      )
     });
   }
 
@@ -63,28 +72,45 @@ export default class MatchesView extends React.Component {
 
   render() {
     let matchesSnippet =
-      this.state.matches &&
-      this.state.matches.map(match => (
-        <li key={match.id}>
-          <input
-            type="checkbox"
-            id={match.id.toString()}
-            value={match.selected}
-            onChange={this.onChange}
-          />
-          <label htmlFor={match.id.toString()}>
-            <Link to={"/match" + match.id}>{match.name}</Link>
-          </label>
-        </li>
-      ));
+        this.state.matches &&
+        this.state.matches.map(match => (
+          <li key={match.id}>
+            <input
+              type="checkbox"
+              id={match.id.toString()}
+              value={match.selected}
+              onChange={this.onChange}
+            />
+            <label htmlFor={match.id.toString()}>
+              <Link className="nav-link" to={"/match" + match.id}>
+                {match.gameDay}. {match.team1.name} : {match.team2.name}
+              </Link>
+            </label>
+          </li>
+        )),
+      errorSnippet = this.state.error && (
+        <div className="alert alert-danger">{this.state.error}</div>
+      );
 
     return (
       <div>
-        <Link to="/">Zurück</Link>
-        <Link to="/match">Neu</Link>
-        <ol>{matchesSnippet}</ol>
-        <button onClick={this.delete}>Löschen</button>
-        <span className="error">{this.state.error}</span>
+        <ul className="nav">
+          <li className="nav-item">
+            <Link to="/" className="nav-link">
+              Zurück
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/match" className="nav-link">
+              Neu
+            </Link>
+          </li>
+        </ul>
+        <ol className="nav flex-column">{matchesSnippet}</ol>
+        <button className="btn btn-danger" onClick={this.delete}>
+          Löschen
+        </button>
+        {errorSnippet}
       </div>
     );
   }

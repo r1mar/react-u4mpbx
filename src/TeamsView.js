@@ -82,16 +82,16 @@ export default class TeamsView extends React.Component {
 
     return (
       <div>
-        <ul class="nav">
-          <li class="nav-item">
+        <ul className="nav">
+          <li className="nav-item">
             <Link to="/" className="nav-link">
               Zurück
             </Link>
           </li>
-          <li class="nav-item">
+          <li className="nav-item">
             <Link to="/team" className="nav-link">
               Neu
-            </Link>{" "}
+            </Link>
           </li>
         </ul>
         <ol className="nav flex-column">{teamsSnippet}</ol>
