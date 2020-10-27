@@ -14,7 +14,7 @@ class Service {
         name: "Bayer Leverkusen"
       }
     ];
-    
+
     this.matches = [
       {
         id: 1,
@@ -111,7 +111,7 @@ class Service {
 
     return Promise.all(result);
   }
-  
+
   createMatch(match) {
     return new Promise(resolve => {
       let maxId = -1;
@@ -191,6 +191,15 @@ class Service {
     });
 
     return Promise.all(result);
+  }
+
+  readAll() {
+    return new Promise((resolve, reject) => {
+      resolve({
+        teams: this.teams.map(team => Object.assign({}, team)),
+        matches: this.matches.map(match => Object.assign({}, match))
+      });
+    });
   }
 }
 
