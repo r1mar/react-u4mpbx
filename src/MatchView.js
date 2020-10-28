@@ -59,20 +59,20 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave,
+    let original, workingCopy, txtInput, btnSave, teamOptions,
       lblError = this.state.error && (<div className="alert alert-danger">{this.state.error}</div>);
 
     if (this.state.original) {
       original = this.state.original;
       workingCopy = this.state.workingCopy;
-      txtInput = (
-          <input
-            id="txtName"
+      cmbTeam1 = (
+          <select
+            id="cmbTeam1"
             type="text"
             className="form-control"
             onChange={this.onChange}
             value={workingCopy.team1Id}
-          />
+          >{teamOptions}</select>
         );
       btnSave = (
           <button
