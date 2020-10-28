@@ -82,7 +82,7 @@ export default class MatchesView extends React.Component {
               onChange={this.onChange}
             />
             <label htmlFor={match.id.toString()}>
-              <Link className="nav-link" to={"/match" + match.id}>
+              <Link className="nav-link" to={"/match/" + match.id}>
                 {match.gameDay}. {match.team1.name} : {match.team2.name}
               </Link>
             </label>

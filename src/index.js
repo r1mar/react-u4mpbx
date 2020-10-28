@@ -7,6 +7,7 @@ import NotFound from "./NotFound";
 import TeamsView from "./TeamsView";
 import TeamView from "./TeamView";
 import MatchesView from "./MatchesView";
+import MatchView from "./MatchView";
 
 ReactDOM.render(
   <Router>
@@ -16,6 +17,7 @@ ReactDOM.render(
       <Route path="/team/:id" component={TeamView} />
       <Route path="/team" component={TeamView} />
       <Route path="/matches" component={MatchesView} />
+      <Route path="/match/:id" component={MatchView} />
       <Route component={NotFound} />
     </Switch>
   </Router>,
