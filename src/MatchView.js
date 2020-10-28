@@ -75,11 +75,11 @@ export default class MatchView extends React.Component {
           />
         );
       btnSave = (
-          <input
+          <button
             type="submit"
-            className="save"
-            disabled={original.name === workingCopy.name ? "disabled" : ""}
-          />
+            className="btn btn-primary"
+            disabled={original.team1Id === workingCopy.team1Id ? "disabled" : ""}
+          >Übernehmen</button>
         );
     }
 
