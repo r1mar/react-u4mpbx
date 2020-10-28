@@ -59,7 +59,7 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave, teamOptions,
+    let original, workingCopy, txtInput, btnSave, teamOptions1,
       lblError = this.state.error && (<div className="alert alert-danger">{this.state.error}</div>);
 
     if (this.state.original) {
