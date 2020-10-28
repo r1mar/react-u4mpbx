@@ -59,36 +59,46 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave;
+    let original, workingCopy, txtInput, btnSave,
+      lblError = this.state.error && (<div className="alert alert-danger">{this.state.error}</div>);
 
     if (this.state.original) {
-      (original = this.state.original),
-        (workingCopy = this.state.workingCopy),
-        (txtInput = (
+      original = this.state.original;
+      workingCopy = this.state.workingCopy;
+      txtInput = (
           <input
             id="txtName"
             type="text"
+            className="form-control"
             onChange={this.onChange}
-            value={workingCopy.name}
+            value={workingCopy.team1Id}
           />
-        )),
-        (btnSave = (
+        );
+      btnSave = (
           <input
             type="submit"
             className="save"
             disabled={original.name === workingCopy.name ? "disabled" : ""}
           />
-        ));
+        );
     }
 
     return (
+      <div>
+        <ul className="nav">
+          <li className="nav-item">
+            <Link to="/matches" className="nav-link">Zurück</Link>
+          </li>
+        </ul>
       <form onSubmit={this.save}>
-        <Link to="/matches">Zurück</Link>
+        <div className="input-group">
         <label htmlFor="txtName" text="Name:" />
         {txtInput}
-        <span className="error">{this.state.error}</span>
+        </div>
         {btnSave}
+        {lblError}
       </form>
+      </div>
     );
   }
 }
