@@ -166,9 +166,8 @@ class Service {
 
   readMatch(id) {
     return new Promise((resolve, reject) => {
-      let result = this.matches
-        .find(match => match.id == id)
-        .map(match => Object.assign({}, match));
+      let result = Object.assign({}, this.matches
+        .find(match => match.id == id));
 
       if (result) {
         result.team1 = Object.assign(
