@@ -12,30 +12,23 @@ export default class Table extends React.Component {
       <table className="table table-bordered table-hover">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            {this.props.columns &&
+              this.props.columns.map(column => {
+                return <th scope="col">{column.label}</th>;
+              })}
           </tr>
         </thead>
         <tbody>
-          <tr className="table-danger">
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+          {this.props.rows &&
+            this.props.rows.map(row => {
+              let cells =
+                this.props.columns &&
+                this.props.columns.map(column => {
+                  return <th>{row[column.name]}</th>; //className="table-danger" scope="row"
+                });
+
+              return <tr>{cells}</tr>;
+            })}
         </tbody>
       </table>
     );

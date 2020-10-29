@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import style from "./style.css";
 import service from "./Service";
 import Alert from "./Alert";
+import Table from "./Table";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
@@ -95,6 +96,19 @@ export default class TeamsView extends React.Component {
             </Link>
           </li>
         </ul>
+        <Table
+          rows={this.state.teams}
+          columns={[
+            {
+              label: "#",
+              name: "id"
+            },
+            {
+              label: "Name",
+              name: "name"
+            }
+          ]}
+        />
         <ol className="nav flex-column">{teamsSnippet}</ol>
         <button className="btn btn-danger" onClick={this.delete}>
           Löschen
