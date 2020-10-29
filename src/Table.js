@@ -14,11 +14,15 @@ export default class Table extends React.Component {
       selection: Object.assign({}, this.state.selection)
     };
 
-    newState.selection[event.target.key] = {};
-    newState.selection[event.target.key].selected = !(this.state.selection && this.state.selection[
-      event.target.key
+    console.log(event.target);
+
+    newState.selection[event.target.id] = {};
+
+    if(this.state.selection && this.state.selection) {}
+    newState.selection[event.target.id].selected = !(this.state.selection && this.state.selection[
+      event.target.id
     ] && this.state.selection[
-      event.target.key
+      event.target.id
     ].selected);
     this.setState(newState);
   }
@@ -33,6 +37,7 @@ export default class Table extends React.Component {
                 return (
                   <th key={column.name} scope="col">
                     {column.label}
+                    {JSON.stringify(this.state)}
                   </th>
                 );
               })}
@@ -51,12 +56,12 @@ export default class Table extends React.Component {
                 this.props.columns.map(column => {
                   if (column.name === "id") {
                     return (
-                      <th scope="row" key={column.name}>
+                      <th id={row.id.toString()} scope="row" key={column.name}>
                         {row[column.name]}
                       </th>
                     );
                   } else {
-                    return <td key={column.name}>{row[column.name]}</td>; //className="table-danger" scope="row"
+                    return <td id={row.id.toString()} key={column.name}>{row[column.name]}</td>; //className="table-danger" scope="row"
                   }
                 });
 
