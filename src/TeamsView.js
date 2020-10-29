@@ -101,8 +101,7 @@ export default class TeamsView extends React.Component {
           columns={[
             {
               label: "#",
-              name: "id",
-              rowHeader: true
+              name: "id"
             },
             {
               label: "Name",
