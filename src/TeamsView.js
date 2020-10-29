@@ -67,7 +67,7 @@ export default class TeamsView extends React.Component {
     let teamsSnippet =
       this.state.teams &&
       this.state.teams.map(team => (
-        <li key={team.id}>
+        <li key={team.id.toString()}>
           <input
             type="checkbox"
             id={team.id.toString()}
@@ -101,7 +101,8 @@ export default class TeamsView extends React.Component {
           columns={[
             {
               label: "#",
-              name: "id"
+              name: "id",
+              rowHeader: true
             },
             {
               label: "Name",

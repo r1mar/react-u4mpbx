@@ -14,7 +14,7 @@ export default class Table extends React.Component {
           <tr>
             {this.props.columns &&
               this.props.columns.map(column => {
-                return <th scope="col">{column.label}</th>;
+                return <th key={column.name} scope="col">{column.label}</th>;
               })}
           </tr>
         </thead>
@@ -24,7 +24,11 @@ export default class Table extends React.Component {
               let cells =
                 this.props.columns &&
                 this.props.columns.map(column => {
-                  return <th>{row[column.name]}</th>; //className="table-danger" scope="row"
+                  if(column.rowHeader) {
+                  return <th scope="row" key={column.name}>{row[column.name]}</th>; 
+                  } else {
+                    return <td key={column.name}>{row[column.name]}</td>;//className="table-danger" scope="row"
+                  }
                 });
 
               return <tr>{cells}</tr>;
