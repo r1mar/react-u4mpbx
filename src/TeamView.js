@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
+import Alert from "./Alert";
 
 export default class TeamView extends React.Component {
   constructor(props) {
@@ -92,8 +93,8 @@ export default class TeamView extends React.Component {
             <label htmlFor="txtName">Name:</label>
             {txtInput}
           </div>
-          <span className="error">{this.state.error}</span>
           {btnSave}
+          <Alert message={this.state.error} />
         </form>
       </div>
     );

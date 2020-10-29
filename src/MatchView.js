@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
+import Alert from "./Alert";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -59,45 +60,50 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave, teamOptions1,
-      lblError = this.state.error && (<div className="alert alert-danger">{this.state.error}</div>);
+    let original, workingCopy, txtInput, btnSave, teamOptions1;
 
     if (this.state.original) {
       original = this.state.original;
       workingCopy = this.state.workingCopy;
       cmbTeam1 = (
-          <select
-            id="cmbTeam1"
-            type="text"
-            className="form-control"
-            onChange={this.onChange}
-            value={workingCopy.team1Id}
-          >{teamOptions}</select>
-        );
+        <select
+          id="cmbTeam1"
+          type="text"
+          className="form-control"
+          onChange={this.onChange}
+          value={workingCopy.team1Id}
+        >
+          {teamOptions}
+        </select>
+      );
       btnSave = (
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={original.team1Id === workingCopy.team1Id ? "disabled" : ""}
-          >Übernehmen</button>
-        );
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={original.team1Id === workingCopy.team1Id ? "disabled" : ""}
+        >
+          Übernehmen
+        </button>
+      );
     }
 
     return (
       <div>
         <ul className="nav">
           <li className="nav-item">
-            <Link to="/matches" className="nav-link">Zurück</Link>
+            <Link to="/matches" className="nav-link">
+              Zurück
+            </Link>
           </li>
         </ul>
-      <form onSubmit={this.save}>
-        <div className="input-group">
-        <label htmlFor="txtName" text="Name:" />
-        {txtInput}
-        </div>
-        {btnSave}
-        {lblError}
-      </form>
+        <form onSubmit={this.save}>
+          <div className="input-group">
+            <label htmlFor="txtName" text="Name:" />
+            {txtInput}
+          </div>
+          {btnSave}
+          <Alert message={this.state.error} />
+        </form>
       </div>
     );
   }

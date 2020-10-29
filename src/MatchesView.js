@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import style from "./style.css";
 import service from "./Service";
+import Alert from "./Alert";
 
 export default class MatchesView extends React.Component {
   constructor(props) {
@@ -72,25 +73,22 @@ export default class MatchesView extends React.Component {
 
   render() {
     let matchesSnippet =
-        this.state.matches &&
-        this.state.matches.map(match => (
-          <li key={match.id}>
-            <input
-              type="checkbox"
-              id={match.id.toString()}
-              value={match.selected}
-              onChange={this.onChange}
-            />
-            <label htmlFor={match.id.toString()}>
-              <Link className="nav-link" to={"/match/" + match.id}>
-                {match.gameDay}. {match.team1.name} : {match.team2.name}
-              </Link>
-            </label>
-          </li>
-        )),
-      errorSnippet = this.state.error && (
-        <div className="alert alert-danger">{this.state.error}</div>
-      );
+      this.state.matches &&
+      this.state.matches.map(match => (
+        <li key={match.id}>
+          <input
+            type="checkbox"
+            id={match.id.toString()}
+            value={match.selected}
+            onChange={this.onChange}
+          />
+          <label htmlFor={match.id.toString()}>
+            <Link className="nav-link" to={"/match/" + match.id}>
+              {match.gameDay}. {match.team1.name} : {match.team2.name}
+            </Link>
+          </label>
+        </li>
+      ));
 
     return (
       <div>
@@ -110,7 +108,7 @@ export default class MatchesView extends React.Component {
         <button className="btn btn-danger" onClick={this.delete}>
           Löschen
         </button>
-        {errorSnippet}
+        <Alert message={this.state.error} />
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import style from "./style.css";
 import service from "./Service";
+import Alert from "./Alert";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
@@ -98,7 +99,7 @@ export default class TeamsView extends React.Component {
         <button className="btn btn-danger" onClick={this.delete}>
           Löschen
         </button>
-        <span className="error">{this.state.error}</span>
+        <Alert message={this.state.error} />
       </div>
     );
   }
