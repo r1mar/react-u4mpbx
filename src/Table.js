@@ -14,6 +14,7 @@ export default class Table extends React.Component {
       selection: Object.assign({}, this.state.selection)
     };
 
+    newState.selection[event.target.key] = {};
     newState.selection[event.target.key].selected = !(this.state.selection && this.state.selection[
       event.target.key
     ] && this.state.selection[
@@ -40,7 +41,7 @@ export default class Table extends React.Component {
         <tbody>
           {this.props.rows &&
             this.props.rows.map(row => {
-              let selected = this.state.selection && this.state.selection[row.id.toString()].selected,
+              let selected = this.state.selection && this.state.selection[row.id.toString()] &&this.state.selection[row.id.toString()].selected,
                 attributes = {
                   className: selected ? "table-danger" : ""
                 };
