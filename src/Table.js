@@ -14,16 +14,16 @@ export default class Table extends React.Component {
       selection: Object.assign({}, this.state.selection)
     };
 
-    console.log(event.target);
-
     newState.selection[event.target.id] = {};
 
-    if(this.state.selection && this.state.selection) {}
-    newState.selection[event.target.id].selected = !(this.state.selection && this.state.selection[
-      event.target.id
-    ] && this.state.selection[
-      event.target.id
-    ].selected);
+    if(this.state.selection && this.state.selection[event.target.id] && this.state.selection[event.target.id].selected) {
+      delete newState.selection[event.target.id];
+
+    } else {
+      newState.selection[event.target.id].selected = true;
+
+    }
+
     this.setState(newState);
   }
 
@@ -37,7 +37,6 @@ export default class Table extends React.Component {
                 return (
                   <th key={column.name} scope="col">
                     {column.label}
-                    {JSON.stringify(this.state)}
                   </th>
                 );
               })}
