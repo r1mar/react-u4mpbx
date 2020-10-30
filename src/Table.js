@@ -16,12 +16,14 @@ export default class Table extends React.Component {
 
     newState.selection[event.target.id] = {};
 
-    if(this.state.selection && this.state.selection[event.target.id] && this.state.selection[event.target.id].selected) {
+    if (
+      this.state.selection &&
+      this.state.selection[event.target.id] &&
+      this.state.selection[event.target.id].selected
+    ) {
       delete newState.selection[event.target.id];
-
     } else {
       newState.selection[event.target.id].selected = true;
-
     }
 
     this.setState(newState);
@@ -45,7 +47,10 @@ export default class Table extends React.Component {
         <tbody>
           {this.props.rows &&
             this.props.rows.map(row => {
-              let selected = this.state.selection && this.state.selection[row.id.toString()] &&this.state.selection[row.id.toString()].selected,
+              let selected =
+                  this.state.selection &&
+                  this.state.selection[row.id.toString()] &&
+                  this.state.selection[row.id.toString()].selected,
                 attributes = {
                   className: selected ? "table-danger" : ""
                 };
@@ -53,14 +58,29 @@ export default class Table extends React.Component {
               let cells =
                 this.props.columns &&
                 this.props.columns.map(column => {
+                  let content = column.navigation ? (
+                    <a
+                      id={row.id.toString()}
+                      onClick={column.navigation}
+                      href="#"
+                    >
+                      {row[column.name]}
+                    </a>
+                  ) : (
+                    row[column.name]
+                  );
                   if (column.name === "id") {
                     return (
                       <th id={row.id.toString()} scope="row" key={column.name}>
-                        {row[column.name]}
+                        {content}
                       </th>
                     );
                   } else {
-                    return <td id={row.id.toString()} key={column.name}>{row[column.name]}</td>; //className="table-danger" scope="row"
+                    return (
+                      <td id={row.id.toString()} key={column.name}>
+                        {content}
+                      </td>
+                    ); //className="table-danger" scope="row"
                   }
                 });
 

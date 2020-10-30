@@ -13,6 +13,7 @@ export default class TeamsView extends React.Component {
 
     this.delete = this.delete.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.showTeam = this.showTeam.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +64,12 @@ export default class TeamsView extends React.Component {
     });
   }
 
+  showTeam(event) {
+    event.preventDefault();
+
+    this.props.history.push("/team/" + event.target.id);
+  }
+
   render() {
     let teamsSnippet =
       this.state.teams &&
@@ -105,7 +112,8 @@ export default class TeamsView extends React.Component {
             },
             {
               label: "Name",
-              name: "name"
+              name: "name",
+              navigation: this.showTeam
             }
           ]}
         />
