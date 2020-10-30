@@ -14,6 +14,7 @@ export default class TeamsView extends React.Component {
     this.delete = this.delete.bind(this);
     this.onChange = this.onChange.bind(this);
     this.showTeam = this.showTeam.bind(this);
+    this.deleteTeams = this.deleteTeams.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +47,19 @@ export default class TeamsView extends React.Component {
     this.setState({
       teams: this.state.teams.filter(team => toDeleteTeams.indexOf(team) === -1)
     });
+  }
+
+  deleteTeams(ids, items) {
+    alert(JSON.stringify(ids));
+    service.deleteTeams(ids).catch(error => {
+      this.setState(Object.assign({}, this.state, {
+        error: error.message
+      }))
+    });
+
+    this.setState({
+      teams: this.state.teams.filter(team => items.indexOf(team) === -1)
+    })
   }
 
   onChange(event) {
@@ -115,7 +129,7 @@ export default class TeamsView extends React.Component {
               name: "name",
               navigation: this.showTeam
             }
-          ]}
+          ]} delete={this.deleteTeams}
         />
         <ol className="nav flex-column">{teamsSnippet}</ol>
         <button className="btn btn-danger" onClick={this.delete}>

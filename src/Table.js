@@ -4,7 +4,9 @@ export default class Table extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      selection: {}
+    };
 
     this.toggleSelection = this.toggleSelection.bind(this);
     this.delete = this.delete.bind(this);
@@ -18,7 +20,6 @@ export default class Table extends React.Component {
     newState.selection[event.target.id] = {};
 
     if (
-      this.state.selection &&
       this.state.selection[event.target.id] &&
       this.state.selection[event.target.id].selected
     ) {
@@ -34,20 +35,20 @@ export default class Table extends React.Component {
     let toDeleteIds = [],
       toDeleteItems = [];
 
-    if (!this.state.selection) {
-      return;
-    }
-
     let keys = Object.keys(this.state.selection);
 
-    key.forEach(key => {
-      if (key.selected) {
+    keys.forEach(key => {
+      if (this.state.selection[key].selected) {
         toDeleteIds.push(+key);
-        toDeleteTeams.push(this.props.items.find(item => item.id === +key));
+        toDeleteItems.push(this.props.rows.find(item => item.id === +key));
       }
     });
 
     this.props.delete(toDeleteIds, toDeleteItems);
+
+    this.setState({
+      selection: {}
+    });
   }
 
   render() {
@@ -55,12 +56,11 @@ export default class Table extends React.Component {
       <table className="table table-bordered table-hover">
         <thead>
           <tr>
-            <th colspan={this.props.columns.length + 1} className="text-right">
+            <th colSpan={this.props.columns.length + 1} className="text-right">
               <button
                 className="btn btn-danger"
                 onClick={this.delete}
                 disabled={
-                  !this.state.selection ||
                   Object.keys(this.state.selection).length === 0
                 }
               >
@@ -83,7 +83,6 @@ export default class Table extends React.Component {
           {this.props.rows &&
             this.props.rows.map(row => {
               let selected =
-                  this.state.selection &&
                   this.state.selection[row.id.toString()] &&
                   this.state.selection[row.id.toString()].selected,
                 attributes = {
