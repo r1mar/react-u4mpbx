@@ -7,6 +7,7 @@ export default class Table extends React.Component {
     this.state = {};
 
     this.toggleSelection = this.toggleSelection.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   toggleSelection(event) {
@@ -27,6 +28,26 @@ export default class Table extends React.Component {
     }
 
     this.setState(newState);
+  }
+
+  delete() {
+    let toDeleteIds = [],
+      toDeleteItems = [];
+
+    if (!this.state.selection) {
+      return;
+    }
+
+    let keys = Object.keys(this.state.selection);
+
+    key.forEach(key => {
+      if (key.selected) {
+        toDeleteIds.push(+key);
+        toDeleteTeams.push(this.props.items.find(item => item.id === +key));
+      }
+    });
+
+    this.props.delete(toDeleteIds, toDeleteItems);
   }
 
   render() {
