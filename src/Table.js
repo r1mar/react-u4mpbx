@@ -34,6 +34,20 @@ export default class Table extends React.Component {
       <table className="table table-bordered table-hover">
         <thead>
           <tr>
+            <th colspan={this.props.columns.length + 1} className="text-right">
+              <button
+                className="btn btn-danger"
+                onClick={this.delete}
+                disabled={
+                  !this.state.selection ||
+                  Object.keys(this.state.selection).length === 0
+                }
+              >
+                Löschen
+              </button>
+            </th>
+          </tr>
+          <tr>
             {this.props.columns &&
               this.props.columns.map(column => {
                 return (
@@ -80,7 +94,7 @@ export default class Table extends React.Component {
                       <td id={row.id.toString()} key={column.name}>
                         {content}
                       </td>
-                    ); //className="table-danger" scope="row"
+                    );
                   }
                 });
 
