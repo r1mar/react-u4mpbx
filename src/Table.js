@@ -57,6 +57,7 @@ export default class Table extends React.Component {
         <thead>
           <tr>
             <th colSpan={this.props.columns.length + 1} className="text-right">
+              <button className="btn btn-secondary" onClick={this.props.create}>Neu</button>
               <button
                 className="btn btn-danger"
                 onClick={this.delete}

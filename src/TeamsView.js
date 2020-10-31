@@ -9,7 +9,9 @@ export default class TeamsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      teams: []
+    };
 
     this.delete = this.delete.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -67,7 +69,7 @@ export default class TeamsView extends React.Component {
   }
 
   createTeam() {
-    
+    this.props.history.push("/team");
   }
 
   onChange(event) {
@@ -137,7 +139,7 @@ export default class TeamsView extends React.Component {
               name: "name",
               navigation: this.showTeam
             }
-          ]} delete={this.deleteTeams}
+          ]} delete={this.deleteTeams} create={this.createTeam}
         />
         <ol className="nav flex-column">{teamsSnippet}</ol>
         <button className="btn btn-danger" onClick={this.delete}>
