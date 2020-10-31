@@ -72,7 +72,7 @@ class Service {
       let maxId = -1;
 
       this.teams.forEach(team => {
-        maxId = team.id > maxId ? team.id : max.id;
+        maxId = team.id > maxId ? team.id : maxId;
       });
 
       team.id = ++maxId;
