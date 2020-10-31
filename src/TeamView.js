@@ -7,7 +7,14 @@ export default class TeamView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      original: {
+        name: ""
+      },
+      workingCopy: {
+        name: ""
+      }
+    };
     this.save = this.save.bind(this);
     this.onChange = this.onChange.bind(this);
   }
@@ -29,8 +36,12 @@ export default class TeamView extends React.Component {
         });
     } else {
       this.setState({
-        original: {},
-        workingCopy: {}
+        original: {
+          name: ""
+        },
+        workingCopy: {
+          name: ""
+        }
       });
     }
   }
@@ -39,15 +50,22 @@ export default class TeamView extends React.Component {
     event.preventDefault();
 
     if (this.state.original.name !== this.state.workingCopy.name) {
+      let result;
       if (this.props.match.params.id) {
-        service.updateTeam(this.state.workingCopy);
+        result = service.updateTeam(this.state.workingCopy);
       } else {
-        service.createTeam(this.state.workingCopy);
+        result = service.createTeam(this.state.workingCopy);
       }
 
+      result.then(() => {
       this.setState({
         original: this.state.workingCopy,
         workingCopy: Object.assign({}, this.state.workingCopy)
+      });
+      }).catch(error => {
+        this.setState(Object.assign({}, this.state, {
+          error: error.message
+        }));
       });
     }
   }
