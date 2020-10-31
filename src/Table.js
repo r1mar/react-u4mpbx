@@ -44,10 +44,10 @@ export default class Table extends React.Component {
       }
     });
 
-    this.props.delete(toDeleteIds, toDeleteItems);
-
+    this.props.delete(toDeleteIds, toDeleteItems).then( () => {
     this.setState({
       selection: {}
+    });
     });
   }
 

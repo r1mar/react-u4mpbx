@@ -15,6 +15,7 @@ export default class TeamsView extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.showTeam = this.showTeam.bind(this);
     this.deleteTeams = this.deleteTeams.bind(this);
+    this.createTeam = this.createTeam.bind(this);
   }
 
   componentDidMount() {
@@ -50,16 +51,23 @@ export default class TeamsView extends React.Component {
   }
 
   deleteTeams(ids, items) {
-    alert(JSON.stringify(ids));
-    service.deleteTeams(ids).catch(error => {
+    let result = service.deleteTeams(ids);
+    
+    result.then(() => {
+      this.setState({
+        teams: this.state.teams.filter(team => items.indexOf(team) === -1)
+      });
+    }).catch(error => {
       this.setState(Object.assign({}, this.state, {
         error: error.message
       }))
     });
 
-    this.setState({
-      teams: this.state.teams.filter(team => items.indexOf(team) === -1)
-    })
+    return result;
+  }
+
+  createTeam() {
+    
   }
 
   onChange(event) {
