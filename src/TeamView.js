@@ -8,10 +8,7 @@ export default class TeamView extends React.Component {
     super(props);
 
     this.state = {
-      original: {
-        name: ""
-      },
-      workingCopy: {
+      team: {
         name: ""
       }
     };
@@ -25,8 +22,7 @@ export default class TeamView extends React.Component {
         .readTeam(this.props.match.params.id)
         .then(team => {
           this.setState({
-            original: team,
-            workingCopy: Object.assign({}, team)
+            team: team
           });
         })
         .catch(error => {
@@ -36,10 +32,7 @@ export default class TeamView extends React.Component {
         });
     } else {
       this.setState({
-        original: {
-          name: ""
-        },
-        workingCopy: {
+        team: {
           name: ""
         }
       });
@@ -49,69 +42,63 @@ export default class TeamView extends React.Component {
   save(event) {
     event.preventDefault();
 
-    if (this.state.original.name !== this.state.workingCopy.name) {
+    if (this.state.name !== this.state.name) {
       let result;
       if (this.props.match.params.id) {
-        result = service.updateTeam(this.state.workingCopy);
+        result = service.updateTeam(this.state.team);
       } else {
-        result = service.createTeam(this.state.workingCopy);
+        result = service.createTeam(this.state.team);
       }
 
-      result.then(() => {
-      this.setState({
-        original: this.state.workingCopy,
-        workingCopy: Object.assign({}, this.state.workingCopy)
-      });
-      }).catch(error => {
-        this.setState(Object.assign({}, this.state, {
-          error: error.message
-        }));
-      });
+      result
+        .then(() => {
+          this.setState({
+            team: this.state.team
+          });
+        })
+        .catch(error => {
+          this.setState(
+            Object.assign({}, this.state, {
+              error: error.message
+            })
+          );
+        });
     }
   }
 
   onChange(event) {
     let newState = Object.assign({}, this.state);
 
-    newState.workingCopy.name = event.target.value;
+    newState.team.name = event.target.value;
+
+    if (event.target.value !== event.target.attributes["value"].value) {
+      newState.disabled = "disabled";
+    }
     this.setState(newState);
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave;
-
-    if (this.state.original) {
-      (original = this.state.original),
-        (workingCopy = this.state.workingCopy),
-        (txtInput = (
-          <input
-            id="txtName"
-            type="text"
-            onChange={this.onChange}
-            value={workingCopy.name}
-            className="form-control"
-          />
-        )),
-        (btnSave = (
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={original.name === workingCopy.name ? "disabled" : ""}
-          >
-            Übernehmen
-          </button>
-        ));
-    }
-
     return (
       <div>
         <Link to="/teams">Zurück</Link>
         <form onSubmit={this.save}>
           <div className="form-group">
             <label htmlFor="txtName">Name:</label>
-            {txtInput}
+            <input
+              id="txtName"
+              type="text"
+              onChange={this.onChange}
+              value={this.state.team.name}
+              className="form-control"
+            />
           </div>
-          {btnSave}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={this.state.disabled}
+          >
+            Übernehmen
+          </button>
           <Alert message={this.state.error} />
         </form>
       </div>
