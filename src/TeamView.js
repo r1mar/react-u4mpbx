@@ -9,7 +9,8 @@ export default class TeamView extends React.Component {
 
     this.state = {
       team: {
-        name: ""
+        name: "",
+        disabled: "disabled"
       }
     };
     this.save = this.save.bind(this);
@@ -22,7 +23,8 @@ export default class TeamView extends React.Component {
         .readTeam(this.props.match.params.id)
         .then(team => {
           this.setState({
-            team: team
+            team: team,
+            disabled: "disabled"
           });
         })
         .catch(error => {
@@ -33,7 +35,8 @@ export default class TeamView extends React.Component {
     } else {
       this.setState({
         team: {
-          name: ""
+          name: "",
+          disabled: "disabled"
         }
       });
     }
@@ -42,7 +45,7 @@ export default class TeamView extends React.Component {
   save(event) {
     event.preventDefault();
 
-    if (this.state.name !== this.state.name) {
+    if (!this.state.disabled) {
       let result;
       if (this.props.match.params.id) {
         result = service.updateTeam(this.state.team);
@@ -53,7 +56,8 @@ export default class TeamView extends React.Component {
       result
         .then(() => {
           this.setState({
-            team: this.state.team
+            team: this.state.team,
+            disabled: "disabled"
           });
         })
         .catch(error => {
@@ -71,9 +75,12 @@ export default class TeamView extends React.Component {
 
     newState.team.name = event.target.value;
 
-    if (event.target.value !== event.target.attributes["value"].value) {
+    if (event.target.value === event.target.attributes["value"].value) {
       newState.disabled = "disabled";
+    } else {
+      newState.disabled = "";
     }
+
     this.setState(newState);
   }
 
@@ -87,6 +94,7 @@ export default class TeamView extends React.Component {
             <input
               id="txtName"
               type="text"
+              name="txtName"
               onChange={this.onChange}
               value={this.state.team.name}
               className="form-control"
