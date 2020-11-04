@@ -9,7 +9,8 @@ export default class TeamView extends React.Component {
 
     this.state = {
       team: {
-        name: ""
+        name: "",
+        disabled: ""
       }
     };
     this.save = this.save.bind(this);
@@ -22,7 +23,8 @@ export default class TeamView extends React.Component {
         .readTeam(this.props.match.params.id)
         .then(team => {
           this.setState({
-            team: team
+            team: team,
+            disabled: "disabled"
           });
         })
         .catch(error => {
@@ -34,7 +36,8 @@ export default class TeamView extends React.Component {
       this.setState({
         team: {
           name: ""
-        }
+        },
+        disabled: "disabled"
       });
     }
   }
@@ -52,30 +55,23 @@ export default class TeamView extends React.Component {
       result
         .then(() => {
           this.setState({
-            team: this.state.team
+            disabled: ""
           });
         })
         .catch(error => {
           this.setState({
               error: error.message
             });
-          );
         });
-    }
   }
 
   onChange(event) {
-    let newState = Object.assign({}, this.state);
-
-    newState.team.name = event.target.value;
-
-    if (event.target.value === event.target.attributes["value"].value) {
-      newState.disabled = "disabled";
-    } else {
-      newState.disabled = "";
-    }
-
-    this.setState(newState);
+    this.setState({
+      team: {
+        name: event.target.value
+      },
+      disabled: ""
+    });
   }
 
   render() {
@@ -92,15 +88,14 @@ export default class TeamView extends React.Component {
               onChange={this.onChange}
               value={this.state.team.name}
               className="form-control"
+              required
             />
           </div>
-          <button
+          <input
             type="submit"
             className="btn btn-primary"
             disabled={this.state.disabled}
-          >
-            Übernehmen
-          </button>
+          />
           <Alert message={this.state.error} />
         </form>
       </div>
