@@ -9,8 +9,7 @@ export default class TeamView extends React.Component {
 
     this.state = {
       team: {
-        name: "",
-        disabled: "disabled"
+        name: ""
       }
     };
     this.save = this.save.bind(this);
@@ -23,8 +22,7 @@ export default class TeamView extends React.Component {
         .readTeam(this.props.match.params.id)
         .then(team => {
           this.setState({
-            team: team,
-            disabled: "disabled"
+            team: team
           });
         })
         .catch(error => {
@@ -35,8 +33,7 @@ export default class TeamView extends React.Component {
     } else {
       this.setState({
         team: {
-          name: "",
-          disabled: "disabled"
+          name: ""
         }
       });
     }
@@ -45,7 +42,6 @@ export default class TeamView extends React.Component {
   save(event) {
     event.preventDefault();
 
-    if (!this.state.disabled) {
       let result;
       if (this.props.match.params.id) {
         result = service.updateTeam(this.state.team);
@@ -56,15 +52,13 @@ export default class TeamView extends React.Component {
       result
         .then(() => {
           this.setState({
-            team: this.state.team,
-            disabled: "disabled"
+            team: this.state.team
           });
         })
         .catch(error => {
-          this.setState(
-            Object.assign({}, this.state, {
+          this.setState({
               error: error.message
-            })
+            });
           );
         });
     }
