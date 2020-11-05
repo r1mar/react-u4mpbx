@@ -65,9 +65,9 @@ export default class TeamView extends React.Component {
 
   onChange(event) {
     this.setState({
-      team: {
+      team: Object.assign({}, this.state.team, {
         name: event.target.value
-      }
+      })
     });
   }
 
