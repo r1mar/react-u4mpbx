@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import service from "./Service";
 import Alert from "./Alert";
 import TextBox from "./TextBox";
+import Form from "./Form";
 
 export default class TeamView extends React.Component {
   constructor(props) {
@@ -71,19 +72,18 @@ export default class TeamView extends React.Component {
   }
 
   render() {
+    let lblId = this.props.match.params.id ? (<h1># {this.props.match.params.id}</h1>) : null;
+
     return (
       <div>
         <Link to="/teams">Zurück</Link>
-        <form onSubmit={this.save}>
-          <TextBox id="txtName" label="Name:" name="txtName"
+        {lblId}
+        <Form onSubmit={this.save} error={this.state.error}>
+          <TextBox id="txtName" label="Name:"
               onChange={this.onChange}
               value={this.state.team.name}
               required />
-          <input
-            type="submit"
-            className="btn btn-primary" />
-          <Alert message={this.state.error} />
-        </form>
+        </Form>
       </div>
     );
   }
