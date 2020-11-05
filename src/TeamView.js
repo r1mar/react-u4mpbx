@@ -2,16 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
 import Alert from "./Alert";
-
-function TextBox(props) {
-  return (
-    <div className="form-group">
-      <label htmlFor={props.id}>{props.label} </label>
-      <input id={props.id} name={props.name} type="text" className="form-control" onChange={props.onChange}
-      value={props.value} required={props.required} />
-    </div>
-  );
-}
+import TextBox from "./TextBox";
 
 export default class TeamView extends React.Component {
   constructor(props) {
