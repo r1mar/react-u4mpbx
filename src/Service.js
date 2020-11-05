@@ -112,7 +112,8 @@ class Service {
 
   updateTeam(team) {
     return new Promise((resolve, reject) => {
-      let aTeam = this.teams.find(item => item.id === team.id);
+      let aTeam = this.teams.find(item => item.id == team.id);
+      alert(team.id);
 
       if (aTeam) {
         Object.assign(aTeam, team);
