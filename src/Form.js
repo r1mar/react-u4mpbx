@@ -3,11 +3,11 @@ import Alert from "./Alert";
 
 export default function Form(props) {
   return (
-    <form onSubmit={props.submit}>
+    <form onSubmit={props.onSubmit}>
       {props.children}
 
       <input type="submit" className="btn btn-primary" />
-      <Alert message={props.message} />
+      <Alert message={props.error} />
     </form>
   )
 }
