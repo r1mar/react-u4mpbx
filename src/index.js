@@ -18,6 +18,7 @@ ReactDOM.render(
       <Route path="/team" component={TeamView} />
       <Route path="/matches" component={MatchesView} />
       <Route path="/match/:id" component={MatchView} />
+      <Route path="/match" component={MatchView} />
       <Route component={NotFound} />
     </Switch>
   </Router>,

@@ -11,8 +11,10 @@ export default class MatchesView extends React.Component {
 
     this.state = {};
 
-    this.delete = this.delete.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.deleteMatches = this.deleteMatches.bind(this);
+    this.showMatch = this.showMatch.bind(this);
+    this.getName = this.getName.bind(this);
+    this.createMatch = this.createMatch.bind(this);
   }
 
   componentDidMount() {
@@ -30,23 +32,11 @@ export default class MatchesView extends React.Component {
       });
   }
 
-  delete() {
-    let toDeleteIds = [],
-      toDeleteMatches = [];
-
-    this.state.matches.forEach(match => {
-      if (match.selected) {
-        toDeleteIds.push(match.id);
-        toDeleteMatches.push(match);
-      }
-    });
-
+  deleteMatches(toDeleteIds, toDeleteMatches) {
     service.deleteMatches(toDeleteIds).catch(error => {
-      this.setState(
-        Object.assign({}, this.state, {
+      this.setState({
           error: error.message
-        })
-      );
+        });
     });
 
     this.setState({
@@ -56,48 +46,19 @@ export default class MatchesView extends React.Component {
     });
   }
 
-  onChange(event) {
-    let match = this.state.matches.filter(match => match.id == event.target.id);
-
-    match = Object.assign({}, match);
-    match.selected = event.target.checked;
-    this.setState({
-      matches: this.state.matches.map(match => {
-        if (match.id == event.target.id) {
-          match.selected = event.target.checked;
-        }
-
-        return match;
-      })
-    });
-  }
-
-  getName(id) {
-    let match = this.state.matches.find(team => team.id == id);
-
+  getName(match) {
     return match.team1.name + " : " + match.team2.name;
   }
 
+  showMatch(match) {
+    this.props.history.push("/match/" + match.id);
+  }
+
+  createMatch() {
+    this.props.history.push("/match");
+  }
+
   render() {
-    let matchesSnippet =
-      this.state.matches &&
-      this.state.matches.map(match => (
-        <li key={match.id}>
-          <input
-            type="checkbox"
-            id={match.id.toString()}
-            value={match.selected}
-            onChange={this.onChange}
-          />
-          <label htmlFor={match.id.toString()}>
-            <Link className="nav-link" to={"/match/" + match.id}>
-              {match.gameDay}. {match.team1.name} : {match.team2.name}
-            </Link>
-          </label>
-        </li>
-      ));
-
-
     return (
       <div>
         <ul className="nav">
@@ -111,23 +72,22 @@ export default class MatchesView extends React.Component {
           rows={this.state.matches}
           columns={[
             {
+              id: 1,
               label: "#",
               name: "id"
             },
             {
+              id: 2,
               label: "SpielTage",
               name: "gameDay",
             }, {
+              id: 3,
               label: "Spiel",
               name: this.getName,
               navigation: this.showMatch
             }
           ]} delete={this.deleteMatches} create={this.createMatch}
         />
-        <ol className="nav flex-column">{matchesSnippet}</ol>
-        <button className="btn btn-danger" onClick={this.delete}>
-          Löschen
-        </button>
         <Alert message={this.state.error} />
       </div>
     );
