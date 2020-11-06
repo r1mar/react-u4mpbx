@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import style from "./style.css";
 import service from "./Service";
 import Alert from "./Alert";
+import Table from "./Table";
 
 export default class MatchesView extends React.Component {
   constructor(props) {
@@ -71,6 +72,12 @@ export default class MatchesView extends React.Component {
     });
   }
 
+  getName(id) {
+    let match = this.state.matches.find(team => team.id == id);
+
+    return match.team1.name + " : " + match.team2.name;
+  }
+
   render() {
     let matchesSnippet =
       this.state.matches &&
@@ -90,6 +97,7 @@ export default class MatchesView extends React.Component {
         </li>
       ));
 
+
     return (
       <div>
         <ul className="nav">
@@ -98,12 +106,24 @@ export default class MatchesView extends React.Component {
               Zurück
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/match" className="nav-link">
-              Neu
-            </Link>
-          </li>
         </ul>
+          <Table
+          rows={this.state.matches}
+          columns={[
+            {
+              label: "#",
+              name: "id"
+            },
+            {
+              label: "SpielTage",
+              name: "gameDay",
+            }, {
+              label: "Spiel",
+              calcValue: this.getName,
+              navigation: this.showMatch
+            }
+          ]} delete={this.deleteMatches} create={this.createMatch}
+        />
         <ol className="nav flex-column">{matchesSnippet}</ol>
         <button className="btn btn-danger" onClick={this.delete}>
           Löschen
