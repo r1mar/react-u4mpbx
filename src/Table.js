@@ -99,20 +99,20 @@ export default class Table extends React.Component {
                       onClick={column.navigation}
                       href="#"
                     >
-                      {row[column.name]}
+                      {typeof column.name === "function" ? column.name(row) : row[column.name]}
                     </a>
                   ) : (
                     row[column.name]
                   );
                   if (column.name === "id") {
                     return (
-                      <th id={row.id.toString()} scope="row" key={column.name}>
+                      <th id={row.id.toString()} scope="row" key={column.id}>
                         {content}
                       </th>
                     );
                   } else {
                     return (
-                      <td id={row.id.toString()} key={column.name}>
+                      <td id={row.id.toString()} key={column.id}>
                         {content}
                       </td>
                     );

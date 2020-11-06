@@ -67,10 +67,12 @@ export default class TeamsView extends React.Component {
           rows={this.state.teams}
           columns={[
             {
+              id: 1,
               label: "#",
               name: "id"
             },
             {
+              id: 2,
               label: "Name",
               name: "name",
               navigation: this.showTeam
