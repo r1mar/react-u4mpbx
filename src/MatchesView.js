@@ -33,17 +33,19 @@ export default class MatchesView extends React.Component {
   }
 
   deleteMatches(toDeleteIds, toDeleteMatches) {
-    service.deleteMatches(toDeleteIds).catch(error => {
+    let result = service.deleteMatches(toDeleteIds);
+    
+    result.then(() => {
+      this.setState({
+        matches: this.state.matches.filter(match => toDeleteMatches.indexOf(match) === -1)
+      })
+    }).catch(error => {
       this.setState({
           error: error.message
         });
     });
 
-    this.setState({
-      matches: this.state.matches.filter(
-        match => toDeleteMatches.indexOf(match) === -1
-      )
-    });
+    return result;
   }
 
   getName(match) {
