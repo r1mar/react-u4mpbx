@@ -52,8 +52,10 @@ export default class MatchesView extends React.Component {
     return match.team1.name + " : " + match.team2.name;
   }
 
-  showMatch(match) {
-    this.props.history.push("/match/" + match.id);
+  showMatch(event) {
+    event.preventDefault();
+    
+    this.props.history.push("/match/" + event.target.id);
   }
 
   createMatch() {
