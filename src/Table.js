@@ -73,7 +73,7 @@ export default class Table extends React.Component {
             {this.props.columns &&
               this.props.columns.map(column => {
                 return (
-                  <th key={column.name} scope="col">
+                  <th key={column.id} scope="col">
                     {column.label}
                   </th>
                 );

@@ -119,7 +119,7 @@ export default class MatchesView extends React.Component {
               name: "gameDay",
             }, {
               label: "Spiel",
-              calcValue: this.getName,
+              name: this.getName,
               navigation: this.showMatch
             }
           ]} delete={this.deleteMatches} create={this.createMatch}
