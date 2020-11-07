@@ -7,7 +7,11 @@ export default class MatchView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      match: {
+
+      }
+    };
     this.save = this.save.bind(this);
     this.onChange = this.onChange.bind(this);
   }
@@ -18,8 +22,7 @@ export default class MatchView extends React.Component {
         .readMatch(this.props.match.params.id)
         .then(match => {
           this.setState({
-            original: match,
-            workingCopy: Object.assign({}, match)
+            match: match
           });
         })
         .catch(error => {
@@ -27,22 +30,19 @@ export default class MatchView extends React.Component {
             error: error.message
           });
         });
-    } else {
-      this.setState({
-        original: {},
-        workingCopy: {}
-      });
     }
   }
 
   save(event) {
+    let result;
+
     event.preventDefault();
 
-    if (this.state.original.name !== this.state.workingCopy.name) {
       if (this.props.match.params.id) {
-        service.updateMatch(this.state.workingCopy);
+        result = service.updateMatch(this.state.workingCopy);
+        
       } else {
-        service.createMatch(this.state.workingCopy);
+        result = service.createMatch(this.state.workingCopy);
       }
 
       this.setState({
