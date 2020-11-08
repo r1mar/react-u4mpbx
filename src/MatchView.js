@@ -17,6 +17,10 @@ export default class MatchView extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({
+      errors: []
+    })
+    
     if (this.props.match.params.id) {
       service
         .readMatch(this.props.match.params.id)
@@ -32,6 +36,16 @@ export default class MatchView extends React.Component {
           }));
         });
     }
+
+    service.readTeams().then(teams => {
+      this.setState({
+        teams: teams
+      });
+    }).catch(error => {
+      this.setState((state, props) => ({
+        errors: [...state.errors, error.message]
+      }));
+    })
   }
 
   save(event) {
