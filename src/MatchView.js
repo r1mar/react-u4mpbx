@@ -34,58 +34,53 @@ export default class MatchView extends React.Component {
   }
 
   save(event) {
-    let result;
+    let result, errors;
 
     event.preventDefault();
 
       if (this.props.match.params.id) {
-        result = service.updateMatch(this.state.workingCopy);
+        result = service.updateMatch(this.state.match);
         
       } else {
-        result = service.createMatch(this.state.workingCopy);
+        result = service.createMatch(this.state.match);
+
+        result.then(match => {
+          this.props.history.push("/match/" + match.id);
+        });
       }
 
+      result.catch(error => {
+
       this.setState({
-        original: this.state.workingCopy,
-        workingCopy: Object.assign({}, this.state.workingCopy)
+        errors: error.message
       });
-    }
+      });
+
+      service
   }
 
-  onChange(event) {
-    let newState = Object.assign({}, this.state);
-
-    newState.workingCopy.name = event.target.value;
-    this.setState(newState);
+  onSelectTeam1(event) {
+    this.setState({
+      match: Object.assign({}, this.state.match, {
+        team1Id: event.target.value
+      })
+    });
   }
 
   render() {
-    let original, workingCopy, txtInput, btnSave, teamOptions1;
-
-    if (this.state.original) {
-      original = this.state.original;
-      workingCopy = this.state.workingCopy;
-      cmbTeam1 = (
+    let teamOptions =this.state.teams.map(team => (
+      <option id={team.id}>{team.name}</option>
+    )), cmbTeam1 = (
         <select
           id="cmbTeam1"
           type="text"
           className="form-control"
-          onChange={this.onChange}
+          onChange={this.onSelectTeam1}
           value={workingCopy.team1Id}
         >
           {teamOptions}
         </select>
       );
-      btnSave = (
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={original.team1Id === workingCopy.team1Id ? "disabled" : ""}
-        >
-          Übernehmen
-        </button>
-      );
-    }
 
     return (
       <div>
@@ -96,14 +91,12 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
-        <form onSubmit={this.save}>
+        <Form onSubmit={this.save}>
           <div className="input-group">
             <label htmlFor="txtName" text="Name:" />
-            {txtInput}
+            {cmbTeam1}
           </div>
-          {btnSave}
-          <Alert message={this.state.error} />
-        </form>
+        </Form>
       </div>
     );
   }
