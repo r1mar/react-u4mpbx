@@ -2,15 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
 import Form from "./Form";
+import ComboBox from "./file2";
 
 export default class MatchView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      match: {
-      },
-      errors: []
+      match: {},
+      errors: [],
+      teams: []
     };
     this.save = this.save.bind(this);
     this.onSelectTeam1 = this.onSelectTeam1.bind(this);
@@ -20,7 +21,7 @@ export default class MatchView extends React.Component {
     this.setState({
       errors: []
     })
-    
+
     if (this.props.match.params.id) {
       service
         .readMatch(this.props.match.params.id)
@@ -70,11 +71,10 @@ export default class MatchView extends React.Component {
 
       result.catch(error => {
       this.setState({
-        errors: [error.message
+        errors: [error.message]
       });
       });
 
-      service
   }
 
   onSelectTeam1(event) {
@@ -86,20 +86,6 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let teamOptions =this.state.teams.map(team => (
-      <option id={team.id}>{team.name}</option>
-    )), cmbTeam1 = (
-        <select
-          id="cmbTeam1"
-          type="text"
-          className="form-control"
-          onChange={this.onSelectTeam1}
-          value={workingCopy.team1Id}
-        >
-          {teamOptions}
-        </select>
-      );
-
     return (
       <div>
         <ul className="nav">
@@ -109,11 +95,11 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
-        <Form onSubmit={this.save}>
-          <div className="input-group">
-            <label htmlFor="txtName" text="Name:" />
-            {cmbTeam1}
-          </div>
+        <Form onSubmit={this.save} errors={this.state.errors}>
+          <ComboBox label="Gastgeber:" onChange={this.onSelectTeam1} options={this.state.teams.map(team => ({
+            id: team.id,
+            value: team.name
+          }))} />
         </Form>
       </div>
     );
