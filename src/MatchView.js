@@ -50,9 +50,8 @@ export default class MatchView extends React.Component {
       }
 
       result.catch(error => {
-
       this.setState({
-        errors: error.message
+        errors: [error.message
       });
       });
 
