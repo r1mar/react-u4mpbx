@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
-import Alert from "./Alert";
+import Form from "./Form";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -9,11 +9,11 @@ export default class MatchView extends React.Component {
 
     this.state = {
       match: {
-
-      }
+      },
+      errors: []
     };
     this.save = this.save.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.onSelectTeam1 = this.onSelectTeam1.bind(this);
   }
 
   componentDidMount() {
@@ -22,21 +22,26 @@ export default class MatchView extends React.Component {
         .readMatch(this.props.match.params.id)
         .then(match => {
           this.setState({
-            match: match
+            match: match,
+            errors: []
           });
         })
         .catch(error => {
-          this.setState({
-            error: error.message
-          });
+          this.setState((state, props) => ({
+            errors: [...state.errors, error.message]
+          }));
         });
     }
   }
 
   save(event) {
-    let result, errors;
+    let result;
 
     event.preventDefault();
+
+    this.setState({
+      errors: []
+    })
 
       if (this.props.match.params.id) {
         result = service.updateMatch(this.state.match);
