@@ -3,7 +3,7 @@ import FormGroup from "./FormGroup";
 
 export default function ComboBox(props) {
   let options = props.options.map(option => (
-    <option id={option.id} key={option.id}>
+    <option key={option.id}>
       {option.value}
     </option>
   ));
