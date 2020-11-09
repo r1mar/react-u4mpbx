@@ -1,7 +1,7 @@
 import React from "react";
 import FormGroup from "./FormGroup";
 
-export default function TextBox(props) {
+export default function NumberBox(props) {
   return (
     <FormGroup forId={props.id} label={props.label}>
       <input

@@ -1,4 +1,5 @@
 import React from "react";
+import FormGroup from "./FormGroup";
 
 export default function ComboBox(props) {
   let options = props.options.map(option => (
@@ -8,8 +9,7 @@ export default function ComboBox(props) {
   ));
 
   return (
-    <div className="form-group">
-      <label htmlFor={props.id}>{props.label}</label>
+    <FormGroup forId={props.id} label={props.label}>
       <select
         id={props.id}
         onChange={props.onChangr}
@@ -18,6 +18,6 @@ export default function ComboBox(props) {
       >
         {options}
       </select>
-    </div>
+    </FormGroup>
   );
 }
