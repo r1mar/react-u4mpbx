@@ -12,10 +12,12 @@ export default function ComboBox(props) {
     <FormGroup forId={props.id} label={props.label}>
       <select
         id={props.id}
+        name={props.id}
         onChange={props.onChangr}
         value={props.value}
         className="form-control"
       >
+        <option key="-1" id="-1" />
         {options}
       </select>
     </FormGroup>
