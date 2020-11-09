@@ -12,7 +12,8 @@ export default class TeamView extends React.Component {
     this.state = {
       team: {
         name: ""
-      }
+      },
+      errors: []
     };
     this.save = this.save.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -29,7 +30,7 @@ export default class TeamView extends React.Component {
         })
         .catch(error => {
           this.setState({
-            error: error.message
+            errors: [error.message]
           });
         });
     } else {
@@ -44,23 +45,21 @@ export default class TeamView extends React.Component {
   save(event) {
     event.preventDefault();
 
-      let result;
-      if (this.props.match.params.id) {
-        result = service.updateTeam(this.state.team);
+    let result;
+    if (this.props.match.params.id) {
+      result = service.updateTeam(this.state.team);
+    } else {
+      result = service.createTeam(this.state.team);
+      result.then(team => {
+        this.props.history.push("/team/" + team.id);
+      });
+    }
 
-      } else {
-        result = service.createTeam(this.state.team);
-        result.then(team => {
-          this.props.history.push("/team/" + team.id);
-        });
-
-      }
-
-      result.catch(error => {
-          this.setState({
-              error: error.message
-            });
-        });
+    result.catch(error => {
+      this.setState({
+        errors: [error.message]
+      });
+    });
   }
 
   onChange(event) {
@@ -72,17 +71,22 @@ export default class TeamView extends React.Component {
   }
 
   render() {
-    let lblId = this.props.match.params.id ? (<h1># {this.props.match.params.id}</h1>) : null;
+    let lblId = this.props.match.params.id ? (
+      <h1># {this.props.match.params.id}</h1>
+    ) : null;
 
     return (
       <div>
         <Link to="/teams">Zurück</Link>
         {lblId}
-        <Form onSubmit={this.save} error={this.state.error}>
-          <TextBox id="txtName" label="Name:"
-              onChange={this.onChange}
-              value={this.state.team.name}
-              required />
+        <Form onSubmit={this.save} errors={this.state.errors}>
+          <TextBox
+            id="txtName"
+            label="Name:"
+            onChange={this.onChange}
+            value={this.state.team.name}
+            required
+          />
         </Form>
       </div>
     );

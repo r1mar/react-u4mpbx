@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import service from "./Service";
 import Form from "./Form";
-import ComboBox from "./file2";
+import ComboBox from "./ComboBox";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -14,13 +14,13 @@ export default class MatchView extends React.Component {
       teams: []
     };
     this.save = this.save.bind(this);
-    this.onSelectTeam1 = this.onSelectTeam1.bind(this);
+    this.onSelectTeam = this.onSelectTeam.bind(this);
   }
 
   componentDidMount() {
     this.setState({
       errors: []
-    })
+    });
 
     if (this.props.match.params.id) {
       service
@@ -38,15 +38,18 @@ export default class MatchView extends React.Component {
         });
     }
 
-    service.readTeams().then(teams => {
-      this.setState({
-        teams: teams
+    service
+      .readTeams()
+      .then(teams => {
+        this.setState({
+          teams: teams
+        });
+      })
+      .catch(error => {
+        this.setState((state, props) => ({
+          errors: [...state.errors, error.message]
+        }));
       });
-    }).catch(error => {
-      this.setState((state, props) => ({
-        errors: [...state.errors, error.message]
-      }));
-    })
   }
 
   save(event) {
@@ -56,32 +59,36 @@ export default class MatchView extends React.Component {
 
     this.setState({
       errors: []
-    })
+    });
 
-      if (this.props.match.params.id) {
-        result = service.updateMatch(this.state.match);
-        
-      } else {
-        result = service.createMatch(this.state.match);
+    if (this.props.match.params.id) {
+      result = service.updateMatch(this.state.match);
+    } else {
+      result = service.createMatch(this.state.match);
 
-        result.then(match => {
-          this.props.history.push("/match/" + match.id);
-        });
-      }
+      result.then(match => {
+        this.props.history.push("/match/" + match.id);
+      });
+    }
 
-      result.catch(error => {
+    result.catch(error => {
       this.setState({
         errors: [error.message]
       });
-      });
-
+    });
   }
 
-  onSelectTeam1(event) {
+  onSelectTeam(event) {
+    let newMatch = Object.assign({}, this.state.match);
+
+    if (event.target.id === "cmbTeam1") {
+      newMatch.teamId1 = event.target.id;
+    } else {
+      newMatch.teamId2 = event.target.id;
+    }
+
     this.setState({
-      match: Object.assign({}, this.state.match, {
-        team1Id: event.target.value
-      })
+      match: newMatch
     });
   }
 
@@ -96,10 +103,24 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <Form onSubmit={this.save} errors={this.state.errors}>
-          <ComboBox label="Gastgeber:" onChange={this.onSelectTeam1} options={this.state.teams.map(team => ({
-            id: team.id,
-            value: team.name
-          }))} />
+          <ComboBox
+            id="cmbTeam1"
+            label="Gastgeber:"
+            onChange={this.onSelectTeam}
+            options={this.state.teams.map(team => ({
+              id: team.id,
+              value: team.name
+            }))}
+          />
+          <ComboBox
+            id="cmbTeam2"
+            label="Gast:"
+            onChange={this.onSelectTeam}
+            options={this.state.teams.map(team => ({
+              id: team.id,
+              value: team.name
+            }))}
+          />
         </Form>
       </div>
     );

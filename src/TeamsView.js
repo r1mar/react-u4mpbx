@@ -10,7 +10,8 @@ export default class TeamsView extends React.Component {
     super(props);
 
     this.state = {
-      teams: []
+      teams: [],
+      errors: []
     };
 
     this.showTeam = this.showTeam.bind(this);
@@ -28,16 +29,20 @@ export default class TeamsView extends React.Component {
 
   deleteTeams(ids, items) {
     let result = service.deleteTeams(ids);
-    
-    result.then(() => {
-      this.setState({
-        teams: this.state.teams.filter(team => items.indexOf(team) === -1)
+
+    result
+      .then(() => {
+        this.setState({
+          teams: this.state.teams.filter(team => items.indexOf(team) === -1)
+        });
+      })
+      .catch(error => {
+        this.setState(
+          Object.assign({}, this.state, {
+            errors: [error.message]
+          })
+        );
       });
-    }).catch(error => {
-      this.setState(Object.assign({}, this.state, {
-        error: error.message
-      }))
-    });
 
     return result;
   }
@@ -77,10 +82,12 @@ export default class TeamsView extends React.Component {
               name: "name",
               navigation: this.showTeam
             }
-          ]} delete={this.deleteTeams} create={this.createTeam}
+          ]}
+          delete={this.deleteTeams}
+          create={this.createTeam}
         />
 
-        <Alert message={this.state.error} />
+        <Alert messages={this.state.errors} />
       </div>
     );
   }

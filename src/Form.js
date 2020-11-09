@@ -7,7 +7,7 @@ export default function Form(props) {
       {props.children}
 
       <input type="submit" className="btn btn-primary" />
-      <Alert message={props.error} />
+      <Alert messages={props.errors} />
     </form>
-  )
+  );
 }

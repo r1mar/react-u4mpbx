@@ -9,7 +9,9 @@ export default class MatchesView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      errors: []
+    };
 
     this.deleteMatches = this.deleteMatches.bind(this);
     this.showMatch = this.showMatch.bind(this);
@@ -27,23 +29,27 @@ export default class MatchesView extends React.Component {
       })
       .catch(error => {
         this.setState({
-          error: error.message
+          errors: [error.message]
         });
       });
   }
 
   deleteMatches(toDeleteIds, toDeleteMatches) {
     let result = service.deleteMatches(toDeleteIds);
-    
-    result.then(() => {
-      this.setState({
-        matches: this.state.matches.filter(match => toDeleteMatches.indexOf(match) === -1)
-      })
-    }).catch(error => {
-      this.setState({
-          error: error.message
+
+    result
+      .then(() => {
+        this.setState({
+          matches: this.state.matches.filter(
+            match => toDeleteMatches.indexOf(match) === -1
+          )
         });
-    });
+      })
+      .catch(error => {
+        this.setState({
+          errors: [error.message]
+        });
+      });
 
     return result;
   }
@@ -54,7 +60,7 @@ export default class MatchesView extends React.Component {
 
   showMatch(event) {
     event.preventDefault();
-    
+
     this.props.history.push("/match/" + event.target.id);
   }
 
@@ -72,7 +78,7 @@ export default class MatchesView extends React.Component {
             </Link>
           </li>
         </ul>
-          <Table
+        <Table
           rows={this.state.matches}
           columns={[
             {
@@ -83,16 +89,19 @@ export default class MatchesView extends React.Component {
             {
               id: 2,
               label: "SpielTage",
-              name: "gameDay",
-            }, {
+              name: "gameDay"
+            },
+            {
               id: 3,
               label: "Spiel",
               name: this.getName,
               navigation: this.showMatch
             }
-          ]} delete={this.deleteMatches} create={this.createMatch}
+          ]}
+          delete={this.deleteMatches}
+          create={this.createMatch}
         />
-        <Alert message={this.state.error} />
+        <Alert messages={this.state.errors} />
       </div>
     );
   }
