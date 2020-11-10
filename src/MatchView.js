@@ -121,6 +121,8 @@ export default class MatchView extends React.Component {
               value: team.name
             }))}
           />
+          <NumberBox id="txtTore1" onChange={this.onChangeGoal}
+            value={this.state.match.team1Goals}
         </Form>
       </div>
     );
