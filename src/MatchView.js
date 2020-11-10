@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import service from "./Service";
 import Form from "./Form";
 import ComboBox from "./ComboBox";
+import NumberBox from "./NumberBox";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class MatchView extends React.Component {
     };
     this.save = this.save.bind(this);
     this.onSelectTeam = this.onSelectTeam.bind(this);
+    this.onChangeGoal = this.onChangeGoal.bind(this);
   }
 
   componentDidMount() {
@@ -79,17 +81,33 @@ export default class MatchView extends React.Component {
   }
 
   onSelectTeam(event) {
-    let newMatch = Object.assign({}, this.state.match);
+    let newMatch = Object.assign({}, this.state.match),
+      team = this.state.teams.find(team => team.name === event.target.value);
 
     if (event.target.id === "cmbTeam1") {
-      newMatch.teamId1 = event.target.id;
+      newMatch.teamId1 = team.id;
     } else {
-      newMatch.teamId2 = event.target.id;
+      newMatch.teamId2 = team.id;
     }
 
     this.setState({
       match: newMatch
     });
+  }
+
+  onChangeGoal(event) {
+    let newMatch = Object.assign({}, this.state.match);
+
+    if (event.target.id === "txtGoals1") {
+      newMatch.teamId1Goals = event.target.value;
+    } else {
+      newMatch.teamId2Goals = event.target.value;
+    }
+
+    this.setState({
+      match: newMatch
+    });
+
   }
 
   render() {
@@ -102,6 +120,7 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
+        {JSON.stringify(this.state)}
         <Form onSubmit={this.save} errors={this.state.errors}>
           <ComboBox
             id="cmbTeam1"
@@ -121,8 +140,10 @@ export default class MatchView extends React.Component {
               value: team.name
             }))}
           />
-          <NumberBox id="txtTore1" onChange={this.onChangeGoal}
-            value={this.state.match.team1Goals}
+          <NumberBox id="txtGoals1" onChange={this.onChangeGoal}
+            value={this.state.match.team1Goals} />
+          <NumberBox id="txtGoals2" onChange={this.onChangeGoal}
+            value={this.state.match.team2Goals} />
         </Form>
       </div>
     );

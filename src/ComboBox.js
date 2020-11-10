@@ -13,7 +13,7 @@ export default function ComboBox(props) {
       <select
         id={props.id}
         name={props.id}
-        onChange={props.onChangr}
+        onChange={props.onChange}
         value={props.value}
         className="form-control"
       >
