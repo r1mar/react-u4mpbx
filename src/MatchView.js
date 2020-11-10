@@ -144,7 +144,6 @@ export default class MatchView extends React.Component {
         <div>
           {lblId}
         </div>
-        {JSON.stringify(this.state)}
         <Form onSubmit={this.save} errors={this.state.errors}>
           <TextBox id="txtGameday" label="Spieltag" onChange={this.onChangeGameDay} value={this.state.match.gameDay} />
           <ComboBox
@@ -154,7 +153,7 @@ export default class MatchView extends React.Component {
             options={this.state.teams.map(team => ({
               id: team.id,
               value: team.name
-            }))}
+            }))} selectedId={this.state.team1Id}
           />
           <ComboBox
             id="cmbTeam2"
