@@ -11,7 +11,11 @@ export default class MatchView extends React.Component {
     super(props);
 
     this.state = {
-      match: {},
+      match: {
+        gameDay: "",
+        team1Goals: 0,
+        team2Goals: 0
+      },
       errors: [],
       teams: []
     };
@@ -112,10 +116,10 @@ export default class MatchView extends React.Component {
     let newMatch = Object.assign({}, this.state.match);
 
     if (event.target.id === "txtGoals1") {
-      newMatch.team1Goals = event.target.value;
+      newMatch.team1Goals = +event.target.value;
 
     } else {
-      newMatch.team2Goals = event.target.value;
+      newMatch.team2Goals = +event.target.value;
 
     }
 
