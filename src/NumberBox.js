@@ -7,7 +7,7 @@ export default function NumberBox(props) {
       <input
         id={props.id}
         name={props.id}
-        type="text"
+        type="number"
         className="form-control"
         onChange={props.onChange}
         value={props.value}
