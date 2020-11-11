@@ -93,9 +93,11 @@ export default class MatchView extends React.Component {
       team = this.state.teams.find(team => team.name === event.target.value);
 
     if (event.target.id === "cmbTeam1") {
-      newMatch.team1Id = team.id;
+      newMatch.team1Id = event.target.value;
+
     } else {
-      newMatch.team2Id = team.id;
+      newMatch.team2Id = event.target.value;
+
     }
 
     this.setState({
@@ -158,7 +160,7 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team1.name}
+            value={this.state.match.team1.id}
             required
           />
           <ComboBox
@@ -169,7 +171,7 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team2.name}
+            value={this.state.match.team2.id}
             required
           />
           <NumberBox

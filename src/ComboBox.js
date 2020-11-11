@@ -3,7 +3,7 @@ import FormGroup from "./FormGroup";
 
 export default function ComboBox(props) {
   let options = props.options.map(option => (
-    <option key={option.id}>{option.value}</option>
+    <option key={option.id} value={option.id}>{option.value}</option>
   ));
 
   return (
@@ -14,6 +14,7 @@ export default function ComboBox(props) {
         onChange={props.onChange}
         value={props.value}
         className="form-control"
+        required={props.required}
       >
         <option key="-1" id="-1" />
         {options}
