@@ -13,8 +13,8 @@ export default class MatchView extends React.Component {
     this.state = {
       match: {
         gameDay: "",
-        //team1Goals: null,
-        //team2Goals: 0,
+        team1Goals: "",
+        team2Goals: "",
         team1: {},
         team2: {}
       },
@@ -148,6 +148,7 @@ export default class MatchView extends React.Component {
             label="Spieltag"
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
+            required
           />
           <ComboBox
             id="cmbTeam1"
@@ -158,6 +159,7 @@ export default class MatchView extends React.Component {
               value: team.name
             }))}
             value={this.state.match.team1.name}
+            required
           />
           <ComboBox
             id="cmbTeam2"
@@ -168,16 +170,19 @@ export default class MatchView extends React.Component {
               value: team.name
             }))}
             value={this.state.match.team2.name}
+            required
           />
           <NumberBox
             id="txtGoals1"
             onChange={this.onChangeGoal}
             value={this.state.match.team1Goals}
+            required
           />
           <NumberBox
             id="txtGoals2"
             onChange={this.onChangeGoal}
             value={this.state.match.team2Goals}
+            required
           />
         </Form>
       </div>
