@@ -3,7 +3,7 @@ import FormGroup from "./FormGroup";
 
 export default function TextBox(props) {
   return (
-    <FormGroup forId={props.id} label={props.label}>
+    <FormGroup forId={props.id} label={props.label} error={props.error}>
       <input
         id={props.id}
         name={props.id}

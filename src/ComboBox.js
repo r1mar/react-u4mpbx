@@ -15,6 +15,7 @@ export default function ComboBox(props) {
         value={props.value}
         className="form-control"
         required={props.required}
+        error={props.error}
       >
         <option key="-1" id="-1" />
         {options}
