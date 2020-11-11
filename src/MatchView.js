@@ -68,24 +68,24 @@ export default class MatchView extends React.Component {
     event.preventDefault();
 
     this.setState({
-      errors: [],
-      formValidated: true
+      errors: []
     });
 
     if (this.props.match.params.id) {
       result = service.updateMatch(this.state.match);
+
     } else {
       result = service.createMatch(this.state.match);
 
       result.then(match => {
         this.props.history.push("/match/" + match.id);
       });
+
     }
 
     result.catch(error => {
       this.setState({
-        errors: [error.message],
-        formValidated: false
+        errors: [error.message]
       });
     });
   }
@@ -103,16 +103,14 @@ export default class MatchView extends React.Component {
     }
 
     this.setState({
-      match: newMatch,
-      formValidated: false
+      match: newMatch
     });
   }
 
   onChangeGameDay(event) {
     this.setState({
       match: Object.assign({}, this.state.match, {
-        gameDay: event.target.value,
-        formValidated: false
+        gameDay: event.target.value
       })
     });
   }
@@ -131,8 +129,7 @@ export default class MatchView extends React.Component {
     }
 
     this.setState({
-      match: newMatch,
-      formValidated: false
+      match: newMatch
     });
   }
 
@@ -149,7 +146,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-        <Form onSubmit={this.save} errors={this.state.errors} validated={this.state.formValidated}>
+        <Form onSubmit={this.save} errors={this.state.errors}>
           <TextBox
             id="txtGameday"
             label="Spieltag"
