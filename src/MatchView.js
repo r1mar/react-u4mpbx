@@ -13,8 +13,10 @@ export default class MatchView extends React.Component {
     this.state = {
       match: {
         gameDay: "",
-        team1Goals: 0,
-        team2Goals: 0
+        //team1Goals: null,
+        //team2Goals: 0,
+        team1: {},
+        team2: {}
       },
       errors: [],
       teams: []
@@ -71,7 +73,6 @@ export default class MatchView extends React.Component {
 
     if (this.props.match.params.id) {
       result = service.updateMatch(this.state.match);
-
     } else {
       result = service.createMatch(this.state.match);
 
@@ -93,10 +94,8 @@ export default class MatchView extends React.Component {
 
     if (event.target.id === "cmbTeam1") {
       newMatch.team1Id = team.id;
-
     } else {
       newMatch.team2Id = team.id;
-
     }
 
     this.setState({
@@ -116,21 +115,22 @@ export default class MatchView extends React.Component {
     let newMatch = Object.assign({}, this.state.match);
 
     if (event.target.id === "txtGoals1") {
-      newMatch.team1Goals = +event.target.value;
-
+      newMatch.team1Goals = Number.isInteger(event.target.value)
+        ? +event.target.value
+        : event.target.value;
     } else {
-      newMatch.team2Goals = +event.target.value;
-
+      newMatch.team2Goals = Number.isInteger(event.target.value)
+        ? +event.target.value
+        : event.target.value;
     }
 
     this.setState({
       match: newMatch
     });
-
   }
 
   render() {
-    let lblId = this.state.match.id ? (<h1># {this.state.match.id}</h1>) : null;
+    let lblId = this.state.match.id ? <h1># {this.state.match.id}</h1> : null;
 
     return (
       <div>
@@ -141,11 +141,14 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
-        <div>
-          {lblId}
-        </div>
+        <div>{lblId}</div>
         <Form onSubmit={this.save} errors={this.state.errors}>
-          <TextBox id="txtGameday" label="Spieltag" onChange={this.onChangeGameDay} value={this.state.match.gameDay} />
+          <TextBox
+            id="txtGameday"
+            label="Spieltag"
+            onChange={this.onChangeGameDay}
+            value={this.state.match.gameDay}
+          />
           <ComboBox
             id="cmbTeam1"
             label="Gastgeber:"
@@ -153,7 +156,8 @@ export default class MatchView extends React.Component {
             options={this.state.teams.map(team => ({
               id: team.id,
               value: team.name
-            }))} selectedId={this.state.team1Id}
+            }))}
+            value={this.state.match.team1.name}
           />
           <ComboBox
             id="cmbTeam2"
@@ -163,11 +167,18 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
+            value={this.state.match.team2.name}
           />
-          <NumberBox id="txtGoals1" onChange={this.onChangeGoal}
-            value={this.state.match.team1Goals} />
-          <NumberBox id="txtGoals2" onChange={this.onChangeGoal}
-            value={this.state.match.team2Goals} />
+          <NumberBox
+            id="txtGoals1"
+            onChange={this.onChangeGoal}
+            value={this.state.match.team1Goals}
+          />
+          <NumberBox
+            id="txtGoals2"
+            onChange={this.onChangeGoal}
+            value={this.state.match.team2Goals}
+          />
         </Form>
       </div>
     );
