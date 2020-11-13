@@ -12,6 +12,7 @@ export default function NumberBox(props) {
         onChange={props.onChange}
         value={props.value}
         required={props.required}
+        min={props.min}
       />
     </FormGroup>
   );

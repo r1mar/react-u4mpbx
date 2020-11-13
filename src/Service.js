@@ -156,11 +156,15 @@ class Service {
       let maxId = -1;
 
       if (!match.team1Id) {
-        throw new FieldError("team1Id", "Gastgeber nicht angegeben");
+        throw new FieldError("team1Id", "Das ist ein Pflichtfeld");
       }
 
       if (!match.team2Id) {
-        throw new FieldError("team2Id", "Gast nicht angegeben");
+        throw new FieldError("team2Id", "Das ist ein Pflichtfeld");
+      }
+
+      if(match.team1Id === match.team2Id) {
+        throw new FieldError("team2Id", "Wählen Sie zwei unterschiedliche Teams aus");
       }
 
       this.matches.forEach(match => {

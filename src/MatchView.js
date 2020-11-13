@@ -153,7 +153,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-        {JSON.stringify(this.state.match)}
+        
         <Form
           onSubmit={this.save}
           errors={this.state.errors}
@@ -196,6 +196,7 @@ export default class MatchView extends React.Component {
             errors={this.state.errors.filter(
               error => error instanceof FieldError && error.field === "team2Id"
             )}
+            min="0"
           />
           <NumberBox
             id="txtGoals1"
@@ -206,6 +207,7 @@ export default class MatchView extends React.Component {
               error =>
                 error instanceof FieldError && error.field === "team1Goals"
             )}
+            min="0"
           />
           <NumberBox
             id="txtGoals2"
