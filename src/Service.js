@@ -155,11 +155,11 @@ class Service {
     return new Promise(resolve => {
       let maxId = -1;
 
-      if (match.team1Id) {
+      if (!match.team1Id) {
         throw new FieldError("team1Id", "Gastgeber nicht angegeben");
       }
 
-      if (match.team2Id) {
+      if (!match.team2Id) {
         throw new FieldError("team2Id", "Gast nicht angegeben");
       }
 
