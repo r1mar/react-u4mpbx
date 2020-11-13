@@ -153,13 +153,14 @@ export default class MatchView extends React.Component {
         </ul>
         <div>{lblId}</div>
         {JSON.stringify(this.state.match)}
-        <Form onSubmit={this.save} errors={this.state.errors}>
+        <Form onSubmit={this.save} errors={this.state.errors} validated={this.state}>
           <TextBox
             id="txtGameday"
             label="Spieltag"
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
             required
+            error={this.state.errors.filter(error => error instanceof FieldError && error.field === "gameDay")}
           />{" "}
           <ComboBox
             id="cmbTeam1"
