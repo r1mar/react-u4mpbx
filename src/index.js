@@ -19,6 +19,7 @@ ReactDOM.render(
       <Route path="/matches" component={MatchesView} />
       <Route path="/match/:id" component={MatchView} />
       <Route path="/match" component={MatchView} />
+      <Route path="/not-found" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   </Router>,

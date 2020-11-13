@@ -42,9 +42,13 @@ export default class MatchView extends React.Component {
           });
         })
         .catch(error => {
-          this.setState((state, props) => ({
-            errors: [...state.errors, error.message]
-          }));
+          if ((error.message = "Not found")) {
+            this.props.history.push("/not-found");
+          } else {
+            this.setState((state, props) => ({
+              errors: [...state.errors, error.message]
+            }));
+          }
         });
     }
 
@@ -73,14 +77,12 @@ export default class MatchView extends React.Component {
 
     if (this.props.match.params.id) {
       result = service.updateMatch(this.state.match);
-
     } else {
       result = service.createMatch(this.state.match);
 
       result.then(match => {
         this.props.history.push("/match/" + match.id);
       });
-
     }
 
     result.catch(error => {
@@ -96,10 +98,8 @@ export default class MatchView extends React.Component {
 
     if (event.target.id === "cmbTeam1") {
       newMatch.team1Id = event.target.value;
-
     } else {
       newMatch.team2Id = event.target.value;
-
     }
 
     this.setState({
@@ -153,7 +153,7 @@ export default class MatchView extends React.Component {
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
             required
-          />
+          />{" "}
           <ComboBox
             id="cmbTeam1"
             label="Gastgeber:"
