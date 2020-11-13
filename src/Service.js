@@ -160,7 +160,7 @@ class Service {
       }
 
       if (match.team2Id) {
-        throw new Error("team2Id", "Gast nicht angegeben");
+        throw new FieldError("team2Id", "Gast nicht angegeben");
       }
 
       this.matches.forEach(match => {

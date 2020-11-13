@@ -6,6 +6,7 @@ import ComboBox from "./ComboBox";
 import NumberBox from "./NumberBox";
 import TextBox from "./TextBox";
 import NotFoundError from "./NotFoundError";
+import FieldError from "./FieldError";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -43,7 +44,7 @@ export default class MatchView extends React.Component {
           });
         })
         .catch(error => {
-          if ((error instanceof NotFoundError)) {
+          if (error instanceof NotFoundError) {
             this.props.history.push("/not-found");
           } else {
             this.setState((state, props) => ({
@@ -153,15 +154,21 @@ export default class MatchView extends React.Component {
         </ul>
         <div>{lblId}</div>
         {JSON.stringify(this.state.match)}
-        <Form onSubmit={this.save} errors={this.state.errors} validated={this.state}>
+        <Form
+          onSubmit={this.save}
+          errors={this.state.errors}
+          validated={this.state.sent}
+        >
           <TextBox
             id="txtGameday"
             label="Spieltag"
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
             required
-            error={this.state.errors.filter(error => error instanceof FieldError && error.field === "gameDay")}
-          />{" "}
+            errors={this.state.errors.filter(
+              error => error instanceof FieldError && error.field === "gameDay"
+            )}
+          />
           <ComboBox
             id="cmbTeam1"
             label="Gastgeber:"
@@ -172,6 +179,9 @@ export default class MatchView extends React.Component {
             }))}
             value={this.state.match.team1Id}
             required
+            errors={this.state.errors.filter(
+              error => error instanceof FieldError && error.field === "team1Id"
+            )}
           />
           <ComboBox
             id="cmbTeam2"
@@ -183,18 +193,29 @@ export default class MatchView extends React.Component {
             }))}
             value={this.state.match.team2Id}
             required
+            errors={this.state.errors.filter(
+              error => error instanceof FieldError && error.field === "team2Id"
+            )}
           />
           <NumberBox
             id="txtGoals1"
             onChange={this.onChangeGoal}
             value={this.state.match.team1Goals}
             required
+            errors={this.state.errors.filter(
+              error =>
+                error instanceof FieldError && error.field === "team1Goals"
+            )}
           />
           <NumberBox
             id="txtGoals2"
             onChange={this.onChangeGoal}
             value={this.state.match.team2Goals}
             required
+            errors={this.state.errors.filter(
+              error =>
+                error instanceof FieldError && error.field === "team2Goals"
+            )}
           />
         </Form>
       </div>

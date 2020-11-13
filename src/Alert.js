@@ -1,9 +1,12 @@
 import React from "react";
+import FieldError from "./FieldError";
 
 export default function Alert(props) {
-  let messages = props.messages.map(message => (
-    <div className="alert alert-danger">{message}</div>
-  ));
+  let messages = props.messages
+    .filter(message => !(message instanceof FieldError))
+    .map(message => {
+      <div className="alert alert-danger">{props.message}</div>;
+    });
 
   return <div>{messages}</div>;
 }
