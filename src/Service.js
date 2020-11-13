@@ -1,3 +1,6 @@
+import FieldError from "./FieldError";
+import NotFoundError from "./NotFoundError";
+
 class Service {
   constructor() {
     this.teams = [
@@ -88,7 +91,7 @@ class Service {
       if (result) {
         resolve(Object.assign({}, result));
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }
@@ -118,7 +121,7 @@ class Service {
         Object.assign(aTeam, team);
         resolve(team);
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }
@@ -133,7 +136,7 @@ class Service {
         this.teams.splice(index, 1);
         resolve();
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }
@@ -152,12 +155,12 @@ class Service {
     return new Promise(resolve => {
       let maxId = -1;
 
-      if(match.team1Id) {
-        throw new Error("Gastgeber nicht angegeben");
+      if (match.team1Id) {
+        throw new FieldError("team1Id", "Gastgeber nicht angegeben");
       }
 
-      if(match.team12d) {
-        throw new Error("Gast nicht angegeben");
+      if (match.team2Id) {
+        throw new Error("team2Id", "Gast nicht angegeben");
       }
 
       this.matches.forEach(match => {
@@ -174,8 +177,10 @@ class Service {
 
   readMatch(id) {
     return new Promise((resolve, reject) => {
-      let result = Object.assign({}, this.matches
-        .find(match => match.id == id));
+      let result = Object.assign(
+        {},
+        this.matches.find(match => match.id == id)
+      );
 
       if (result) {
         result.team1 = Object.assign(
@@ -188,7 +193,7 @@ class Service {
         );
         resolve(result);
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }
@@ -241,7 +246,7 @@ class Service {
 
         resolve(match);
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }
@@ -256,7 +261,7 @@ class Service {
         this.matches.splice(index, 1);
         resolve();
       } else {
-        reject(new Error("Nicht gefunden"));
+        reject(new NotFoundError());
       }
     });
   }

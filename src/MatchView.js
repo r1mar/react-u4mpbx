@@ -5,6 +5,7 @@ import Form from "./Form";
 import ComboBox from "./ComboBox";
 import NumberBox from "./NumberBox";
 import TextBox from "./TextBox";
+import NotFoundError from "./NotFoundError";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -42,11 +43,11 @@ export default class MatchView extends React.Component {
           });
         })
         .catch(error => {
-          if ((error.message = "Not found")) {
+          if ((error instanceof NotFoundError)) {
             this.props.history.push("/not-found");
           } else {
             this.setState((state, props) => ({
-              errors: [...state.errors, error.message]
+              errors: [...state.errors, error]
             }));
           }
         });
@@ -61,7 +62,7 @@ export default class MatchView extends React.Component {
       })
       .catch(error => {
         this.setState((state, props) => ({
-          errors: [...state.errors, error.message]
+          errors: [...state.errors, error]
         }));
       });
   }
@@ -87,7 +88,7 @@ export default class MatchView extends React.Component {
 
     result.catch(error => {
       this.setState({
-        errors: [error.message]
+        errors: [error]
       });
     });
   }
@@ -97,9 +98,9 @@ export default class MatchView extends React.Component {
       team = this.state.teams.find(team => team.name === event.target.value);
 
     if (event.target.id === "cmbTeam1") {
-      newMatch.team1Id = event.target.value;
+      newMatch.team1Id = +event.target.value;
     } else {
-      newMatch.team2Id = event.target.value;
+      newMatch.team2Id = +event.target.value;
     }
 
     this.setState({
@@ -146,6 +147,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
+        {JSON.stringify(this.state.match)}
         <Form onSubmit={this.save} errors={this.state.errors}>
           <TextBox
             id="txtGameday"
@@ -162,7 +164,7 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team1.id}
+            value={this.state.match.team1Id}
             required
           />
           <ComboBox
@@ -173,7 +175,7 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team2.id}
+            value={this.state.match.team2Id}
             required
           />
           <NumberBox

@@ -18,7 +18,7 @@ export default function ComboBox(props) {
         className="form-control"
         required={props.required}
       >
-        <option key="-1" id="-1" />
+        <option key="-1" id="" />
         {options}
       </select>
     </FormGroup>
