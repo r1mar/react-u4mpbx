@@ -73,7 +73,8 @@ export default class MatchView extends React.Component {
     event.preventDefault();
 
     this.setState({
-      errors: []
+      errors: [],
+      sent: true
     });
 
     if (this.props.match.params.id) {
@@ -94,8 +95,9 @@ export default class MatchView extends React.Component {
   }
 
   onSelectTeam(event) {
-    let newMatch = Object.assign({}, this.state.match),
-      team = this.state.teams.find(team => team.name === event.target.value);
+    let newMatch = Object.assign({}, this.state.match, {
+      sent: false
+    });
 
     if (event.target.id === "cmbTeam1") {
       newMatch.team1Id = +event.target.value;
@@ -111,13 +113,16 @@ export default class MatchView extends React.Component {
   onChangeGameDay(event) {
     this.setState({
       match: Object.assign({}, this.state.match, {
-        gameDay: event.target.value
+        gameDay: event.target.value,
+        sent: false
       })
     });
   }
 
   onChangeGoal(event) {
-    let newMatch = Object.assign({}, this.state.match);
+    let newMatch = Object.assign({}, this.state.match, {
+      sent: false
+    });
 
     if (event.target.id === "txtGoals1") {
       newMatch.team1Goals = Number.isInteger(event.target.value)
