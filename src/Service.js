@@ -152,6 +152,14 @@ class Service {
     return new Promise(resolve => {
       let maxId = -1;
 
+      if(match.team1Id) {
+        throw new Error("Gastgeber nicht angegeben");
+      }
+
+      if(match.team12d) {
+        throw new Error("Gast nicht angegeben");
+      }
+
       this.matches.forEach(match => {
         maxId = match.id > maxId ? match.id : max.id;
       });
