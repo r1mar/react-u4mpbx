@@ -55,7 +55,7 @@ export default class MatchesView extends React.Component {
   }
 
   getName(match) {
-    return match.team1.name + " : " + match.team2.name;
+    return match.host.name + " : " + match.guest.name;
   }
 
   showMatch(event) {
