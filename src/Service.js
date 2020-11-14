@@ -75,15 +75,15 @@ class Service {
         id: 3,
         host: {
           id: 8,
-          goals: 1
+          goals: 1,
+          name: "SGE"
         },
         guest: {
           id: 9,
-          goals: 1
+          goals: 1,
+          name: "Arminia"
         },
-        gameDay: "20/21 1",
-        team1Goals: 1,
-        team2Goals: 1
+        gameDay: "20/21 1"
       }
     ];
   }
@@ -169,29 +169,35 @@ class Service {
     return Promise.all(result);
   }
 
+  validateMatch() {
+    if (!match.host.id) {
+      throw new FieldError("host.id", "Das ist ein Pflichtfeld");
+    }
+
+    if (!match.guest.id) {
+      throw new FieldError("guest.id", "Das ist ein Pflichtfeld");
+    }
+
+    if (match.host.id === match.guest.id) {
+      throw new FieldError(
+        "guest.id",
+        "Wählen Sie zwei unterschiedliche Teams aus"
+      );
+    }
+  }
+
   createMatch(match) {
     return new Promise(resolve => {
       let maxId = -1;
 
-      if (!match.team1Id) {
-        throw new FieldError("team1Id", "Das ist ein Pflichtfeld");
-      }
-
-      if (!match.team2Id) {
-        throw new FieldError("team2Id", "Das ist ein Pflichtfeld");
-      }
-
-      if(match.team1Id === match.team2Id) {
-        throw new FieldError("team2Id", "Wählen Sie zwei unterschiedliche Teams aus");
-      }
+      validateMatch("creating");
 
       this.matches.forEach(match => {
         maxId = match.id > maxId ? match.id : max.id;
       });
 
       match.id = ++maxId;
-      delete match.team1;
-      delete match.team2;
+
       this.matches.push(Object.assign({}, match));
       resolve(match);
     });
@@ -226,15 +232,6 @@ class Service {
         .map(match => {
           let result = Object.assign({}, match);
 
-          result.team1 = Object.assign(
-            {},
-            this.teams.find(team => team.id === result.team1Id)
-          );
-          result.team2 = Object.assign(
-            {},
-            this.teams.find(team => team.id === result.team2Id)
-          );
-
           return result;
         })
         .sort((a, b) => {
@@ -244,10 +241,10 @@ class Service {
           if (a.gameDay < b.gameDay) {
             return -1;
           }
-          if (a.team1.name > b.team1.name) {
+          if (a.host.name > b.host.name) {
             return 1;
           }
-          if (a.team1.name < b.team1.name) {
+          if (a.guest.name < b.guest.name) {
             return -1;
           }
 
@@ -263,8 +260,8 @@ class Service {
 
       if (aMatch) {
         Object.assign(aMatch, match);
-        delete aMatch.team1;
-        delete aMatch.team2;
+
+        validateMatch("updating");
 
         resolve(match);
       } else {

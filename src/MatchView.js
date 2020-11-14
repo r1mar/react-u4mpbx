@@ -15,10 +15,8 @@ export default class MatchView extends React.Component {
     this.state = {
       match: {
         gameDay: "",
-        team1Goals: "",
-        team2Goals: "",
-        team1: {},
-        team2: {}
+        host: {},
+        guest: {}
       },
       errors: [],
       teams: []
@@ -97,13 +95,14 @@ export default class MatchView extends React.Component {
 
   onSelectTeam(event) {
     let newMatch = Object.assign({}, this.state.match, {
-      sent: false
-    });
+        sent: false
+      }),
+      team = this.state.teams.find(team => team.id === +event.target.value);
 
     if (event.target.id === "cmbTeam1") {
-      newMatch.team1Id = +event.target.value;
+      newMatch.host = Object.assign({}, this.state.match.host, team);
     } else {
-      newMatch.team2Id = +event.target.value;
+      newMatch.guest = Object.assign({}, this.state.match.guest, team);
     }
 
     this.setState({
@@ -126,11 +125,11 @@ export default class MatchView extends React.Component {
     });
 
     if (event.target.id === "txtGoals1") {
-      newMatch.team1Goals = Number.isInteger(event.target.value)
+      newMatch.host.goals = Number.isInteger(event.target.value)
         ? +event.target.value
         : event.target.value;
     } else {
-      newMatch.team2Goals = Number.isInteger(event.target.value)
+      newMatch.guest.goals = Number.isInteger(event.target.value)
         ? +event.target.value
         : event.target.value;
     }
@@ -153,7 +152,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-        
+
         <Form
           onSubmit={this.save}
           errors={this.state.errors}
@@ -180,7 +179,7 @@ export default class MatchView extends React.Component {
             value={this.state.match.team1Id}
             required
             errors={this.state.errors.filter(
-              error => error instanceof FieldError && error.field === "team1Id"
+              error => error instanceof FieldError && error.field === "host.id"
             )}
           />
           <ComboBox
@@ -194,7 +193,7 @@ export default class MatchView extends React.Component {
             value={this.state.match.team2Id}
             required
             errors={this.state.errors.filter(
-              error => error instanceof FieldError && error.field === "team2Id"
+              error => error instanceof FieldError && error.field === "guest.id"
             )}
             min="0"
           />
@@ -205,7 +204,7 @@ export default class MatchView extends React.Component {
             required
             errors={this.state.errors.filter(
               error =>
-                error instanceof FieldError && error.field === "team1Goals"
+                error instanceof FieldError && error.field === "host.goals"
             )}
             min="0"
           />
@@ -216,7 +215,7 @@ export default class MatchView extends React.Component {
             required
             errors={this.state.errors.filter(
               error =>
-                error instanceof FieldError && error.field === "team2Goals"
+                error instanceof FieldError && error.field === "guest.goals"
             )}
           />
         </Form>
