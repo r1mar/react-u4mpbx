@@ -94,9 +94,7 @@ export default class MatchView extends React.Component {
   }
 
   onSelectTeam(event) {
-    let newMatch = Object.assign({}, this.state.match, {
-        sent: false
-      }),
+    let newMatch = Object.assign({}, this.state.match),
       team = this.state.teams.find(team => team.id === +event.target.value);
 
     if (event.target.id === "cmbTeam1") {
@@ -106,23 +104,22 @@ export default class MatchView extends React.Component {
     }
 
     this.setState({
-      match: newMatch
+      match: newMatch,
+      sent: false
     });
   }
 
   onChangeGameDay(event) {
     this.setState({
       match: Object.assign({}, this.state.match, {
-        gameDay: event.target.value,
-        sent: false
-      })
+        gameDay: event.target.value
+      }),
+      sent: false
     });
   }
 
   onChangeGoal(event) {
-    let newMatch = Object.assign({}, this.state.match, {
-      sent: false
-    });
+    let newMatch = Object.assign({}, this.state.match);
 
     if (event.target.id === "txtGoals1") {
       newMatch.host.goals = Number.isInteger(event.target.value)
@@ -135,7 +132,8 @@ export default class MatchView extends React.Component {
     }
 
     this.setState({
-      match: newMatch
+      match: newMatch,
+      sent: false
     });
   }
 
@@ -152,7 +150,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-
+          {JSON.stringify(this.state)}
         <Form
           onSubmit={this.save}
           errors={this.state.errors}

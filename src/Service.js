@@ -187,7 +187,8 @@ class Service {
   }
 
   createMatch(match) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      try {
       let maxId = -1;
 
       validateMatch("creating");
@@ -200,6 +201,9 @@ class Service {
 
       this.matches.push(Object.assign({}, match));
       resolve(match);
+      } catch(error) {
+        reject(error);
+      }
     });
   }
 
