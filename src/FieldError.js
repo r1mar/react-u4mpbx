@@ -1,6 +1,6 @@
-import Error from "./Error";
+import ErrorRoot from "./Error";
 
-export default class FieldError extends Error {
+export default class FieldError extends ErrorRoot {
   constructor(field, ...params) {
     super(...params);
 

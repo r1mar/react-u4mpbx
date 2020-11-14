@@ -150,7 +150,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-          {JSON.stringify(this.state)}
+          
         <Form
           onSubmit={this.save}
           errors={this.state.errors}

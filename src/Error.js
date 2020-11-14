@@ -1,4 +1,4 @@
-export default class Error {
+export default class ErrorRoot {
   constructor(message, fileName, lineNumber) {
     this.message = message;
     this.fileName = fileName;
