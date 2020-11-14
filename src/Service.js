@@ -45,24 +45,42 @@ class Service {
     this.matches = [
       {
         id: 1,
-        team1Id: 4,
-        team2Id: 5,
-        gameDay: "20/21 1",
-        team1Goals: 8,
-        team2Goals: 0
+        host: {
+          id: 4,
+          goals: 8,
+          name: "FC Bayern"
+        },
+        guest: {
+          id: 5,
+          goals: 0,
+          name: "Schalke"
+        },
+        gameDay: "20/21 1"
       },
       {
         id: 2,
-        team1Id: 6,
-        team2Id: 7,
-        gameDay: "20/21 1",
-        team1Goals: 2,
-        team2Goals: 3
+        host: {
+          id: 6,
+          goals: 2,
+          name: "Vfb"
+        },
+        guest: {
+          id: 7,
+          goals: 3,
+          name: "Freiburg"
+        },
+        gameDay: "20/21 1"
       },
       {
         id: 3,
-        team1Id: 8,
-        team2Id: 9,
+        host: {
+          id: 8,
+          goals: 1
+        },
+        guest: {
+          id: 9,
+          goals: 1
+        },
         gameDay: "20/21 1",
         team1Goals: 1,
         team2Goals: 1
