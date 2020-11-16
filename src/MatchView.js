@@ -15,8 +15,12 @@ export default class MatchView extends React.Component {
     this.state = {
       match: {
         gameDay: "",
-        host: {},
-        guest: {}
+        host: {
+          goals: 0
+        },
+        guest: {
+          goals: 0
+        }
       },
       errors: [],
       teams: []
@@ -150,7 +154,7 @@ export default class MatchView extends React.Component {
           </li>
         </ul>
         <div>{lblId}</div>
-          
+
         <Form
           onSubmit={this.save}
           errors={this.state.errors}
@@ -174,7 +178,7 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team1Id}
+            value={this.state.match.host.id}
             required
             errors={this.state.errors.filter(
               error => error instanceof FieldError && error.field === "host.id"
@@ -188,34 +192,38 @@ export default class MatchView extends React.Component {
               id: team.id,
               value: team.name
             }))}
-            value={this.state.match.team2Id}
+            value={this.state.match.guest.id}
             required
             errors={this.state.errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
             )}
             min="0"
           />
-          <NumberBox
-            id="txtGoals1"
-            onChange={this.onChangeGoal}
-            value={this.state.match.team1Goals}
-            required
-            errors={this.state.errors.filter(
-              error =>
-                error instanceof FieldError && error.field === "host.goals"
-            )}
-            min="0"
-          />
-          <NumberBox
-            id="txtGoals2"
-            onChange={this.onChangeGoal}
-            value={this.state.match.team2Goals}
-            required
-            errors={this.state.errors.filter(
-              error =>
-                error instanceof FieldError && error.field === "guest.goals"
-            )}
-          />
+          <div className="form-row">
+            <NumberBox
+              id="txtGoals1"
+              onChange={this.onChangeGoal}
+              value={this.state.match.host.goals}
+              required
+              errors={this.state.errors.filter(
+                error =>
+                  error instanceof FieldError && error.field === "host.goals"
+              )}
+              min="0"
+              inline={true}
+            />
+            <NumberBox
+              id="txtGoals2"
+              onChange={this.onChangeGoal}
+              value={this.state.match.guest.goals}
+              required
+              errors={this.state.errors.filter(
+                error =>
+                  error instanceof FieldError && error.field === "guest.goals"
+              )}
+              inline={true}
+            />
+          </div>
         </Form>
       </div>
     );

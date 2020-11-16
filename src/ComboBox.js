@@ -9,7 +9,12 @@ export default function ComboBox(props) {
   ));
 
   return (
-    <FormGroup forId={props.id} label={props.label} errors={props.errors}>
+    <FormGroup
+      forId={props.id}
+      label={props.label}
+      errors={props.errors}
+      inline={props.inline}
+    >
       <select
         id={props.id}
         name={props.id}

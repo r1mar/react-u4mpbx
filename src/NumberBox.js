@@ -3,7 +3,12 @@ import FormGroup from "./FormGroup";
 
 export default function NumberBox(props) {
   return (
-    <FormGroup forId={props.id} label={props.label} errors={props.errors}>
+    <FormGroup
+      forId={props.id}
+      label={props.label}
+      errors={props.errors}
+      inline={props.inline}
+    >
       <input
         id={props.id}
         name={props.id}

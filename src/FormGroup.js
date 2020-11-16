@@ -8,7 +8,7 @@ export default function FormGroup(props) {
   ) : null;
 
   return (
-    <div className="form-group">
+    <div className={props.inline ? "form-group col" : "form-group"}>
       <label htmlFor={props.forId}>{props.label}</label>
       {props.children}
       {errors}
