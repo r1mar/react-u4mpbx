@@ -169,7 +169,7 @@ class Service {
     return Promise.all(result);
   }
 
-  validateMatch() {
+  validateMatch(match) {
     if (!match.host.id) {
       throw new FieldError("host.id", "Das ist ein Pflichtfeld");
     }
@@ -189,19 +189,19 @@ class Service {
   createMatch(match) {
     return new Promise((resolve, reject) => {
       try {
-      let maxId = -1;
+        let maxId = -1;
 
-      validateMatch("creating");
+        this.validateMatch(match, "creating");
 
-      this.matches.forEach(match => {
-        maxId = match.id > maxId ? match.id : max.id;
-      });
+        this.matches.forEach(match => {
+          maxId = match.id > maxId ? match.id : max.id;
+        });
 
-      match.id = ++maxId;
+        match.id = ++maxId;
 
-      this.matches.push(Object.assign({}, match));
-      resolve(match);
-      } catch(error) {
+        this.matches.push(Object.assign({}, match));
+        resolve(match);
+      } catch (error) {
         reject(error);
       }
     });
@@ -265,7 +265,7 @@ class Service {
       if (aMatch) {
         Object.assign(aMatch, match);
 
-        validateMatch("updating");
+        this.validateMatch(match, "updating");
 
         resolve(match);
       } else {
