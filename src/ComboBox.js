@@ -3,10 +3,12 @@ import FormGroup from "./FormGroup";
 
 export default function ComboBox(props) {
   let options = props.options.map(option => (
-    <option key={option.id} value={option.id}>
-      {option.value}
-    </option>
-  ));
+      <option key={option.id} value={option.id}>
+        {option.value}
+      </option>
+    )),
+    spaceOption =
+      !props.required || !props.value ? <option key="-1" id="" /> : null;
 
   return (
     <FormGroup
@@ -25,7 +27,7 @@ export default function ComboBox(props) {
         }
         required={props.required}
       >
-        <option key="-1" id="" />
+        {spaceOption}
         {options}
       </select>
     </FormGroup>
