@@ -7,7 +7,7 @@ import NumberBox from "./NumberBox";
 import DateBox from "./DateBox";
 import NotFoundError from "./NotFoundError";
 import FieldError from "./FieldError";
-import bootstrap from "bootstrap-icons/icons/bootstrap.svg";
+import PageHeader from "./PageHeader";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -147,6 +147,7 @@ export default class MatchView extends React.Component {
 
     return (
       <div>
+        <PageHeader />
         <ul className="nav">
           <li className="nav-item">
             <Link to="/matches" className="nav-link">
@@ -154,7 +155,7 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
-        <img src={bootstrap} />
+
         <div>{lblId}</div>
         <Form
           onSubmit={this.save}

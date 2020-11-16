@@ -8,7 +8,10 @@ import TeamsView from "./TeamsView";
 import TeamView from "./TeamView";
 import MatchesView from "./MatchesView";
 import MatchView from "./MatchView";
+
 import "bootstrap/dist/css/bootstrap.min.css";
+import jquery from "jquery";
+import propper from "propper";
 
 ReactDOM.render(
   <Router>
