@@ -54,7 +54,7 @@ export default class Table extends React.Component {
   getContent(row, column) {
     let value;
 
-    if (Column.type === "date") {
+    if (column.type === "date") {
       value = new Date(row[column.name]).toLocaleDateString();
     } else if (typeof column.name === "function") {
       value = column.name(row);
