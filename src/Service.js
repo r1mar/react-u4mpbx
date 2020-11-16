@@ -55,7 +55,7 @@ class Service {
           goals: 0,
           name: "Schalke"
         },
-        gameDay: "20/21 1"
+        gameDay: "2020-01-01"
       },
       {
         id: 2,
@@ -69,7 +69,7 @@ class Service {
           goals: 3,
           name: "Freiburg"
         },
-        gameDay: "20/21 1"
+        gameDay: "2020-02-01"
       },
       {
         id: 3,
@@ -83,7 +83,7 @@ class Service {
           goals: 1,
           name: "Arminia"
         },
-        gameDay: "20/21 1"
+        gameDay: "2020-03-01"
       }
     ];
   }

@@ -4,7 +4,7 @@ import service from "./Service";
 import Form from "./Form";
 import ComboBox from "./ComboBox";
 import NumberBox from "./NumberBox";
-import TextBox from "./TextBox";
+import DateBox from "./DateBox";
 import NotFoundError from "./NotFoundError";
 import FieldError from "./FieldError";
 
@@ -156,7 +156,7 @@ export default class MatchView extends React.Component {
           errors={this.state.errors}
           validated={this.state.sent}
         >
-          <TextBox
+          <DateBox
             id="txtGameday"
             label="Spieltag"
             onChange={this.onChangeGameDay}

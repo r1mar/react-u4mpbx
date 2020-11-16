@@ -89,7 +89,8 @@ export default class MatchesView extends React.Component {
             {
               id: 2,
               label: "SpielTage",
-              name: "gameDay"
+              name: "gameDay",
+              type: "Date"
             },
             {
               id: 3,

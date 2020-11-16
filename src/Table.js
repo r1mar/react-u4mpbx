@@ -44,11 +44,45 @@ export default class Table extends React.Component {
       }
     });
 
-    this.props.delete(toDeleteIds, toDeleteItems).then( () => {
-    this.setState({
-      selection: {}
+    this.props.delete(toDeleteIds, toDeleteItems).then(() => {
+      this.setState({
+        selection: {}
+      });
     });
-    });
+  }
+
+  getContent(row, column) {
+    let value;
+
+    if (Column.type === "date") {
+      value = new Date(row[column.name]).toLocaleDateString();
+    } else if (typeof column.name === "function") {
+      value = column.name(row);
+    } else {
+      value = row[column.name];
+    }
+
+    let content = column.navigation ? (
+      <a id={row.id.toString()} onClick={column.navigation} href="#">
+        {value}
+      </a>
+    ) : (
+      value
+    );
+
+    if (column.name === "id") {
+      return (
+        <th id={row.id.toString()} scope="row" key={column.id}>
+          {content}
+        </th>
+      );
+    } else {
+      return (
+        <td id={row.id.toString()} key={column.id}>
+          {content}
+        </td>
+      );
+    }
   }
 
   render() {
@@ -57,13 +91,13 @@ export default class Table extends React.Component {
         <thead>
           <tr>
             <th colSpan={this.props.columns.length + 1} className="text-right">
-              <button className="btn btn-secondary" onClick={this.props.create}>Neu</button>
+              <button className="btn btn-secondary" onClick={this.props.create}>
+                Neu
+              </button>
               <button
                 className="btn btn-danger"
                 onClick={this.delete}
-                disabled={
-                  Object.keys(this.state.selection).length === 0
-                }
+                disabled={Object.keys(this.state.selection).length === 0}
               >
                 Löschen
               </button>
@@ -92,32 +126,7 @@ export default class Table extends React.Component {
 
               let cells =
                 this.props.columns &&
-                this.props.columns.map(column => {
-                  let content = column.navigation ? (
-                    <a
-                      id={row.id.toString()}
-                      onClick={column.navigation}
-                      href="#"
-                    >
-                      {typeof column.name === "function" ? column.name(row) : row[column.name]}
-                    </a>
-                  ) : (
-                    row[column.name]
-                  );
-                  if (column.name === "id") {
-                    return (
-                      <th id={row.id.toString()} scope="row" key={column.id}>
-                        {content}
-                      </th>
-                    );
-                  } else {
-                    return (
-                      <td id={row.id.toString()} key={column.id}>
-                        {content}
-                      </td>
-                    );
-                  }
-                });
+                this.props.columns.map(column => this.getContent(row, column));
 
               return (
                 <tr
