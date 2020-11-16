@@ -1,12 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import globe from "bootstrap-icons/icons/globe.svg";
 
 export default class PageHeader extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      collapsed: true
+    };
+
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  toggleMenu(){
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
   }
 
   download() {
@@ -25,12 +34,12 @@ export default class PageHeader extends React.Component {
 
   render() {
     return (
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
-          <img src={globe} with="32" height="32" />
+          Fußball KI
         </Link>
-        <button
-          class="navbar-toggler"
+        <button onClick={this.toggleMenu}
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
           data-target="#navbarSupportedContent"
@@ -38,10 +47,10 @@ export default class PageHeader extends React.Component {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon" />
+          <span className="navbar-toggler-icon" />
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div className={this.state.collapsed ? "collapse navbar-collapse" : "navbar-collapse"} id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/teams">
