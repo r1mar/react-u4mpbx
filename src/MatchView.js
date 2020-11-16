@@ -7,6 +7,7 @@ import NumberBox from "./NumberBox";
 import DateBox from "./DateBox";
 import NotFoundError from "./NotFoundError";
 import FieldError from "./FieldError";
+import bootstrap from "bootstrap-icons/icons/bootstrap.svg";
 
 export default class MatchView extends React.Component {
   constructor(props) {
@@ -153,8 +154,8 @@ export default class MatchView extends React.Component {
             </Link>
           </li>
         </ul>
+        <img src={bootstrap} />
         <div>{lblId}</div>
-
         <Form
           onSubmit={this.save}
           errors={this.state.errors}
