@@ -14,7 +14,9 @@ export default class PageHeader extends React.Component {
   }
 
   componentDidmount() {
-    const height = this.divElement.clientHeight;
+    this.setState({
+      height: this.divElement.clientHeight
+    });
   }
 
   toggleMenu() {
@@ -27,7 +29,7 @@ export default class PageHeader extends React.Component {
         collapsed: !state.collapsed,
         collapsing: false
       }));
-    }, 10000);
+    }, 350);
   }
 
   download() {
@@ -45,6 +47,11 @@ export default class PageHeader extends React.Component {
   }
 
   render() {
+    let style = {};
+
+    if(this.state.collapsed) {
+      style.height = this.state.height;
+    }
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
@@ -73,6 +80,7 @@ export default class PageHeader extends React.Component {
               ? "navbar-collapse collapse"
               : "navbar-collapse collapse show"
           }
+          {...style}
           id="navbarSupportedContent"
         >
           <ul
