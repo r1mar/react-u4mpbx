@@ -6,16 +6,24 @@ export default class PageHeader extends React.Component {
     super(props);
 
     this.state = {
-      collapsed: true
+      collapsed: true,
+      collapsing: false
     };
 
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  toggleMenu(){
+  toggleMenu() {
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsing: true
     });
+
+    setTimeout(() => {
+      this.setState((state, props) => ({
+        collapsed: !state.collapsed,
+        collapsing: false
+      }));
+    }, 10000);
   }
 
   download() {
@@ -36,21 +44,33 @@ export default class PageHeader extends React.Component {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
-          Fußball KI
+          {this.props.title}
         </Link>
-        <button onClick={this.toggleMenu}
-          className="navbar-toggler"
+        <button
+          onClick={this.toggleMenu}
+          className={
+            this.state.collapsed ? "navbar-toggler collapsed" : "navbar-toggler"
+          }
           type="button"
           data-toggle="collapse"
           data-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent"
-          aria-expanded="false"
+          aria-expanded={this.state.collapsed ? "false" : "true"}
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
 
-        <div className={this.state.collapsed ? "collapse navbar-collapse" : "navbar-collapse"} id="navbarSupportedContent">
+        <div
+          className={
+            this.state.collapsing
+              ? "navbar-collapse collapsing"
+              : this.state.collapsed
+              ? "navbar-collapse collapse"
+              : "navbar-collapse collapse show"
+          }
+          id="navbarSupportedContent"
+        >
           <ul class="navbar-nav mr-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/teams">

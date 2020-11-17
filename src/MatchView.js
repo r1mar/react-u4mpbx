@@ -143,11 +143,15 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let lblId = this.state.match.id ? <h1># {this.state.match.id}</h1> : null;
+    let lblId = this.state.match.id ? (
+      <h1># {"Spiel #" + this.state.match.id}</h1>
+    ) : (
+      "Neues Spiel"
+    );
 
     return (
       <div>
-        <PageHeader />
+        <PageHeader title={lblId} />
         <ul className="nav">
           <li className="nav-item">
             <Link to="/matches" className="nav-link">
