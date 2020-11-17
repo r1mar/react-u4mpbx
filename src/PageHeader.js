@@ -47,12 +47,14 @@ export default class PageHeader extends React.Component {
   }
 
   render() {
-    let style = {};
+    let style = {},
+     btnBack = this.props.history.length && this.props.history.location.pathname !== "/" ? <button className="btn btn-link" onClick={() => this.props.history.goBack()}>Zurück {JSON.stringify(this.props.history.location) }</button> : null;
 
     if(this.state.collapsed) {
       style.height = this.state.height;
     }
     return (
+      <div className="row"><div className="col">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">
           {this.props.title}
@@ -108,6 +110,8 @@ export default class PageHeader extends React.Component {
           </ul>
         </div>
       </nav>
+      {btnBack}
+      </div></div>
     );
   }
 }

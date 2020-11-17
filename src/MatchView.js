@@ -151,16 +151,8 @@ export default class MatchView extends React.Component {
 
     return (
       <div>
-        <PageHeader title={lblId} />
-        <ul className="nav">
-          <li className="nav-item">
-            <Link to="/matches" className="nav-link">
-              Zurück
-            </Link>
-          </li>
-        </ul>
+        <PageHeader title={lblId} history={this.props.history} />
 
-        <div>{lblId}</div>
         <Form
           onSubmit={this.save}
           errors={this.state.errors}
