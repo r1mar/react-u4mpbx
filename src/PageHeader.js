@@ -13,6 +13,10 @@ export default class PageHeader extends React.Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
+  componentDidmount() {
+    const height = this.divElement.clientHeight;
+  }
+
   toggleMenu() {
     this.setState({
       collapsing: true
@@ -71,7 +75,12 @@ export default class PageHeader extends React.Component {
           }
           id="navbarSupportedContent"
         >
-          <ul class="navbar-nav mr-auto">
+          <ul
+            className="navbar-nav mr-auto"
+            ref={divElement => {
+              this.divElement = divElement;
+            }}
+          >
             <li className="nav-item">
               <Link className="nav-link" to="/teams">
                 Vereine
