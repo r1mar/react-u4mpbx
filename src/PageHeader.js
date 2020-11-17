@@ -48,7 +48,7 @@ export default class PageHeader extends React.Component {
 
   render() {
     let style = {},
-     btnBack = this.props.history.length && this.props.history.location.pathname !== "/" ? <button className="btn btn-link" onClick={() => this.props.history.goBack()}>Zurück {JSON.stringify(this.props.history.location) }</button> : null;
+     btnBack = this.props.history.length && this.props.history.location.pathname !== "/" ? <button className="btn btn-link" onClick={() => this.props.history.goBack()}>Zurück </button> : null;
 
     if(this.state.collapsed) {
       style.height = this.state.height;
