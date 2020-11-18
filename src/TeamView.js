@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import service from "./Service";
-import Alert from "./Alert";
+import FieldError from "./FieldError";
 import TextBox from "./TextBox";
 import Form from "./Form";
+import PageHeader from "./PageHeader";
 
 export default class TeamView extends React.Component {
   constructor(props) {
@@ -71,21 +71,21 @@ export default class TeamView extends React.Component {
   }
 
   render() {
-    let lblId = this.props.match.params.id ? (
-      <h1># {this.props.match.params.id}</h1>
-    ) : null;
+    let title = this.props.match.params.id ? (
+      "Verein #" + this.props.match.params.id
+    ) : "Neues Spiel";
 
     return (
       <div>
-        <Link to="/teams">Zurück</Link>
-        {lblId}
-        <Form onSubmit={this.save} errors={this.state.errors}>
+        <PageHeader title={title} history={this.props.history} />
+        <Form onSubmit={this.save} errors={this.state.errors.filter(error => !(error instanceof FieldError))}>
           <TextBox
             id="txtName"
             label="Name:"
             onChange={this.onChange}
             value={this.state.team.name}
             required
+            errors={this.state.errors.filter(error => error instanceof FieldError)}
           />
         </Form>
       </div>

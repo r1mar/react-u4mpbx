@@ -4,6 +4,7 @@ import style from "./style.css";
 import service from "./Service";
 import Alert from "./Alert";
 import Table from "./Table";
+import PageHeader from "./PageHeader";
 
 export default class TeamsView extends React.Component {
   constructor(props) {
@@ -60,13 +61,7 @@ export default class TeamsView extends React.Component {
   render() {
     return (
       <div>
-        <ul className="nav">
-          <li className="nav-item">
-            <Link to="/" className="nav-link">
-              Zurück
-            </Link>
-          </li>
-        </ul>
+        <PageHeader title="Vereine" history={this.props.history} />
 
         <Table
           rows={this.state.teams}
