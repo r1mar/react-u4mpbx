@@ -8,7 +8,8 @@ export default class PageHeader extends React.Component {
 
     this.state = {
       collapsed: true,
-      collapsing: false
+      collapsing: false,
+      errors: []
     };
 
     this.toggleMenu = this.toggleMenu.bind(this);
