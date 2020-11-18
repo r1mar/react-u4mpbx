@@ -4,6 +4,7 @@ import FieldError from "./FieldError";
 import TextBox from "./TextBox";
 import Form from "./Form";
 import PageHeader from "./PageHeader";
+import NotFoundError from "./NotFoundError";
 
 export default class TeamView extends React.Component {
   constructor(props) {
@@ -29,9 +30,13 @@ export default class TeamView extends React.Component {
           });
         })
         .catch(error => {
+          if(error instanceof NotFoundError) {
+            this.props.history.push("/not-found");
+          } else {
           this.setState({
             errors: [error.message]
           });
+          }
         });
     } else {
       this.setState({
@@ -56,6 +61,9 @@ export default class TeamView extends React.Component {
     }
 
     result.catch(error => {
+      if(error instanceof NotFoundError) {
+        this.props.history.push("/not-found");
+      }
       this.setState({
         errors: [error.message]
       });

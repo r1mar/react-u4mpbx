@@ -103,7 +103,7 @@ export default class PageHeader extends React.Component {
             </li>
             <li className="nav-item">
               <a className="nav-link" onClick={this.download}>
-                Speichern
+                Exportieren
               </a>
               <a id="downloadDummy" style={{ display: "none" }} />
             </li>
