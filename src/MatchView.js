@@ -143,15 +143,15 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let lblId = this.state.match.id ? (
-      <h1># {"Spiel #" + this.state.match.id}</h1>
+    let title = this.state.match.id ? (
+      "Spiel #" + this.state.match.id
     ) : (
       "Neues Spiel"
     );
 
     return (
       <div>
-        <PageHeader title={lblId} history={this.props.history} />
+        <PageHeader title={title} history={this.props.history} />
 
         <Form
           onSubmit={this.save}
