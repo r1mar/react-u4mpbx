@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Alert from "./Alert";
 
 export default class PageHeader extends React.Component {
   constructor(props) {
@@ -32,8 +33,9 @@ export default class PageHeader extends React.Component {
     }, 350);
   }
 
-  download() {
-    service.readAll().then(data => {
+  async download() {
+    try{
+    let data = await service.readAll();
       let dataUrl =
           "data:text/json;charset=utf8," +
           encodeURIComponent(JSON.stringify(data)),
@@ -43,7 +45,13 @@ export default class PageHeader extends React.Component {
       aDownload.setAttribute("download", "data.json");
 
       aDownload.click();
-    });
+
+    } catch(error) {
+      this.setState({
+        errors: [error]
+      });
+
+    }
   }
 
   render() {
@@ -111,6 +119,7 @@ export default class PageHeader extends React.Component {
         </div>
       </nav>
       {btnBack}
+      <Alert messages={this.state.errors} />
       </div></div>
     );
   }
