@@ -1,92 +1,113 @@
 import FieldError from "./FieldError";
 import NotFoundError from "./NotFoundError";
+import MultipleError from "./MultipleError";
 
 class Service {
   constructor() {
     this.data = {
-      teams = [
-      {
-        id: 1,
-        name: "Mönchen Gladbach"
-      },
-      {
-        id: 2,
-        name: "1. FC Köln"
-      },
-      {
-        id: 3,
-        name: "Bayer Leverkusen"
-      },
-      {
-        id: 4,
-        name: "FC Bayern"
-      },
-      {
-        id: 5,
-        name: "Schalke"
-      },
-      {
-        id: 6,
-        name: "Vfb"
-      },
-      {
-        id: 7,
-        name: "Freiburg"
-      },
-      {
-        id: 8,
-        name: "SGE"
-      },
-      {
-        id: 9,
-        name: "Arminia"
-      }
-    ],
-    matches = [
-      {
-        id: 1,
-        host: {
+      teams: [
+        {
+          id: 1,
+          name: "Mönchen Gladbach"
+        },
+        {
+          id: 2,
+          name: "1. FC Köln"
+        },
+        {
+          id: 3,
+          name: "Bayer Leverkusen"
+        },
+        {
           id: 4,
-          goals: 8,
           name: "FC Bayern"
         },
-        guest: {
+        {
           id: 5,
-          goals: 0,
           name: "Schalke"
         },
-        gameDay: "2020-01-01"
-      },
-      {
-        id: 2,
-        host: {
+        {
           id: 6,
-          goals: 2,
           name: "Vfb"
         },
-        guest: {
+        {
           id: 7,
-          goals: 3,
           name: "Freiburg"
         },
-        gameDay: "2020-02-01"
-      },
-      {
-        id: 3,
-        host: {
+        {
           id: 8,
-          goals: 1,
           name: "SGE"
         },
-        guest: {
+        {
           id: 9,
-          goals: 1,
           name: "Arminia"
+        }
+      ],
+      matches: [
+        {
+          id: 1,
+          host: {
+            id: 4,
+            goals: 8,
+            name: "FC Bayern"
+          },
+          guest: {
+            id: 5,
+            goals: 0,
+            name: "Schalke"
+          },
+          gameDay: "2020-01-01"
         },
-        gameDay: "2020-03-01"
-      }
-    ]
+        {
+          id: 2,
+          host: {
+            id: 6,
+            goals: 2,
+            name: "Vfb"
+          },
+          guest: {
+            id: 7,
+            goals: 3,
+            name: "Freiburg"
+          },
+          gameDay: "2020-02-01"
+        },
+        {
+          id: 3,
+          host: {
+            id: 8,
+            goals: 1,
+            name: "SGE"
+          },
+          guest: {
+            id: 9,
+            goals: 1,
+            name: "Arminia"
+          },
+          gameDay: "2020-03-01"
+        }
+      ]
     };
+
+    this.metadata = {
+      entities: [
+        {
+          name: "team",
+          collection: "teams",
+          paths: ["team", "teams"],
+          properties: [
+            {
+              name: "id",
+              type: "number",
+              isKey: true,
+              autoIncrement: true
+            },
+            { name: "name", type: "string", required: true }
+          ]
+        }
+      ]
+    };
+
     this.teams = [
       {
         id: 1,
@@ -172,19 +193,87 @@ class Service {
     ];
   }
 
-  createEntity(entity) {
-    return new Promise(resolve => {
-      let maxId = -1;
+  createEntity(path, data) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metadata = this.getMetadata(path),
+          entitySet = this.data[metadata.collection];
 
-      this.teams.forEach(team => {
-        maxId = team.id > maxId ? team.id : maxId;
+        this.determineEntity(metadata, entitySet, "create", data);
+        this.validateEntity(metadata, entitySet, "create", data);
+
+        entitySet.push(Object.assign({}, data));
+        resolve(data);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  getMetadata(path) {
+    let metadata = this.metadata.entities.filter(entity =>
+      entity.paths.filter(entityPath => path.search(entityPath) != -1)
+    );
+
+    if (!metadata || !metadata.length) {
+      throw new NotFoundError(
+        `Zum Pfad "${path}" konnte keine Entität ermittelt`
+      );
+    }
+
+    if (metadata.length > 1) {
+      throw new Error(
+        `Pfad ${path} konnte nicht eindeutig einer Entität zugeordnet werden`
+      );
+    }
+
+    return metadata[0];
+  }
+
+  determineEntity(metadata, entitySet, operation, data) {
+    if (operation === "create") {
+      metadata.properties.forEach(property => {
+        if (property.autoIncrement) {
+          let maxValue = -1;
+
+          entitySet.forEach(entity => {
+            maxValue =
+              entity[property.name] > maxValue
+                ? entity[property.name]
+                : maxValue;
+          });
+
+          data[property.name] = ++maxValue;
+        }
       });
+    }
 
-      team.id = ++maxId;
-      this.teams.push(Object.assign({}, team));
-      resolve(team);
+    if (metadata.determine) {
+      metadata.determine(metadata, entitySet, operation, data);
+    }
+  }
+
+  validateEntity(metadata, entitySet, operation, data) {
+    let error = new MultipleError();
+
+    metadata.properties.forEach(property => {
+      if (property.required && !data[property.name]) {
+        error.errors.push(new FieldError(property.name));
+      }
     });
 
+    switch (error.errors.length) {
+      case 0:
+        break;
+      case 1:
+        throw error.errors[0];
+      default:
+        throw error;
+    }
+
+    if (metadata.validate) {
+      metadata.validate(metadata, entitySet, operation, data);
+    }
   }
 
   createTeam(team) {
