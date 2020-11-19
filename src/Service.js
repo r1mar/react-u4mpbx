@@ -94,7 +94,7 @@ class Service {
         {
           name: "team",
           collection: "teams",
-          paths: ["team", "teams"],
+          paths: ["/team/:id", "/teams"],
           properties: [
             {
               name: "id",
@@ -210,7 +210,7 @@ class Service {
     });
   }
 
-    readEntity(path, filter) {
+    /*readEntity(path, filter) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
@@ -226,11 +226,15 @@ class Service {
         reject(e);
       }
     });
-  }
+  }*/
 
   getMetadata(path) {
     let metadata = this.metadata.entities.filter(entity =>
-      entity.paths.filter(entityPath => path.search(entityPath) != -1)
+      entity.paths.filter(entityPath => { 
+        let entityStrings = entityPath.match(/\w+/);
+
+        return entityStrings && entityStrings.length && entityStrings[0] === path;
+      })
     );
 
     if (!metadata || !metadata.length) {
