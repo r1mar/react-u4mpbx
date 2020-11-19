@@ -23,7 +23,7 @@ export default class TeamView extends React.Component {
   async componentDidMount() {
     try {
       if (this.props.match.params.id) {
-        let team = await service.readEntity(
+        let team = await service.readEntities(
           "/team/" + this.props.match.params.id
         );
 

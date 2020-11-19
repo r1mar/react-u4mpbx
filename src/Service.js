@@ -198,6 +198,10 @@ class Service {
       try {
         let metadata = this.getMetadata(path),
           entitySet = this.data[metadata.collection];
+          
+        if(!path) {
+          throw new Error("Pfad nicht angegeben");
+        }
 
         this.determineEntity(metadata, entitySet, "create", data);
         this.validateEntity(metadata, entitySet, "create", data);
@@ -210,11 +214,15 @@ class Service {
     });
   }
 
-  readEntity(path) {
+  readEntities(path) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
           entitySet = this.data[metadata.collection];
+
+        if(!path) {
+          throw new Error("Pfad nicht angegeben");
+        }
 
         let result = entitySet.find(entity =>
           this.entityEquals(path, metadata, entity)
@@ -244,29 +252,38 @@ class Service {
       matches = [];
       pathRegex = "/" + metadataPath.replace("/", "/") + "/";
 
-      paramNames.forEach(paramName => {
-        let property = metadata.properties.find(
-            property => ":" + property.name === paramName
-          ),
-          propertyRegex;
+      if (!paramNames) {
+        return metadataPath === path;
+      } else {
+        paramNames.forEach(paramName => {
+          let property = metadata.properties.find(
+              property => ":" + property.name === paramName
+            ),
+            propertyRegex;
 
-        if (property) {
-          properties.push(property);
+          if (property) {
+            properties.push(property);
 
-          if (property.type === "number") {
-            propertyRegex = "([0-9]+)";
-          } else {
-            propertyRegex = "(.[^/]+)";
+            if (property.type === "number") {
+              propertyRegex = "([0-9]+)";
+            } else {
+              propertyRegex = "(.[^/]+)";
+            }
+
+            pathRegex = pathRegex.replace(paramName, propertyRegex);
           }
+        });
 
-          pathRegex = pathRegex.replace(paramName, propertyRegex);
-        }
-      });
+        matches = path.match(pathRegex);
 
-      matches = path.match(pathRegex);
-
-      return matches && matches.length && path === matches[0];
+        return matches && matches.length && path === matches[0];
+      }
     });
+
+    if (matches.length === 1) {
+      //lesen aller Entitäten
+      return true;
+    }
 
     // fehlgeschlagene Vergleiche sammeln
     let results = properties.filter(
@@ -346,18 +363,6 @@ class Service {
     if (metadata.validate) {
       metadata.validate(metadata, entitySet, operation, data);
     }
-  }
-
-  readTeam(id) {
-    return new Promise((resolve, reject) => {
-      let result = this.teams.find(team => team.id == id);
-
-      if (result) {
-        resolve(Object.assign({}, result));
-      } else {
-        reject(new NotFoundError());
-      }
-    });
   }
 
   readTeams() {
