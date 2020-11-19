@@ -1,15 +1,27 @@
 import React from "react";
 import FieldError from "./FieldError";
+import MultipleError from "./MultipleError";
 
 export default function Alert(props) {
-  let messages;
+  let messages,
+    counter = 0;
 
   try {
     messages = props.messages
-      .filter(message => !(message instanceof FieldError))
-      .map(message => (
-        <div className="alert alert-danger">{message.message}</div>
-      ));
+      .filter(field => !(field instanceof FieldError))
+      .map(all =>
+        all instanceof MultipleError ? (
+          all.errors.map(multi => (
+            <div key={++counter} className="alert alert-danger">
+              {multi.message}
+            </div>
+          ))
+        ) : (
+          <div key={++counter} className="alert alert-danger">
+            {all.message}
+          </div>
+        )
+      );
   } catch (e) {
     messages = <div className="alert alert-danger">{e.message}</div>;
   }

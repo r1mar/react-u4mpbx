@@ -232,22 +232,48 @@ class Service {
   }
 
   entityEquals(path, metadata, entity) {
-    let path = metadata.paths.filter(metadataPath => {
-      //nach dem Pfad aus den Metadaten suchen
-      let paramNames = metadataPath.match(/:\w+/g),
-        pathRegex = metadataPath;
+    let pathRegex,
+      properties = [],
+      matches;
+
+    metadata.paths.find(metadataPath => {
+      //nach dem Pfad aus den Metadaten suchen, der zum Abfrage-Path passt
+      let paramNames = metadataPath.match(/:\w+/g);
+
+      properties = [];
+      matches = [];
+      pathRegex = "/" + metadataPath.replace("/", "/") + "/";
 
       paramNames.forEach(paramName => {
-        let property = metadata.properties.find(property => ":" + property.name === paramName);
-        if(property.type === "number") {
-          pathRegex = pathRegex.replace(paramName, "[0-9]+");
-        } else {
-          pathRegex = pathRegex.replace(paramName, ".[^\/]+")
+        let property = metadata.properties.find(
+            property => ":" + property.name === paramName
+          ),
+          propertyRegex;
+
+        if (property) {
+          properties.push(property);
+
+          if (property.type === "number") {
+            propertyRegex = "([0-9]+)";
+          } else {
+            propertyRegex = "(.[^/]+)";
+          }
+
+          pathRegex = pathRegex.replace(paramName, propertyRegex);
         }
       });
 
-      let matches = path.match(pathRegex);
+      matches = path.match(pathRegex);
+
+      return matches && matches.length && path === matches[0];
     });
+
+    // fehlgeschlagene Vergleiche sammeln
+    let results = properties.filter(
+      (property, index) => entity[property.name] != matches[index + 1]
+    );
+
+    return !results || !results.length;
   }
 
   getMetadata(path) {
