@@ -231,9 +231,24 @@ class Service {
     });
   }
 
-  /*entityEquals(path, metadata, entity) {
-    let params = metadata
-  }*/
+  entityEquals(path, metadata, entity) {
+    let path = metadata.paths.filter(metadataPath => {
+      //nach dem Pfad aus den Metadaten suchen
+      let paramNames = metadataPath.match(/:\w+/g),
+        pathRegex = metadataPath;
+
+      paramNames.forEach(paramName => {
+        let property = metadata.properties.find(property => ":" + property.name === paramName);
+        if(property.type === "number") {
+          pathRegex = pathRegex.replace(paramName, "[0-9]+");
+        } else {
+          pathRegex = pathRegex.replace(paramName, ".[^\/]+")
+        }
+      });
+
+      let matches = path.match(pathRegex);
+    });
+  }
 
   getMetadata(path) {
     let metadata = this.metadata.entities.filter(entity =>
