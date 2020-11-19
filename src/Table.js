@@ -88,7 +88,7 @@ export default class Table extends React.Component {
   render() {
     let rows = !this.props.rows ? (
       <tr>
-        <td rowspan={this.props.columns.length}>keine Daten</td>
+        <td colSpan={this.props.columns.length} className="text-center">keine Daten</td>
       </tr>
     ) : (
       this.props.rows &&

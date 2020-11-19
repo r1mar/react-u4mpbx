@@ -26,9 +26,9 @@ export default class MatchesView extends React.Component {
         matches: matches
       });
     } catch (e) {
-      this.state = {
+      this.setState({
         errors: [e]
-      };
+      });
     }
   }
 
@@ -44,7 +44,7 @@ export default class MatchesView extends React.Component {
 
       return result;
     } catch (e) {
-      this.state = {
+      this.setState = {
         errors: [e]
       };
 
@@ -53,7 +53,14 @@ export default class MatchesView extends React.Component {
   }
 
   getName(match) {
+    try {
     return match.host.name + " : " + match.guest.name;
+    } catch(e) {
+      this.setState({
+        errors: [e]
+      });
+      return e.message;
+    }
   }
 
   showMatch(event) {
@@ -62,9 +69,9 @@ export default class MatchesView extends React.Component {
 
       this.props.history.push("/match/" + event.target.id);
     } catch (e) {
-      this.state = {
+      this.setState({
         errors: [e]
-      };
+      });
     }
   }
 
@@ -72,9 +79,9 @@ export default class MatchesView extends React.Component {
     try {
       this.props.history.push("/match");
     } catch (e) {
-      this.state = {
+      this.setState({
         errors: [e]
-      };
+      });
     }
   }
 
