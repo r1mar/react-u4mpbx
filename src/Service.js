@@ -198,8 +198,8 @@ class Service {
       try {
         let metadata = this.getMetadata(path),
           entitySet = this.data[metadata.collection];
-          
-        if(!path) {
+
+        if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
@@ -214,13 +214,38 @@ class Service {
     });
   }
 
+  readEntitity(path) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metadata = this.getMetadata(path),
+          entitySet = this.data[metadata.collection];
+
+        if (!path) {
+          throw new Error("Pfad nicht angegeben");
+        }
+
+        let result = entitySet.find(entity =>
+          this.entityEquals(path, metadata, entity)
+        );
+
+        if (result) {
+          resolve(Object.assign({}, result));
+        } else {
+          throw new NotFoundError(`Entität nicht gefunden`);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
   readEntities(path) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
           entitySet = this.data[metadata.collection];
 
-        if(!path) {
+        if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
@@ -279,6 +304,8 @@ class Service {
         return matches && matches.length && path === matches[0];
       }
     });
+
+    alert(matches.length);
 
     if (matches.length === 1) {
       //lesen aller Entitäten
