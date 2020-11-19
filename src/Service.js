@@ -197,7 +197,7 @@ class Service {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
-            entitySet = this.data[metadata.collection];
+          entitySet = this.data[metadata.collection];
 
         this.determineEntity(metadata, entitySet, "create", data);
         this.validateEntity(metadata, entitySet, "create", data);
@@ -210,30 +210,39 @@ class Service {
     });
   }
 
-    /*readEntity(path, filter) {
+  readEntity(path) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
-            entitySet = this.data[metadata.collection];
-      let result = entitySet.find(entity => team.id == id);
+          entitySet = this.data[metadata.collection];
 
-      if (result) {
-        resolve(Object.assign({}, result));
-      } else {
-        reject(new NotFoundError());
-      }
+        let result = entitySet.find(entity =>
+          this.entityEquals(path, metadata, entity)
+        );
+
+        if (result) {
+          resolve(Object.assign({}, result));
+        } else {
+          throw new NotFoundError(`Entität nicht gefunden`);
+        }
       } catch (e) {
         reject(e);
       }
     });
+  }
+
+  /*entityEquals(path, metadata, entity) {
+    let params = metadata
   }*/
 
   getMetadata(path) {
     let metadata = this.metadata.entities.filter(entity =>
-      entity.paths.filter(entityPath => { 
+      entity.paths.filter(entityPath => {
         let entityStrings = entityPath.match(/\w+/);
 
-        return entityStrings && entityStrings.length && entityStrings[0] === path;
+        return (
+          entityStrings && entityStrings.length && entityStrings[0] === path
+        );
       })
     );
 
