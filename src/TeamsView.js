@@ -34,7 +34,9 @@ export default class TeamsView extends React.Component {
 
   async deleteTeams(ids, items) {
     try {
-      await service.deleteTeams(ids);
+      ids.map(async id => {
+        await service.deleteEntity("/team/" + id);
+      });
 
       this.setState({
         teams: this.state.teams.filter(team => items.indexOf(team) === -1)

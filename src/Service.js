@@ -215,7 +215,7 @@ class Service {
     });
   }
 
-  readEntitity(path) {
+  readEntity(path) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
@@ -291,9 +291,39 @@ class Service {
 
           resolve(Object.assign({}, result));
         } else {
-          reject(new NotFoundError());
+          throw new NotFoundError();
         }
-      } catch (e) {}
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  deleteTeam(path) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metadata = this.getMetadata(path),
+          entitySet = this.data[metadata.collection];
+
+        if (!path) {
+          throw new Error("Pfad nicht angegeben");
+        }
+
+        let result = entitySet.find(entity =>
+          this.entityEquals(path, metadata, entity)
+        );
+
+        if (result) {
+          let index = entitySet.indexOf(result);
+
+          entitySet.splice(index, 1);
+          resolve();
+        } else {
+          throw new NotFoundError();
+        }
+      } catch (e) {
+        reject(e);
+      }
     });
   }
 
@@ -438,35 +468,7 @@ class Service {
     return 0;
   }
 
-  updateTeam(team) {
-    return new Promise((resolve, reject) => {
-      let aTeam = this.teams.find(item => item.id == team.id);
-
-      if (aTeam) {
-        Object.assign(aTeam, team);
-        resolve(team);
-      } else {
-        reject(new NotFoundError());
-      }
-    });
-  }
-
-  deleteTeam(id) {
-    return new Promise((resolve, reject) => {
-      let team = this.teams.find(team => team.id === id);
-
-      if (team) {
-        let index = this.teams.indexOf(team);
-
-        this.teams.splice(index, 1);
-        resolve();
-      } else {
-        reject(new NotFoundError());
-      }
-    });
-  }
-
-  deleteTeams(ids) {
+  /*deleteTeams(ids) {
     let result = [];
 
     ids.forEach(id => {
@@ -474,7 +476,7 @@ class Service {
     });
 
     return Promise.all(result);
-  }
+  }*/
 
   validateMatch(match) {
     if (!match.host.id) {
