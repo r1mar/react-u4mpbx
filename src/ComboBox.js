@@ -2,19 +2,26 @@ import React from "react";
 import FormGroup from "./FormGroup";
 
 export default function ComboBox(props) {
-  let options = props.options.map(option => (
+  let options, spaceOption, errors;
+
+  try {
+    options = props.options.map(option => (
       <option key={option.id} value={option.id}>
         {option.value}
       </option>
-    )),
+    ));
     spaceOption =
       !props.required || !props.value ? <option key="-1" id="" /> : null;
+    errors = props.errors;
+  } catch (e) {
+    errors = [e];
+  }
 
   return (
     <FormGroup
       forId={props.id}
       label={props.label}
-      errors={props.errors}
+      errors={errors}
       inline={props.inline}
     >
       <select
@@ -22,9 +29,7 @@ export default function ComboBox(props) {
         name={props.id}
         onChange={props.onChange}
         value={props.value}
-        className={
-          props.errors.length ? "form-control is-invalid" : "form-control"
-        }
+        className={errors.length ? "form-control is-invalid" : "form-control"}
         required={props.required}
       >
         {spaceOption}
