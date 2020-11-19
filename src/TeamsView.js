@@ -21,6 +21,7 @@ export default class TeamsView extends React.Component {
   async componentDidMount() {
     try {
       let teams = await service.readEntities("/teams");
+
       this.setState({
         teams: teams
       });

@@ -95,6 +95,7 @@ class Service {
           name: "team",
           collection: "teams",
           paths: ["/team/:id", "/teams"],
+          sort: this.sortTeams,
           properties: [
             {
               name: "id",
@@ -253,21 +254,54 @@ class Service {
           this.entityEquals(path, metadata, entity)
         );
 
-        if (result) {
-          resolve(Object.assign({}, result));
-        } else {
-          throw new NotFoundError(`Entität nicht gefunden`);
+        if (result && !result.length) {
+          resolve(result);
         }
+
+        if (metadata.sort) {
+          result = result.sort(metadata.sort);
+        }
+
+        resolve(result.map(entity => Object.assign({}, entity)));
       } catch (e) {
         reject(e);
       }
     });
   }
 
+  updateEntity(path, data) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metadata = this.getMetadata(path),
+          entitySet = this.data[metadata.collection];
+
+        if (!path) {
+          throw new Error("Pfad nicht angegeben");
+        }
+
+        let result = entitySet.find(entity =>
+          this.entityEquals(path, metadata, entity)
+        );
+
+        if (result) {
+          Object.assign(result, data);
+
+          this.determineEntity(metadata, entitySet, "update", result);
+          this.validateEntity(metadata, entitySet, "update", result);
+
+          resolve(Object.assign({}, result));
+        } else {
+          reject(new NotFoundError());
+        }
+      } catch (e) {}
+    });
+  }
+
   entityEquals(path, metadata, entity) {
     let pathRegex,
       properties = [],
-      matches;
+      matches,
+      noFilter;
 
     metadata.paths.find(metadataPath => {
       //nach dem Pfad aus den Metadaten suchen, der zum Abfrage-Path passt
@@ -278,6 +312,7 @@ class Service {
       pathRegex = "/" + metadataPath.replace("/", "/") + "/";
 
       if (!paramNames) {
+        noFilter = true;
         return metadataPath === path;
       } else {
         paramNames.forEach(paramName => {
@@ -307,7 +342,7 @@ class Service {
 
     //alert(matches.length); 0
 
-    if (matches.length === 1) {
+    if (noFilter) {
       //lesen aller Entitäten
       return true;
     }
@@ -392,21 +427,15 @@ class Service {
     }
   }
 
-  readTeams() {
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.teams.sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          }
-          if (a.name < b.name) {
-            return -1;
-          }
+  sortTeams(team1, team2) {
+    if (team1.name > team2.name) {
+      return 1;
+    }
+    if (team1.name < team2.name) {
+      return -1;
+    }
 
-          return 0;
-        })
-      );
-    });
+    return 0;
   }
 
   updateTeam(team) {
