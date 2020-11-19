@@ -197,13 +197,31 @@ class Service {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+            entitySet = this.data[metadata.collection];
 
         this.determineEntity(metadata, entitySet, "create", data);
         this.validateEntity(metadata, entitySet, "create", data);
 
         entitySet.push(Object.assign({}, data));
         resolve(data);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+    readEntity(path, filter) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metadata = this.getMetadata(path),
+            entitySet = this.data[metadata.collection];
+      let result = entitySet.find(entity => team.id == id);
+
+      if (result) {
+        resolve(Object.assign({}, result));
+      } else {
+        reject(new NotFoundError());
+      }
       } catch (e) {
         reject(e);
       }
@@ -274,20 +292,6 @@ class Service {
     if (metadata.validate) {
       metadata.validate(metadata, entitySet, operation, data);
     }
-  }
-
-  createTeam(team) {
-    return new Promise(resolve => {
-      let maxId = -1;
-
-      this.teams.forEach(team => {
-        maxId = team.id > maxId ? team.id : maxId;
-      });
-
-      team.id = ++maxId;
-      this.teams.push(Object.assign({}, team));
-      resolve(team);
-    });
   }
 
   readTeam(id) {

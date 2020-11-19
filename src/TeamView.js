@@ -55,7 +55,7 @@ export default class TeamView extends React.Component {
         team = await service.updateTeam(this.state.team);
       } else {
         team = await service.createEntity("/team", this.state.team);
-        this.props.history.push("/team/" + team.id);
+        this.props.history.replace("/team/" + team.id);
       }
     } catch (e) {
       if (e instanceof NotFoundError) {
