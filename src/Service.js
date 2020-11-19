@@ -105,48 +105,60 @@ class Service {
             },
             { name: "name", type: "string", required: true }
           ]
+        },
+        {
+          name: "match",
+          collection: "matches",
+          paths: ["/match/:id", "/matches"],
+          properties: [
+            {
+              name: "id",
+              type: "number",
+              isKey: true,
+              autoIncrement: true
+            },
+            {
+              name: "gameDay",
+              type: "date",
+              required: true
+            },
+            {
+              name: "host",
+              type: "participant",
+              required: true
+            },
+            {
+              name: "guest",
+              type: "participant",
+              required: true
+            }
+          ]
+        }
+      ],
+      types: [
+        {
+          name: "participant",
+          properties: [
+            {
+              name: "id",
+              type: "number",
+              required: true
+            },
+            {
+              name: "name",
+              type: "string",
+              required: true
+            },
+            {
+              name: "goals",
+              type: "number",
+              min: 0,
+              required: true
+            }
+          ]
         }
       ]
     };
-
-    this.teams = [
-      {
-        id: 1,
-        name: "Mönchen Gladbach"
-      },
-      {
-        id: 2,
-        name: "1. FC Köln"
-      },
-      {
-        id: 3,
-        name: "Bayer Leverkusen"
-      },
-      {
-        id: 4,
-        name: "FC Bayern"
-      },
-      {
-        id: 5,
-        name: "Schalke"
-      },
-      {
-        id: 6,
-        name: "Vfb"
-      },
-      {
-        id: 7,
-        name: "Freiburg"
-      },
-      {
-        id: 8,
-        name: "SGE"
-      },
-      {
-        id: 9,
-        name: "Arminia"
-      }
-    ];
 
     this.matches = [
       {
@@ -467,16 +479,6 @@ class Service {
 
     return 0;
   }
-
-  /*deleteTeams(ids) {
-    let result = [];
-
-    ids.forEach(id => {
-      result.push(this.deleteTeam(id));
-    });
-
-    return Promise.all(result);
-  }*/
 
   validateMatch(match) {
     if (!match.host.id) {

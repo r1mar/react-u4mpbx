@@ -150,10 +150,11 @@ export default class MatchView extends React.Component {
   }
 
   render() {
-    let errors = this.state.errors;
+    let errors = this.state.errors,
+      title;
 
     try {
-      let title = this.state.match.id
+      title = this.state.match.id
         ? "Spiel #" + this.state.match.id
         : "Neues Spiel";
     } catch (e) {

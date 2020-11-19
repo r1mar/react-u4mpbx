@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import style from "./style.css";
 import service from "./Service";
 import Alert from "./Alert";
 import Table from "./Table";
@@ -22,7 +20,7 @@ export default class MatchesView extends React.Component {
 
   async componentDidMount() {
     try {
-      let matches = await service.readMatches();
+      let matches = await service.readEntities("/matches");
 
       this.setState({
         matches: matches
