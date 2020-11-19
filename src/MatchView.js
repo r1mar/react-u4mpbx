@@ -32,139 +32,146 @@ export default class MatchView extends React.Component {
     this.onChangeGameDay = this.onChangeGameDay.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      errors: []
-    });
-
-    if (this.props.match.params.id) {
-      service
-        .readMatch(this.props.match.params.id)
-        .then(match => {
-          this.setState({
-            match: match,
-            errors: []
-          });
-        })
-        .catch(error => {
-          if (error instanceof NotFoundError) {
-            this.props.history.push("/not-found");
-          } else {
-            this.setState((state, props) => ({
-              errors: [...state.errors, error]
-            }));
-          }
-        });
-    }
-
-    service
-      .readTeams()
-      .then(teams => {
-        this.setState({
-          teams: teams
-        });
-      })
-      .catch(error => {
-        this.setState((state, props) => ({
-          errors: [...state.errors, error]
-        }));
+  async componentDidMount() {
+    try {
+      this.setState({
+        errors: []
       });
+
+      if (this.props.match.params.id) {
+        let match = await service.readMatch(this.props.match.params.id);
+
+        this.setState({
+          match: match,
+          errors: []
+        });
+      }
+
+      let teams = await service.readTeams();
+
+      this.setState({
+        teams: teams
+      });
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        this.props.history.push("/not-found");
+      } else {
+        this.setState((state, props) => ({
+          errors: [...state.errors, e]
+        }));
+      }
+    }
   }
 
-  save(event) {
-    let result;
+  async save(event) {
+    try {
+      let match;
+      event.preventDefault();
 
-    event.preventDefault();
+      this.setState({
+        errors: [],
+        sent: true
+      });
 
-    this.setState({
-      errors: [],
-      sent: true
-    });
+      if (this.props.match.params.id) {
+        match = await service.updateMatch(this.state.match);
+      } else {
+        match = await service.createMatch(this.state.match);
 
-    if (this.props.match.params.id) {
-      result = service.updateMatch(this.state.match);
-    } else {
-      result = service.createMatch(this.state.match);
-
-      result.then(match => {
         this.props.history.push("/match/" + match.id);
+      }
+    } catch (e) {
+      this.setState({
+        errors: [e]
       });
     }
-
-    result.catch(error => {
-      this.setState({
-        errors: [error]
-      });
-    });
   }
 
   onSelectTeam(event) {
-    let newMatch = Object.assign({}, this.state.match),
-      team = this.state.teams.find(team => team.id === +event.target.value);
+    try {
+      let newMatch = Object.assign({}, this.state.match),
+        team = this.state.teams.find(team => team.id === +event.target.value);
 
-    if (event.target.id === "cmbTeam1") {
-      newMatch.host = Object.assign({}, this.state.match.host, team);
-    } else {
-      newMatch.guest = Object.assign({}, this.state.match.guest, team);
+      if (event.target.id === "cmbTeam1") {
+        newMatch.host = Object.assign({}, this.state.match.host, team);
+      } else {
+        newMatch.guest = Object.assign({}, this.state.match.guest, team);
+      }
+
+      this.setState({
+        match: newMatch,
+        sent: false
+      });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
     }
-
-    this.setState({
-      match: newMatch,
-      sent: false
-    });
   }
 
   onChangeGameDay(event) {
-    this.setState({
-      match: Object.assign({}, this.state.match, {
-        gameDay: event.target.value
-      }),
-      sent: false
-    });
+    try {
+      this.setState({
+        match: Object.assign({}, this.state.match, {
+          gameDay: event.target.value
+        }),
+        sent: false
+      });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
   onChangeGoal(event) {
-    let newMatch = Object.assign({}, this.state.match);
+    try {
+      let newMatch = Object.assign({}, this.state.match);
 
-    if (event.target.id === "txtGoals1") {
-      newMatch.host.goals = Number.isInteger(event.target.value)
-        ? +event.target.value
-        : event.target.value;
-    } else {
-      newMatch.guest.goals = Number.isInteger(event.target.value)
-        ? +event.target.value
-        : event.target.value;
+      if (event.target.id === "txtGoals1") {
+        newMatch.host.goals = Number.isInteger(event.target.value)
+          ? +event.target.value
+          : event.target.value;
+      } else {
+        newMatch.guest.goals = Number.isInteger(event.target.value)
+          ? +event.target.value
+          : event.target.value;
+      }
+
+      this.setState({
+        match: newMatch,
+        sent: false
+      });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
     }
-
-    this.setState({
-      match: newMatch,
-      sent: false
-    });
   }
 
   render() {
-    let title = this.state.match.id ? (
-      "Spiel #" + this.state.match.id
-    ) : (
-      "Neues Spiel"
-    );
+    let errors = this.state.errors;
+
+    try {
+      let title = this.state.match.id
+        ? "Spiel #" + this.state.match.id
+        : "Neues Spiel";
+    } catch (e) {
+      errors = [e];
+    }
 
     return (
       <div>
         <PageHeader title={title} history={this.props.history} />
 
-        <Form
-          onSubmit={this.save}
-          errors={this.state.errors}
-          validated={this.state.sent}
-        >
+        <Form onSubmit={this.save} errors={errors} validated={this.state.sent}>
           <DateBox
             id="txtGameday"
             label="Spieltag"
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
             required
-            errors={this.state.errors.filter(
+            errors={errors.filter(
               error => error instanceof FieldError && error.field === "gameDay"
             )}
           />
@@ -178,7 +185,7 @@ export default class MatchView extends React.Component {
             }))}
             value={this.state.match.host.id}
             required
-            errors={this.state.errors.filter(
+            errors={errors.filter(
               error => error instanceof FieldError && error.field === "host.id"
             )}
           />
@@ -192,7 +199,7 @@ export default class MatchView extends React.Component {
             }))}
             value={this.state.match.guest.id}
             required
-            errors={this.state.errors.filter(
+            errors={errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
             )}
             min="0"
@@ -203,7 +210,7 @@ export default class MatchView extends React.Component {
               onChange={this.onChangeGoal}
               value={this.state.match.host.goals}
               required
-              errors={this.state.errors.filter(
+              errors={errors.filter(
                 error =>
                   error instanceof FieldError && error.field === "host.goals"
               )}
@@ -215,7 +222,7 @@ export default class MatchView extends React.Component {
               onChange={this.onChangeGoal}
               value={this.state.match.guest.goals}
               required
-              errors={this.state.errors.filter(
+              errors={errors.filter(
                 error =>
                   error instanceof FieldError && error.field === "guest.goals"
               )}

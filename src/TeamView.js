@@ -20,80 +20,92 @@ export default class TeamView extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.match.params.id) {
-      service
-        .readTeam(this.props.match.params.id)
-        .then(team => {
-          this.setState({
-            team: team
-          });
-        })
-        .catch(error => {
-          if(error instanceof NotFoundError) {
-            this.props.history.push("/not-found");
-          } else {
-          this.setState({
-            errors: [error.message]
-          });
+  async componentDidMount() {
+    try {
+      if (this.props.match.params.id) {
+        let team = await service.readTeam(this.props.match.params.id);
+
+        this.setState({
+          team: team
+        });
+      } else {
+        this.setState({
+          team: {
+            name: ""
           }
         });
-    } else {
-      this.setState({
-        team: {
-          name: ""
-        }
-      });
+      }
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        this.props.history.push("/not-found");
+      } else {
+        this.setState({
+          errors: [e]
+        });
+      }
     }
   }
 
-  save(event) {
-    event.preventDefault();
+  async save(event) {
+    try {
+      event.preventDefault();
 
-    let result;
-    if (this.props.match.params.id) {
-      result = service.updateTeam(this.state.team);
-    } else {
-      result = service.createTeam(this.state.team);
-      result.then(team => {
+      let team;
+      if (this.props.match.params.id) {
+        team = await service.updateTeam(this.state.team);
+      } else {
+        team = await service.createTeam(this.state.team);
         this.props.history.push("/team/" + team.id);
-      });
-    }
-
-    result.catch(error => {
-      if(error instanceof NotFoundError) {
+      }
+    } catch (e) {
+      if (e instanceof NotFoundError) {
         this.props.history.push("/not-found");
       }
       this.setState({
-        errors: [error.message]
+        errors: [e]
       });
-    });
+    }
   }
 
   onChange(event) {
-    this.setState({
-      team: Object.assign({}, this.state.team, {
-        name: event.target.value
-      })
-    });
+    try {
+      this.setState({
+        team: Object.assign({}, this.state.team, {
+          name: event.target.value
+        })
+      });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
   render() {
-    let title = this.props.match.params.id ? (
-      "Verein #" + this.props.match.params.id
-    ) : "Neues Spiel";
+    let errors = this.state.errors,
+      title;
+    try {
+      title = this.props.match.params.id
+        ? "Verein #" + this.props.match.params.id
+        : "Neues Spiel";
+    } catch (e) {
+      errors = [e];
+    }
 
     return (
       <div>
         <PageHeader title={title} history={this.props.history} />
-        <Form onSubmit={this.save} errors={this.state.errors.filter(error => !(error instanceof FieldError))}>
+        <Form
+          onSubmit={this.save}
+          errors={errors.filter(error => !(error instanceof FieldError))}
+        >
           <TextBox
             id="txtName"
             label="Name:"
             onChange={this.onChange}
             value={this.state.team.name}
             required
-            errors={this.state.errors.filter(error => error instanceof FieldError)}
+            errors={errors.filter(error => error instanceof FieldError)}
           />
         </Form>
       </div>

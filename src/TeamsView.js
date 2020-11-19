@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import style from "./style.css";
 import service from "./Service";
 import Alert from "./Alert";
 import Table from "./Table";
@@ -20,42 +18,55 @@ export default class TeamsView extends React.Component {
     this.createTeam = this.createTeam.bind(this);
   }
 
-  componentDidMount() {
-    service.readTeams().then(teams => {
+  async componentDidMount() {
+    try {
+      let teams = await service.readTeams();
       this.setState({
         teams: teams
       });
-    });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
-  deleteTeams(ids, items) {
-    let result = service.deleteTeams(ids);
+  async deleteTeams(ids, items) {
+    try {
+      await service.deleteTeams(ids);
 
-    result
-      .then(() => {
-        this.setState({
-          teams: this.state.teams.filter(team => items.indexOf(team) === -1)
-        });
-      })
-      .catch(error => {
-        this.setState(
-          Object.assign({}, this.state, {
-            errors: [error.message]
-          })
-        );
+      this.setState({
+        teams: this.state.teams.filter(team => items.indexOf(team) === -1)
       });
 
-    return result;
+      return result;
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
   createTeam() {
-    this.props.history.push("/team");
+    try {
+      this.props.history.push("/team");
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
   showTeam(event) {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    this.props.history.push("/team/" + event.target.id);
+      this.props.history.push("/team/" + event.target.id);
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
   }
 
   render() {

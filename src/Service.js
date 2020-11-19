@@ -3,6 +3,90 @@ import NotFoundError from "./NotFoundError";
 
 class Service {
   constructor() {
+    this.data = {
+      teams = [
+      {
+        id: 1,
+        name: "Mönchen Gladbach"
+      },
+      {
+        id: 2,
+        name: "1. FC Köln"
+      },
+      {
+        id: 3,
+        name: "Bayer Leverkusen"
+      },
+      {
+        id: 4,
+        name: "FC Bayern"
+      },
+      {
+        id: 5,
+        name: "Schalke"
+      },
+      {
+        id: 6,
+        name: "Vfb"
+      },
+      {
+        id: 7,
+        name: "Freiburg"
+      },
+      {
+        id: 8,
+        name: "SGE"
+      },
+      {
+        id: 9,
+        name: "Arminia"
+      }
+    ],
+    matches = [
+      {
+        id: 1,
+        host: {
+          id: 4,
+          goals: 8,
+          name: "FC Bayern"
+        },
+        guest: {
+          id: 5,
+          goals: 0,
+          name: "Schalke"
+        },
+        gameDay: "2020-01-01"
+      },
+      {
+        id: 2,
+        host: {
+          id: 6,
+          goals: 2,
+          name: "Vfb"
+        },
+        guest: {
+          id: 7,
+          goals: 3,
+          name: "Freiburg"
+        },
+        gameDay: "2020-02-01"
+      },
+      {
+        id: 3,
+        host: {
+          id: 8,
+          goals: 1,
+          name: "SGE"
+        },
+        guest: {
+          id: 9,
+          goals: 1,
+          name: "Arminia"
+        },
+        gameDay: "2020-03-01"
+      }
+    ]
+    };
     this.teams = [
       {
         id: 1,
@@ -86,6 +170,21 @@ class Service {
         gameDay: "2020-03-01"
       }
     ];
+  }
+
+  createEntity(entity) {
+    return new Promise(resolve => {
+      let maxId = -1;
+
+      this.teams.forEach(team => {
+        maxId = team.id > maxId ? team.id : maxId;
+      });
+
+      team.id = ++maxId;
+      this.teams.push(Object.assign({}, team));
+      resolve(team);
+    });
+
   }
 
   createTeam(team) {

@@ -20,39 +20,38 @@ export default class MatchesView extends React.Component {
     this.createMatch = this.createMatch.bind(this);
   }
 
-  componentDidMount() {
-    service
-      .readMatches()
-      .then(matches => {
-        this.setState({
-          matches: matches
-        });
-      })
-      .catch(error => {
-        this.setState({
-          errors: [error.message]
-        });
+  async componentDidMount() {
+    try {
+      let matches = await service.readMatches();
+
+      this.setState({
+        matches: matches
       });
+    } catch (e) {
+      this.state = {
+        errors: [e]
+      };
+    }
   }
 
-  deleteMatches(toDeleteIds, toDeleteMatches) {
-    let result = service.deleteMatches(toDeleteIds);
+  async deleteMatches(toDeleteIds, toDeleteMatches) {
+    try {
+      let result = await service.deleteMatches(toDeleteIds);
 
-    result
-      .then(() => {
-        this.setState({
-          matches: this.state.matches.filter(
-            match => toDeleteMatches.indexOf(match) === -1
-          )
-        });
-      })
-      .catch(error => {
-        this.setState({
-          errors: [error.message]
-        });
+      this.setState({
+        matches: this.state.matches.filter(
+          match => toDeleteMatches.indexOf(match) === -1
+        )
       });
 
-    return result;
+      return result;
+    } catch (e) {
+      this.state = {
+        errors: [e]
+      };
+
+      return null;
+    }
   }
 
   getName(match) {
@@ -60,20 +59,32 @@ export default class MatchesView extends React.Component {
   }
 
   showMatch(event) {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    this.props.history.push("/match/" + event.target.id);
+      this.props.history.push("/match/" + event.target.id);
+    } catch (e) {
+      this.state = {
+        errors: [e]
+      };
+    }
   }
 
   createMatch() {
-    this.props.history.push("/match");
+    try {
+      this.props.history.push("/match");
+    } catch (e) {
+      this.state = {
+        errors: [e]
+      };
+    }
   }
 
   render() {
     return (
       <div>
         <PageHeader title="Spiele" history={this.props.history} />
-        
+
         <Table
           rows={this.state.matches}
           columns={[
