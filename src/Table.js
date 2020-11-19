@@ -86,6 +86,35 @@ export default class Table extends React.Component {
   }
 
   render() {
+    let rows = !this.props.rows ? (
+      <tr>
+        <td rowspan={this.props.columns.length}>keine Daten</td>
+      </tr>
+    ) : (
+      this.props.rows &&
+      this.props.rows.map(row => {
+        let selected =
+            this.state.selection[row.id.toString()] &&
+            this.state.selection[row.id.toString()].selected,
+          attributes = {
+            className: selected ? "table-danger" : ""
+          };
+
+        let cells =
+          this.props.columns &&
+          this.props.columns.map(column => this.getContent(row, column));
+
+        return (
+          <tr
+            {...attributes}
+            key={row.id.toString()}
+            onClick={this.toggleSelection}
+          >
+            {cells}
+          </tr>
+        );
+      })
+    );
     return (
       <table className="table table-bordered table-hover">
         <thead>
@@ -114,31 +143,7 @@ export default class Table extends React.Component {
               })}
           </tr>
         </thead>
-        <tbody>
-          {this.props.rows &&
-            this.props.rows.map(row => {
-              let selected =
-                  this.state.selection[row.id.toString()] &&
-                  this.state.selection[row.id.toString()].selected,
-                attributes = {
-                  className: selected ? "table-danger" : ""
-                };
-
-              let cells =
-                this.props.columns &&
-                this.props.columns.map(column => this.getContent(row, column));
-
-              return (
-                <tr
-                  {...attributes}
-                  key={row.id.toString()}
-                  onClick={this.toggleSelection}
-                >
-                  {cells}
-                </tr>
-              );
-            })}
-        </tbody>
+        <tbody>{rows}</tbody>
       </table>
     );
   }

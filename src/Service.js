@@ -249,7 +249,7 @@ class Service {
           throw new Error("Pfad nicht angegeben");
         }
 
-        let result = entitySet.find(entity =>
+        let result = entitySet.filter(entity =>
           this.entityEquals(path, metadata, entity)
         );
 
@@ -305,7 +305,7 @@ class Service {
       }
     });
 
-    alert(matches.length);
+    //alert(matches.length); 0
 
     if (matches.length === 1) {
       //lesen aller Entitäten
