@@ -1,7 +1,7 @@
 import React from "react";
 import service from "./Service";
 
-export default class RapidCompoBox {
+export default class RapidComboBox extends React.Component {
   constructor(props) {
     super(props);
 

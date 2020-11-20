@@ -195,16 +195,21 @@ export default class MatchView extends React.Component {
               error => error instanceof FieldError && error.field === "host.id"
             )}
           />
-          <ComboBox
+          <RapidComboBox
             id="cmbTeam2"
-            label="Gast:"
+            label={
+              this.state.metadata.properties.find(
+                property => property.name === "guest"
+              ).label
+            }
             onChange={this.onSelectTeam}
-            options={this.state.teams.map(team => ({
-              id: team.id,
-              value: team.name
-            }))}
+            options="/teams"
             value={this.state.match.guest.id}
-            required
+            required={
+              this.state.metadata.properties.find(
+                property => property.name === "guest"
+              ).required
+            }
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
             )}
