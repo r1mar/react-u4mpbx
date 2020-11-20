@@ -171,14 +171,11 @@ class Service {
             {
               name: "id",
               type: "number",
-              label: "#",
-              valueList: "/teams",
               required: true
             },
             {
               name: "name",
               type: "string",
-              label: "Name",
               required: true
             },
             {
@@ -269,21 +266,46 @@ class Service {
     });
   }
 
-  expandMetadata(metadata) {
-    metadata.properties.forEach(property => {
-      let type = this.metadata.types.find(type => type.name === property.type);
+  metaRecursiv(metadata, parts) {
+    if(!parts.length) {
+      return metadata;
+    }
+    let property = metadata.properties.find(property => property[parts[0]] || property.name === parts[0]);
+  
+    if(property[parts[0]]) {
+      return property[parts[0]];
+    }
 
-      if (type) {
-        property.type = type;
-        this.expandMetadata(property.type);
+    if(parts.length == 1) {
+      return property;
+    } else {
+      let type = this.metadata.type.find(type => type.name === property.type);
+      parts.splice(0, 1);
+      
+      if(!type) {
+        throw new Error(`Pfad "${parts[0]}" nicht auflösbar`);
+      } else {
+        return this.metaRecursiv(type, parts);
       }
-    });
+    }
   }
 
   readMetadata(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metaPath = this.getMetaPath(path);
+        let parts = path.split('/'),
+          result;
+          if(!parts.length) {
+            throw new Error("Metadatenpfad nicht angegeben");
+          } 
+          result = this.metadata.types.find(type => type.name === parts[0]);
+          if(!result) {
+            throw new Error(`Pfad "${parts[0]}" konnte nicht aufgelöst werden`);
+          }
+          result = this.metaRecursiv(result, parts.splice(0, 1));
+
+        resolve(result);
+        /*let metaPath = this.getMetaPath(path);
 
         if (!metaPath) {
           throw new NotFoundError(`Entität nicht gefunden`);
@@ -295,7 +317,7 @@ class Service {
 
         this.expandMetadata(result);
 
-        resolve(result.properties);
+        resolve(result.properties);*/
       } catch (e) {
         reject(e);
       }
