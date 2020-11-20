@@ -1,7 +1,7 @@
 import React from "react";
 import service from "./Service";
 import Form from "./Form";
-import ComboBox from "./ComboBox";
+import RapidComboBox from "./RapidComboBox";
 import NumberBox from "./NumberBox";
 import DateBox from "./DateBox";
 import NotFoundError from "./NotFoundError";
@@ -38,20 +38,16 @@ export default class MatchView extends React.Component {
       });
 
       if (this.props.match.params.id) {
-        let match = await service.readEntity(
-          "/match/" + this.props.match.params.id
-        );
-
         this.setState({
-          match: match,
-          errors: []
+          match: await service.readEntity(
+            "/match/" + this.props.match.params.id
+          ),
+          metadata: await service.readMetadata("/matches")
         });
       }
 
-      let teams = await service.readEntities("/teams");
-
       this.setState({
-        teams: teams
+        teams: await service.readEntities("/teams")
       });
     } catch (e) {
       if (e instanceof NotFoundError) {
@@ -180,16 +176,11 @@ export default class MatchView extends React.Component {
               error => error instanceof FieldError && error.field === "gameDay"
             )}
           />
-          <ComboBox
+          <RapidComboBox
             id="cmbTeam1"
-            label="Gastgeber:"
             onChange={this.onSelectTeam}
-            options={this.state.teams.map(team => ({
-              id: team.id,
-              value: team.name
-            }))}
             value={this.state.match.host.id}
-            required
+            metadata={this.state.metadata.type.properties.find(property => property.name === "host")}
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "host.id"
             )}
