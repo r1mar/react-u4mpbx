@@ -31,7 +31,7 @@ export default class RapidComboBox extends React.Component {
 
   mapOptions(optionInput) {
     let id = "",
-      name;
+      value;
 
     this.state.optionsMetadata.forEach(meta => {
       if (meta.isKey) {
@@ -39,13 +39,13 @@ export default class RapidComboBox extends React.Component {
       }
 
       if (meta.isName) {
-        name = optionInput[meta.name];
+        value = optionInput[meta.name];
       }
     });
 
     return {
       id: id,
-      name: name
+      value: value
     };
   }
 
