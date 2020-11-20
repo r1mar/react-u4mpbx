@@ -22,6 +22,16 @@ export default class MatchView extends React.Component {
           goals: 0
         }
       },
+      metadata: {
+        properties: [
+          {
+            name: "host"
+          },
+          {
+            name: "guest"
+          }
+        ]
+      },
       errors: [],
       teams: []
     };
