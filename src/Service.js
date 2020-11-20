@@ -269,6 +269,22 @@ class Service {
     });
   }
 
+  readMetadata(path) {
+    return new Promise((resolve, reject) => {
+      try {
+        let metaPath = this.getMetaPath();
+
+        if (!metaPath) {
+          throw new NotFoundError(`Entität nicht gefunden`);
+        }
+
+        resolve(this.metadata.types[metaPath.type]);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
   updateEntity(path, data) {
     return new Promise((resolve, reject) => {
       try {
