@@ -229,7 +229,7 @@ class Service {
     return new Promise((resolve, reject) => {
       try {
         let metadataPath = this.getMetaPath(path),
-          collection = this.getCollection(path);
+          collection = this.getCollection(path, metadataPath);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
@@ -243,8 +243,8 @@ class Service {
           resolve(result);
         }
 
-        if (metadata.sort) {
-          result = result.sort(metadata.sort);
+        if (metadataPath.sort) {
+          result = result.sort(metadataPath.sort);
         }
 
         resolve(result.map(entity => Object.assign({}, entity)));
@@ -313,7 +313,7 @@ class Service {
   }
 
   getMetaPath(path) {
-    this.metadata.paths.find(metaPath => {
+    return this.metadata.paths.find(metaPath => {
       // /team/:id
       let metaRegex = metaPath.name.replace(/:\w+/g, "([^/]+)"),
         matches = path.match(metaRegex);
@@ -359,14 +359,12 @@ class Service {
         return false;
       }
 
-      alert(matches[0] === path + "-" + metaPath.name);
+      alert((matches[0] === path) + "-" + metaPath.name);
       return matches[0] === path;
     });
   }
 
-  getCollection(path) {
-    let metadataPath = this.getMetaPath(path);
-
+  getCollection(path, metadataPath) {
     if (!metadataPath) {
       throw new NotFoundError(`Ressource "${path}" nicht gefunden`);
     }
@@ -376,11 +374,13 @@ class Service {
 
   entityEquals(path, metadataPath, entity) {
     //Pfad aus der Entität erstellen udn mit dem übergebenen Pfad abgleichen
-    let type = metadata.types.find(type => type.name === metadataPath.type),
+    let type = this.metadata.types.find(
+        type => type.name === metadataPath.type
+      ),
       entityPath = metadataPath.name;
 
     // Wenn keine Parameter definiert ist, dann ist alles ein Treffer
-    if (metadataPath.search(":") === -1) {
+    if (metadataPath.name.search(":") === -1) {
       return true;
     }
 
