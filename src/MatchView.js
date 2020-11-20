@@ -207,7 +207,6 @@ export default class MatchView extends React.Component {
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
             )}
-            min="0"
           />
           <div className="form-row">
             <NumberBox
@@ -232,6 +231,7 @@ export default class MatchView extends React.Component {
                   error instanceof FieldError && error.field === "guest.goals"
               )}
               inline={true}
+              min="0"
             />
           </div>
         </Form>

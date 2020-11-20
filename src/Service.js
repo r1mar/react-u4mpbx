@@ -122,22 +122,26 @@ class Service {
             {
               name: "id",
               type: "number",
+              label: "#",
               isKey: true,
               autoIncrement: true
             },
             {
               name: "gameDay",
               type: "date",
+              label: "Spieltag",
               required: true
             },
             {
               name: "host",
               type: "participant",
+              label: "Gastgeber",
               required: true
             },
             {
               name: "guest",
               type: "participant",
+              label: "Gast",
               required: true
             }
           ]
@@ -148,10 +152,17 @@ class Service {
             {
               name: "id",
               type: "number",
+              label: "#",
               isKey: true,
               autoIncrement: true
             },
-            { name: "name", type: "string", required: true }
+            {
+              name: "name",
+              type: "string",
+              label: "Name",
+              isName: true,
+              required: true
+            }
           ]
         },
         {
@@ -160,16 +171,20 @@ class Service {
             {
               name: "id",
               type: "number",
+              label: "#",
+              valueList: "/teams",
               required: true
             },
             {
               name: "name",
               type: "string",
+              label: "Name",
               required: true
             },
             {
               name: "goals",
               type: "number",
+              label: "Tore",
               min: 0,
               required: true
             }
