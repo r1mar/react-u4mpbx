@@ -192,7 +192,7 @@ class Service {
         this.determineEntity(metadataPath, collection, "create", data);
         this.validateEntity(metadataPath, collection, "create", data);
 
-        entitySet.push(Object.assign({}, data));
+        collection.push(Object.assign({}, data));
         resolve(data);
       } catch (e) {
         reject(e);
@@ -398,11 +398,11 @@ class Service {
   }
 
   determineEntity(metadataPath, collection, operation, data) {
-    if (operation === "create") {
-      let type = this.metadata.types.find(
-        type => type.name === metadataPath.type
-      );
+    let type = this.metadata.types.find(
+      type => type.name === metadataPath.type
+    );
 
+    if (operation === "create") {
       type.properties.forEach(property => {
         if (property.autoIncrement) {
           let maxValue = -1;
