@@ -180,7 +180,17 @@ export default class MatchView extends React.Component {
             id="cmbTeam1"
             onChange={this.onSelectTeam}
             value={this.state.match.host.id}
-            metadata={this.state.metadata.type.properties.find(property => property.name === "host")}
+            label={
+              this.state.metadata.properties.find(
+                property => property.name === "host"
+              ).label
+            }
+            required={
+              this.state.metadata.properties.find(
+                property => property.name === "host"
+              ).required
+            }
+            options="/teams"
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "host.id"
             )}

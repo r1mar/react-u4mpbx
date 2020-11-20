@@ -269,6 +269,16 @@ class Service {
     });
   }
 
+  expandMetadata(metadata) {
+    metadata.properties.forEach(property => {
+      if (this.metadata.types[property.type]) {
+        property.type = this.expandMetadata(this.metadata.types[property.type]);
+      }
+    });
+
+    return metadata;
+  }
+
   readMetadata(path) {
     return new Promise((resolve, reject) => {
       try {
@@ -278,7 +288,11 @@ class Service {
           throw new NotFoundError(`Entität nicht gefunden`);
         }
 
-        resolve(this.metadata.types[metaPath.type]);
+        let result = this.metadata.types[metaPath.type];
+
+        this.expandMetadata(result);
+
+        resolve(result.properties);
       } catch (e) {
         reject(e);
       }

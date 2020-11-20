@@ -17,8 +17,8 @@ export default class RapidCompoBox {
     try {
       if (this.props.options) {
         this.setState({
-          options: await service.readEntities(this.props.meta.valueList),
-          optionsMetadata: await service.readMetadata(this.props.meta.valueList)
+          options: await service.readEntities(this.props.options),
+          optionsMetadata: await service.readMetadata(this.props.options)
         });
       }
     } catch (e) {
@@ -52,11 +52,11 @@ export default class RapidCompoBox {
     return (
       <ComboBox
         id={this.props.id}
-        label={this.props.meta.label}
+        label={this.props.label}
         onChange={this.props.onChange}
         options={this.state.options.map(this.mapOptions)}
         value={this.props.value}
-        required={this.props.meta.required}
+        required={this.props.required}
         errors={this.state.errors}
       />
     );
