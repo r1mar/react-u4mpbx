@@ -59,7 +59,7 @@ export default class TeamView extends React.Component {
           this.state.team
         );
       } else {
-        team = await service.createEntity("/team", this.state.team);
+        team = await service.createEntity("/teams", this.state.team);
         this.props.history.replace("/team/" + team.id);
       }
     } catch (e) {

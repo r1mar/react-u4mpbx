@@ -80,7 +80,7 @@ export default class MatchView extends React.Component {
           this.state.match
         );
       } else {
-        match = await service.createEntity("/match/", this.state.match);
+        match = await service.createEntity("/matches", this.state.match);
 
         this.props.history.push("/match/" + match.id);
       }

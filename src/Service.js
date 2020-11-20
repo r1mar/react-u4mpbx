@@ -182,15 +182,15 @@ class Service {
   createEntity(path, data) {
     return new Promise((resolve, reject) => {
       try {
-        let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+        let metadataPath = this.getMetaPath(path),
+          collection = this.getCollection(path, metadataPath);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
-        this.determineEntity(metadata, entitySet, "create", data);
-        this.validateEntity(metadata, entitySet, "create", data);
+        this.determineEntity(metadataPath, collection, "create", data);
+        this.validateEntity(metadataPath, collection, "create", data);
 
         entitySet.push(Object.assign({}, data));
         resolve(data);
@@ -203,15 +203,15 @@ class Service {
   readEntity(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+        let metadataPath = this.getMetaPath(path),
+          collection = this.getCollection(path, metadataPath);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
-        let result = entitySet.find(entity =>
-          this.entityEquals(path, metadata, entity)
+        let result = collection.find(entity =>
+          this.entityEquals(path, metadataPath, entity)
         );
 
         if (result) {
@@ -257,22 +257,22 @@ class Service {
   updateEntity(path, data) {
     return new Promise((resolve, reject) => {
       try {
-        let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+        let metadataPath = this.getMetaPath(path),
+          collection = this.getCollection(path, metadataPath);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
-        let result = entitySet.find(entity =>
-          this.entityEquals(path, metadata, entity)
+        let result = collection.find(entity =>
+          this.entityEquals(path, metadataPath, entity)
         );
 
         if (result) {
           Object.assign(result, data);
 
-          this.determineEntity(metadata, entitySet, "update", result);
-          this.validateEntity(metadata, entitySet, "update", result);
+          this.determineEntity(metadataPath, collection, "update", result);
+          this.validateEntity(metadataPath, collection, "update", result);
 
           resolve(Object.assign({}, result));
         } else {
@@ -287,21 +287,21 @@ class Service {
   deleteEntity(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+        let metadataPath = this.getMetaPath(path),
+          collection = this.getCollection(path, metadataPath);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
-        let result = entitySet.find(entity =>
-          this.entityEquals(path, metadata, entity)
+        let result = collection.find(entity =>
+          this.entityEquals(path, metadataPath, entity)
         );
 
         if (result) {
-          let index = entitySet.indexOf(result);
+          let index = collection.indexOf(result);
 
-          entitySet.splice(index, 1);
+          collection.splice(index, 1);
           resolve();
         } else {
           throw new NotFoundError();
@@ -316,29 +316,32 @@ class Service {
     return this.metadata.paths.find(metaPath => {
       // /team/:id
       let metaRegex = metaPath.name.replace(/:\w+/g, "([^/]+)"),
-        matches = path.match(metaRegex);
+        matches = path.match(metaRegex),
+        paramMatches = metaPath.name.match(/:\w+/g);
       // /team/([^/]+)
       // [ "/team/:id", ":id" ]
+      // [ ":id" ]
 
-      //Filter auf untypisierten Regex
+      //Filter auf untypisierten Regex fehlgeschlagen
       if (!matches || !matches.length) {
         return false;
       }
 
+      if (!paramMatches) {
+        //keine parameter vorhanden
+        return true;
+      }
+
       // typisierten Regex erstellen
       metaRegex = metaPath.name;
-      matches.forEach((match, index) => {
-        if (!index) {
-          return 1;
-        }
-
+      paramMatches.forEach(match => {
         let type = this.metadata.types.find(
           type => type.name === metaPath.type
         );
 
-        let property = type.properties.find(
-            property => property.name === match.subString(1)
-          ),
+        let property = type.properties.find(property => {
+            return property.name === match.substring(1);
+          }),
           paramRegex;
         switch (property.type) {
           case "number":
@@ -359,7 +362,6 @@ class Service {
         return false;
       }
 
-      alert((matches[0] === path) + "-" + metaPath.name);
       return matches[0] === path;
     });
   }
@@ -384,20 +386,28 @@ class Service {
       return true;
     }
 
-    type.properties.forEach(property =>
-      entityPath.replace(":" + property.name, entity[property.name])
+    type.properties.forEach(
+      property =>
+        (entityPath = entityPath.replace(
+          ":" + property.name,
+          entity[property.name]
+        ))
     );
 
     return path === entityPath;
   }
 
-  determineEntity(metadata, entitySet, operation, data) {
+  determineEntity(metadataPath, collection, operation, data) {
     if (operation === "create") {
-      metadata.properties.forEach(property => {
+      let type = this.metadata.types.find(
+        type => type.name === metadataPath.type
+      );
+
+      type.properties.forEach(property => {
         if (property.autoIncrement) {
           let maxValue = -1;
 
-          entitySet.forEach(entity => {
+          collection.forEach(entity => {
             maxValue =
               entity[property.name] > maxValue
                 ? entity[property.name]
@@ -409,15 +419,16 @@ class Service {
       });
     }
 
-    if (metadata.determine) {
-      metadata.determine(metadata, entitySet, operation, data);
+    if (type.determine) {
+      type.determine(metadataPath, collection, operation, data);
     }
   }
 
-  validateEntity(metadata, entitySet, operation, data) {
-    let error = new MultipleError();
+  validateEntity(metadataPath, collection, operation, data) {
+    let error = new MultipleError(),
+      type = this.metadata.types.find(type => type.name === metadataPath.type);
 
-    metadata.properties.forEach(property => {
+    type.properties.forEach(property => {
       if (property.required && !data[property.name]) {
         error.errors.push(new FieldError(property.name));
       }
@@ -432,8 +443,8 @@ class Service {
         throw error;
     }
 
-    if (metadata.validate) {
-      metadata.validate(metadata, entitySet, operation, data);
+    if (type.validate) {
+      type.validate(metadataPath, collection, operation, data);
     }
   }
 
@@ -448,7 +459,7 @@ class Service {
     return 0;
   }
 
-  validateMatch(metadata, entitySet, operation, data) {
+  validateMatch(metadataPath, collection, operation, data) {
     if (data.host.id === data.guest.id) {
       throw new FieldError(
         "guest.id",
