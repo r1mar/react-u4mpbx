@@ -110,6 +110,8 @@ class Service {
           name: "match",
           collection: "matches",
           paths: ["/match/:id", "/matches"],
+          sort: this.sortMatch,
+          validate: this.validateMatch,
           properties: [
             {
               name: "id",
@@ -159,51 +161,6 @@ class Service {
         }
       ]
     };
-
-    this.matches = [
-      {
-        id: 1,
-        host: {
-          id: 4,
-          goals: 8,
-          name: "FC Bayern"
-        },
-        guest: {
-          id: 5,
-          goals: 0,
-          name: "Schalke"
-        },
-        gameDay: "2020-01-01"
-      },
-      {
-        id: 2,
-        host: {
-          id: 6,
-          goals: 2,
-          name: "Vfb"
-        },
-        guest: {
-          id: 7,
-          goals: 3,
-          name: "Freiburg"
-        },
-        gameDay: "2020-02-01"
-      },
-      {
-        id: 3,
-        host: {
-          id: 8,
-          goals: 1,
-          name: "SGE"
-        },
-        guest: {
-          id: 9,
-          goals: 1,
-          name: "Arminia"
-        },
-        gameDay: "2020-03-01"
-      }
-    ];
   }
 
   createEntity(path, data) {
@@ -398,20 +355,21 @@ class Service {
   }
 
   getMetadata(path) {
-    let metadata = this.metadata.entities.filter(entity =>
-      entity.paths.filter(entityPath => {
-        let entityStrings = entityPath.match(/\w+/);
+    let metadata = this.metadata.entities.filter(
+      entity =>
+        entity.paths.filter(entityPath => {
+          let entityStrings = entityPath.match(/\/\w+/);
 
-        return (
-          entityStrings && entityStrings.length && entityStrings[0] === path
-        );
-      })
+          if (!entityStrings || !entityStrings.length) {
+            return false;
+          }
+
+          return path.startsWith(entityStrings[0]);
+        }).length
     );
 
     if (!metadata || !metadata.length) {
-      throw new NotFoundError(
-        `Zum Pfad "${path}" konnte keine Entität ermittelt`
-      );
+      throw new Error(`Zum Pfad "${path}" konnte keine Entität ermittelt`);
     }
 
     if (metadata.length > 1) {
@@ -480,16 +438,8 @@ class Service {
     return 0;
   }
 
-  validateMatch(match) {
-    if (!match.host.id) {
-      throw new FieldError("host.id", "Das ist ein Pflichtfeld");
-    }
-
-    if (!match.guest.id) {
-      throw new FieldError("guest.id", "Das ist ein Pflichtfeld");
-    }
-
-    if (match.host.id === match.guest.id) {
+  validateMatch(metadata, entitySet, operation, data) {
+    if (data.host.id === data.guest.id) {
       throw new FieldError(
         "guest.id",
         "Wählen Sie zwei unterschiedliche Teams aus"
@@ -497,125 +447,26 @@ class Service {
     }
   }
 
-  createMatch(match) {
-    return new Promise((resolve, reject) => {
-      try {
-        let maxId = -1;
+  sortMatch(a, b) {
+    if (a.gameDay > b.gameDay) {
+      return 1;
+    }
+    if (a.gameDay < b.gameDay) {
+      return -1;
+    }
+    if (a.host.name > b.host.name) {
+      return 1;
+    }
+    if (a.guest.name < b.guest.name) {
+      return -1;
+    }
 
-        this.validateMatch(match, "creating");
-
-        this.matches.forEach(match => {
-          maxId = match.id > maxId ? match.id : max.id;
-        });
-
-        match.id = ++maxId;
-
-        this.matches.push(Object.assign({}, match));
-        resolve(match);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  readMatch(id) {
-    return new Promise((resolve, reject) => {
-      let result = Object.assign(
-        {},
-        this.matches.find(match => match.id == id)
-      );
-
-      if (result) {
-        result.team1 = Object.assign(
-          {},
-          this.teams.find(team => team.id === result.team1Id)
-        );
-        result.team2 = Object.assign(
-          {},
-          this.teams.find(team => team.id === result.team2Id)
-        );
-        resolve(result);
-      } else {
-        reject(new NotFoundError());
-      }
-    });
-  }
-
-  readMatches() {
-    return new Promise((resolve, reject) => {
-      let resultArray = this.matches
-        .map(match => {
-          let result = Object.assign({}, match);
-
-          return result;
-        })
-        .sort((a, b) => {
-          if (a.gameDay > b.gameDay) {
-            return 1;
-          }
-          if (a.gameDay < b.gameDay) {
-            return -1;
-          }
-          if (a.host.name > b.host.name) {
-            return 1;
-          }
-          if (a.guest.name < b.guest.name) {
-            return -1;
-          }
-
-          return 0;
-        });
-      resolve(resultArray);
-    });
-  }
-
-  updateMatch(match) {
-    return new Promise((resolve, reject) => {
-      let aMatch = this.matches.find(item => item.id === match.id);
-
-      if (aMatch) {
-        Object.assign(aMatch, match);
-
-        this.validateMatch(match, "updating");
-
-        resolve(match);
-      } else {
-        reject(new NotFoundError());
-      }
-    });
-  }
-
-  deleteMatch(id) {
-    return new Promise((resolve, reject) => {
-      let match = this.matches.find(match => match.id === id);
-
-      if (match) {
-        let index = this.matches.indexOf(match);
-
-        this.matches.splice(index, 1);
-        resolve();
-      } else {
-        reject(new NotFoundError());
-      }
-    });
-  }
-
-  deleteMatches(ids) {
-    let result = [];
-
-    ids.forEach(id => {
-      result.push(this.deleteMatch(id));
-    });
-
-    return Promise.all(result);
+    return 0;
   }
 
   readAll() {
     return new Promise((resolve, reject) => {
-      resolve({
-        teams: this.teams.map(team => Object.assign({}, team)),
-        matches: this.matches.map(match => Object.assign({}, match))
-      });
+      resolve(this.data);
     });
   }
 }

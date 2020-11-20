@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import service from "./Service";
 import Form from "./Form";
 import ComboBox from "./ComboBox";
@@ -39,7 +38,9 @@ export default class MatchView extends React.Component {
       });
 
       if (this.props.match.params.id) {
-        let match = await service.readMatch(this.props.match.params.id);
+        let match = await service.readEntity(
+          "/match/" + this.props.match.params.id
+        );
 
         this.setState({
           match: match,
@@ -47,7 +48,7 @@ export default class MatchView extends React.Component {
         });
       }
 
-      let teams = await service.readTeams();
+      let teams = await service.readEntities("/teams");
 
       this.setState({
         teams: teams
@@ -56,8 +57,8 @@ export default class MatchView extends React.Component {
       if (e instanceof NotFoundError) {
         this.props.history.push("/not-found");
       } else {
-        this.setState((state, props) => ({
-          errors: [...state.errors, e]
+        this.setState(state => ({
+          errors: [e]
         }));
       }
     }
@@ -74,9 +75,12 @@ export default class MatchView extends React.Component {
       });
 
       if (this.props.match.params.id) {
-        match = await service.updateMatch(this.state.match);
+        match = await service.updateEntity(
+          "/match/" + this.state.match.id,
+          this.state.match
+        );
       } else {
-        match = await service.createMatch(this.state.match);
+        match = await service.createEntity("/match/", this.state.match);
 
         this.props.history.push("/match/" + match.id);
       }
