@@ -228,7 +228,7 @@ class Service {
   readEntities(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metadataPath = this.getMetadata(path),
+        let metadataPath = this.getMetaPath(path),
           collection = this.getCollection(path);
 
         if (!path) {
@@ -315,7 +315,7 @@ class Service {
   getMetaPath(path) {
     this.metadata.paths.find(metaPath => {
       // /team/:id
-      let metaRegex = metaPath.replace(/:\w+/g, "([^/]+)"),
+      let metaRegex = metaPath.name.replace(/:\w+/g, "([^/]+)"),
         matches = path.match(metaRegex);
       // /team/([^/]+)
       // [ "/team/:id", ":id" ]
@@ -326,7 +326,7 @@ class Service {
       }
 
       // typisierten Regex erstellen
-      metaRegex = metaPath;
+      metaRegex = metaPath.name;
       matches.forEach((match, index) => {
         if (!index) {
           return 1;
@@ -352,13 +352,14 @@ class Service {
       });
 
       // gegen typisiertes Regex testen
-      let matches = path.match(metaRegex);
+      matches = path.match(metaRegex);
 
       //Filter auf typisierten Regex
       if (!matches || !matches.length) {
         return false;
       }
 
+      alert(matches[0] === path + "-" + metaPath.name);
       return matches[0] === path;
     });
   }
