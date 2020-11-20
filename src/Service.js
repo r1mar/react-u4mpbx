@@ -424,15 +424,28 @@ class Service {
     }
   }
 
+  validateProperties(property, data, error) {
+    if (property.required && !data[property.name]) {
+      error.errors.push(new FieldError(property.name));
+    }
+
+    //rekursiver Aufruf für die Validierung
+    if (this.metadata.types[property.type] && data[property.name]) {
+      let type = this.metadata.types[property.type];
+
+      type.properties.forEach(property =>
+        this.validateProperties(property, data[property.name], error)
+      );
+    }
+  }
+
   validateEntity(metadataPath, collection, operation, data) {
     let error = new MultipleError(),
       type = this.metadata.types.find(type => type.name === metadataPath.type);
 
-    type.properties.forEach(property => {
-      if (property.required && !data[property.name]) {
-        error.errors.push(new FieldError(property.name));
-      }
-    });
+    type.properties.forEach(property =>
+      this.validateProperties(property, data, error)
+    );
 
     switch (error.errors.length) {
       case 0:
