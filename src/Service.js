@@ -93,22 +93,26 @@ class Service {
       paths: [
         {
           name: "/team/:id",
-          type: "team"
+          type: "team",
+          collection: "teams"
         },
         {
           name: "/teams",
           type: "team",
-          sort: this.sortTeams
+          sort: this.sortTeams,
+          collection: "teams"
         },
         {
           name: "/match/:id",
           type: "match",
-          validate: this.validateMatch
+          validate: this.validateMatch,
+          collection: "matches"
         },
         {
           name: "/matches",
           type: "match",
-          sort: this.sortMatch
+          sort: this.sortMatch,
+          collection: "matches"
         }
       ],
       types: [
@@ -224,15 +228,15 @@ class Service {
   readEntities(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metadata = this.getMetadata(path),
-          entitySet = this.data[metadata.collection];
+        let metadataPath = this.getMetadata(path),
+          collection = this.getCollection(path);
 
         if (!path) {
           throw new Error("Pfad nicht angegeben");
         }
 
-        let result = entitySet.filter(entity =>
-          this.entityEquals(path, metadata, entity)
+        let result = collection.filter(entity =>
+          this.entityEquals(path, metadataPath, entity)
         );
 
         if (result && !result.length) {
@@ -308,93 +312,82 @@ class Service {
     });
   }
 
-  getPathRegex(metaPath) {
-    let paramNames = metaPath.match(/:\w+/g);
+  getMetaPath(path) {
+    this.metadata.paths.find(metaPath => {
+      // /team/:id
+      let metaRegex = metaPath.replace(/:\w+/g, "([^/]+)"),
+        matches = path.match(metaRegex);
+      // /team/([^/]+)
+      // [ "/team/:id", ":id" ]
+
+      //Filter auf untypisierten Regex
+      if (!matches || !matches.length) {
+        return false;
+      }
+
+      // typisierten Regex erstellen
+      metaRegex = metaPath;
+      matches.forEach((match, index) => {
+        if (!index) {
+          return 1;
+        }
+
+        let type = this.metadata.types.find(
+          type => type.name === metaPath.type
+        );
+
+        let property = type.properties.find(
+            property => property.name === match.subString(1)
+          ),
+          paramRegex;
+        switch (property.type) {
+          case "number":
+            paramRegex = "([0-9]+)";
+            break;
+
+          case "string":
+            paramRegex = "([^/]+)";
+        }
+        metaRegex = metaRegex.replace(":" + property.name, paramRegex);
+      });
+
+      // gegen typisiertes Regex testen
+      let matches = path.match(metaRegex);
+
+      //Filter auf typisierten Regex
+      if (!matches || !matches.length) {
+        return false;
+      }
+
+      return matches[0] === path;
+    });
   }
 
-  entityEquals(path, metadata, entity) {
-    let pathRegex,
-      properties = [],
-      matches,
-      noFilter;
+  getCollection(path) {
+    let metadataPath = this.getMetaPath(path);
 
-    metadata.paths.find(metadataPath => {
-      //nach dem Pfad aus den Metadaten suchen, der zum Abfrage-Path passt
-      let paramNames = metadataPath.match(/:\w+/g);
+    if (!metadataPath) {
+      throw new NotFoundError(`Ressource "${path}" nicht gefunden`);
+    }
 
-      properties = [];
-      matches = [];
-      pathRegex = "/" + metadataPath.replace("/", "/") + "/";
+    return this.data[metadataPath.collection];
+  }
 
-      if (!paramNames) {
-        noFilter = true;
-        return metadataPath === path;
-      } else {
-        paramNames.forEach(paramName => {
-          let property = metadata.properties.find(
-              property => ":" + property.name === paramName
-            ),
-            propertyRegex;
+  entityEquals(path, metadataPath, entity) {
+    //Pfad aus der Entität erstellen udn mit dem übergebenen Pfad abgleichen
+    let type = metadata.types.find(type => type.name === metadataPath.type),
+      entityPath = metadataPath.name;
 
-          if (property) {
-            properties.push(property);
-
-            if (property.type === "number") {
-              propertyRegex = "([0-9]+)";
-            } else {
-              propertyRegex = "(.[^/]+)";
-            }
-
-            pathRegex = pathRegex.replace(paramName, propertyRegex);
-          }
-        });
-
-        matches = path.match(pathRegex);
-
-        return matches && matches.length && path === matches[0];
-      }
-    });
-
-    //alert(matches.length); 0
-
-    if (noFilter) {
-      //lesen aller Entitäten
+    // Wenn keine Parameter definiert ist, dann ist alles ein Treffer
+    if (metadataPath.search(":") === -1) {
       return true;
     }
 
-    // fehlgeschlagene Vergleiche sammeln
-    let results = properties.filter(
-      (property, index) => entity[property.name] != matches[index + 1]
+    type.properties.forEach(property =>
+      entityPath.replace(":" + property.name, entity[property.name])
     );
 
-    return !results || !results.length;
-  }
-
-  getMetadata(path) {
-    let path = this.metadata.paths.filter(
-      metaPath => {
-          // /team/1 
-          let entityStrings = metaPath.match(/\/\w+/);
-
-          if (!entityStrings || !entityStrings.length) {
-            return false;
-          }
-
-          return path.startsWith(entityStrings[0]);
-      }
-    );
-
-    if (!metadata || !metadata.length) {
-      throw new Error(`Zum Pfad "${path}" konnte keine Entität ermittelt`);
-    }
-
-    if (metadata.length > 1) {
-      throw new Error(
-        `Pfad ${path} konnte nicht eindeutig einer Entität zugeordnet werden`
-      );
-    }
-
-    return metadata[0];
+    return path === entityPath;
   }
 
   determineEntity(metadata, entitySet, operation, data) {
