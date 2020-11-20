@@ -90,28 +90,30 @@ class Service {
     };
 
     this.metadata = {
-      entities: [
+      paths: [
         {
-          name: "team",
-          collection: "teams",
-          paths: ["/team/:id", "/teams"],
-          sort: this.sortTeams,
-          properties: [
-            {
-              name: "id",
-              type: "number",
-              isKey: true,
-              autoIncrement: true
-            },
-            { name: "name", type: "string", required: true }
-          ]
+          name: "/team/:id",
+          type: "team"
         },
         {
+          name: "/teams",
+          type: "team",
+          sort: this.sortTeams
+        },
+        {
+          name: "/match/:id",
+          type: "match",
+          validate: this.validateMatch
+        },
+        {
+          name: "/matches",
+          type: "match",
+          sort: this.sortMatch
+        }
+      ],
+      types: [
+        {
           name: "match",
-          collection: "matches",
-          paths: ["/match/:id", "/matches"],
-          sort: this.sortMatch,
-          validate: this.validateMatch,
           properties: [
             {
               name: "id",
@@ -135,9 +137,19 @@ class Service {
               required: true
             }
           ]
-        }
-      ],
-      types: [
+        },
+        {
+          name: "team",
+          properties: [
+            {
+              name: "id",
+              type: "number",
+              isKey: true,
+              autoIncrement: true
+            },
+            { name: "name", type: "string", required: true }
+          ]
+        },
         {
           name: "participant",
           properties: [
@@ -268,7 +280,7 @@ class Service {
     });
   }
 
-  deleteTeam(path) {
+  deleteEntity(path) {
     return new Promise((resolve, reject) => {
       try {
         let metadata = this.getMetadata(path),
@@ -294,6 +306,10 @@ class Service {
         reject(e);
       }
     });
+  }
+
+  getPathRegex(metaPath) {
+    let paramNames = metaPath.match(/:\w+/g);
   }
 
   entityEquals(path, metadata, entity) {
@@ -355,17 +371,17 @@ class Service {
   }
 
   getMetadata(path) {
-    let metadata = this.metadata.entities.filter(
-      entity =>
-        entity.paths.filter(entityPath => {
-          let entityStrings = entityPath.match(/\/\w+/);
+    let path = this.metadata.paths.filter(
+      metaPath => {
+          // /team/1 
+          let entityStrings = metaPath.match(/\/\w+/);
 
           if (!entityStrings || !entityStrings.length) {
             return false;
           }
 
           return path.startsWith(entityStrings[0]);
-        }).length
+      }
     );
 
     if (!metadata || !metadata.length) {
