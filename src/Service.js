@@ -272,6 +272,7 @@ class Service {
   expandMetadata(metadata) {
     metadata.properties.forEach(property => {
       let type = this.metadata.types.find(type => type.name === property.type);
+
       if (type) {
         property.type = type;
         this.expandMetadata(property.type);
@@ -282,7 +283,7 @@ class Service {
   readMetadata(path) {
     return new Promise((resolve, reject) => {
       try {
-        let metaPath = this.getMetaPath();
+        let metaPath = this.getMetaPath(path);
 
         if (!metaPath) {
           throw new NotFoundError(`Entität nicht gefunden`);
