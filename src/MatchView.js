@@ -22,16 +22,14 @@ export default class MatchView extends React.Component {
           goals: 0
         }
       },
-      metadata: {
-        properties: [
-          {
-            name: "host"
-          },
-          {
-            name: "guest"
-          }
-        ]
-      },
+      metadata: [
+        {
+          name: "host"
+        },
+        {
+          name: "guest"
+        }
+      ],
       errors: [],
       teams: []
     };
@@ -191,14 +189,12 @@ export default class MatchView extends React.Component {
             onChange={this.onSelectTeam}
             value={this.state.match.host.id}
             label={
-              this.state.metadata.properties.find(
-                property => property.name === "host"
-              ).label
+              this.state.metadata.find(property => property.name === "host")
+                .label
             }
             required={
-              this.state.metadata.properties.find(
-                property => property.name === "host"
-              ).required
+              this.state.metadata.find(property => property.name === "host")
+                .required
             }
             options="/teams"
             errors={errors.filter(
@@ -208,17 +204,15 @@ export default class MatchView extends React.Component {
           <RapidComboBox
             id="cmbTeam2"
             label={
-              this.state.metadata.properties.find(
-                property => property.name === "guest"
-              ).label
+              this.state.metadata.find(property => property.name === "guest")
+                .label
             }
             onChange={this.onSelectTeam}
             options="/teams"
             value={this.state.match.guest.id}
             required={
-              this.state.metadata.properties.find(
-                property => property.name === "guest"
-              ).required
+              this.state.metadata.find(property => property.name === "guest")
+                .required
             }
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
