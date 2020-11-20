@@ -1,5 +1,6 @@
 import React from "react";
 import service from "./Service";
+import ComboBox from "./ComboBox";
 
 export default class RapidComboBox extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class RapidComboBox extends React.Component {
     let id = "",
       name;
 
-    this.state.optionsMetadata.properties.forEach(meta => {
+    this.state.optionsMetadata.forEach(meta => {
       if (meta.isKey) {
         id += optionInput[meta.name];
       }

@@ -271,12 +271,12 @@ class Service {
 
   expandMetadata(metadata) {
     metadata.properties.forEach(property => {
-      if (this.metadata.types[property.type]) {
-        property.type = this.expandMetadata(this.metadata.types[property.type]);
+      let type = this.metadata.types.find(type => type.name === property.type);
+      if (type) {
+        property.type = type;
+        this.expandMetadata(property.type);
       }
     });
-
-    return metadata;
   }
 
   readMetadata(path) {
@@ -288,7 +288,9 @@ class Service {
           throw new NotFoundError(`Entität nicht gefunden`);
         }
 
-        let result = this.metadata.types[metaPath.type];
+        let result = this.metadata.types.find(
+          type => type.name === metaPath.type
+        );
 
         this.expandMetadata(result);
 
