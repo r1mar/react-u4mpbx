@@ -8,7 +8,8 @@ export default class RapidComboBox extends React.Component {
 
     this.state = {
       options: [],
-      errors: props.errors
+      errors: props.errors,
+      metadata: {}
     };
 
     this.mapOptions = this.mapOptions.bind(this);
@@ -17,8 +18,9 @@ export default class RapidComboBox extends React.Component {
   async componentDidMount() {
     try {
       if (this.props.options) {
+        let metadata = await service.readMetadata(this.props.meta);
         this.setState({
-          options: await service.readEntities(this.props.options),
+          options: await service.readEntities(metadata.valueList.path),
           optionsMetadata: await service.readMetadata(this.props.options)
         });
       }
