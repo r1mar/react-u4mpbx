@@ -22,16 +22,7 @@ export default class MatchView extends React.Component {
           goals: 0
         }
       },
-      metadata: [
-        {
-          name: "host"
-        },
-        {
-          name: "guest"
-        }
-      ],
-      errors: [],
-      teams: []
+      errors: []
     };
     this.save = this.save.bind(this);
     this.onSelectTeam = this.onSelectTeam.bind(this);
@@ -49,14 +40,10 @@ export default class MatchView extends React.Component {
         this.setState({
           match: await service.readEntity(
             "/match/" + this.props.match.params.id
-          ),
-          metadata: await service.readMetadata("/matches")
+          )
         });
       }
 
-      this.setState({
-        teams: await service.readEntities("/teams")
-      });
     } catch (e) {
       if (e instanceof NotFoundError) {
         this.props.history.push("/not-found");
@@ -95,12 +82,11 @@ export default class MatchView extends React.Component {
     }
   }
 
-  onSelectTeam(event) {
+  onSelectTeam(target, team) {
     try {
-      let newMatch = Object.assign({}, this.state.match),
-        team = this.state.teams.find(team => team.id === +event.target.value);
+      let newMatch = Object.assign({}, this.state.match);
 
-      if (event.target.id === "cmbTeam1") {
+      if (target.id === "cmbTeam1") {
         newMatch.host = Object.assign({}, this.state.match.host, team);
       } else {
         newMatch.guest = Object.assign({}, this.state.match.guest, team);
@@ -188,26 +174,16 @@ export default class MatchView extends React.Component {
             id="cmbTeam1"
             onChange={this.onSelectTeam}
             value={this.state.match.host.id}
-            label="/match/host/label"
-            required="/match/host/required"
-            options="/teams"
+            meta="/match/host"
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "host.id"
             )}
           />
           <RapidComboBox
             id="cmbTeam2"
-            label={
-              this.state.metadata.find(property => property.name === "guest")
-                .label
-            }
+            meta="/match/guest"
             onChange={this.onSelectTeam}
-            options="/teams"
             value={this.state.match.guest.id}
-            required={
-              this.state.metadata.find(property => property.name === "guest")
-                .required
-            }
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "guest.id"
             )}
