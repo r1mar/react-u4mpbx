@@ -313,13 +313,7 @@ class Service {
           result = this.metaRecursiv(result, parts.splice(1));
 
         resolve(result);
-        /*let metaPath = this.getMetaPath(path)this.metadata.types.find(
-          type => type.name === metaPath.type
-        );
-
-        this.expandMetadata(result);
-
-        resolve(result.properties);*/
+        
       } catch (e) {
         reject(e);
       }
