@@ -17,9 +17,9 @@ export default class RapidComboBox extends React.Component {
 
   async componentDidMount() {
     try {
-      if (this.props.options) {
+      if (this.props.meta) {
         let metadata = await service.readMetadata(this.props.meta);
-alert(JSON.stringify(metadata));
+//alert(JSON.stringify(metadata));
         this.setState({
           options: await service.readEntities(metadata.valueList.path),
           metadata: metadata
