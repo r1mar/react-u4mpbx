@@ -308,6 +308,7 @@ class Service {
           if(!parts.length) {
             throw new Error("Metadatenpfad nicht angegeben");
           } 
+          alert(JSON.stringify(parts))
           result = this.metadata.types.find(type => type.name === parts[0]);
           if(!result) {
             throw new Error(`Pfad "${parts[0]}" konnte nicht aufgelöst werden`);
