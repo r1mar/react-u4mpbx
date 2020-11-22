@@ -280,17 +280,13 @@ class Service {
     if(!parts.length) {
       return metadata;
     }
-    let property = metadata.properties.find(property => property[parts[0]] || property.name === parts[0]);
-  
-    if(property[parts[0]]) {
-      return property[parts[0]];
-    }
+    let property = metadata.properties.find(property => property.name === parts[0]);
 
-    if(parts.length == 1) {
+    if(parts.length === 1) {
       return property;
     } else {
       let type = this.metadata.type.find(type => type.name === property.type);
-      parts.splice(0, 1);
+      parts.splice(1);
       
       if(!type) {
         throw new Error(`Pfad "${parts[0]}" nicht auflösbar`);
@@ -303,26 +299,21 @@ class Service {
   readMetadata(path) {
     return new Promise((resolve, reject) => {
       try {
-        let parts = path.split('/'),
+        let parts = path.split('/').filter(part => part),
           result;
           if(!parts.length) {
             throw new Error("Metadatenpfad nicht angegeben");
           } 
-          alert(JSON.stringify(parts))
+          
           result = this.metadata.types.find(type => type.name === parts[0]);
           if(!result) {
             throw new Error(`Pfad "${parts[0]}" konnte nicht aufgelöst werden`);
           }
-          result = this.metaRecursiv(result, parts.splice(0, 1));
+          
+          result = this.metaRecursiv(result, parts.splice(1));
 
         resolve(result);
-        /*let metaPath = this.getMetaPath(path);
-
-        if (!metaPath) {
-          throw new NotFoundError(`Entität nicht gefunden`);
-        }
-
-        let result = this.metadata.types.find(
+        /*let metaPath = this.getMetaPath(path)this.metadata.types.find(
           type => type.name === metaPath.type
         );
 
