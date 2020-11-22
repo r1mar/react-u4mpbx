@@ -136,13 +136,23 @@ class Service {
               name: "host",
               type: "participant",
               label: "Gastgeber",
-              required: true
+              required: true,
+              valueList: {
+                path: "/teams",
+                id: "id",
+                value: "name"
+              }
             },
             {
               name: "guest",
               type: "participant",
               label: "Gast",
-              required: true
+              required: true,
+              valueList: {
+                path: "/teams",
+                id: "id",
+                value: "name"
+              }
             }
           ]
         },

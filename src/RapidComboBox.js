@@ -19,9 +19,10 @@ export default class RapidComboBox extends React.Component {
     try {
       if (this.props.options) {
         let metadata = await service.readMetadata(this.props.meta);
+
         this.setState({
           options: await service.readEntities(metadata.valueList.path),
-          optionsMetadata: await service.readMetadata(this.props.options)
+          metadata: metadata
         });
       }
     } catch (e) {
@@ -32,18 +33,8 @@ export default class RapidComboBox extends React.Component {
   }
 
   mapOptions(optionInput) {
-    let id = "",
-      value;
-
-    this.state.optionsMetadata.forEach(meta => {
-      if (meta.isKey) {
-        id += optionInput[meta.name];
-      }
-
-      if (meta.isName) {
-        value = optionInput[meta.name];
-      }
-    });
+    let id = optionInput[this.state.metadata.valueList.id],
+      value = optionInput[this.state.metadata.valueList.value];
 
     return {
       id: id,
@@ -55,11 +46,11 @@ export default class RapidComboBox extends React.Component {
     return (
       <ComboBox
         id={this.props.id}
-        label={this.props.label}
+        label={this.state.metadata.label}
         onChange={this.props.onChange}
         options={this.state.options.map(this.mapOptions)}
         value={this.props.value}
-        required={this.props.required}
+        required={this.state.metadata.required}
         errors={this.state.errors}
       />
     );
