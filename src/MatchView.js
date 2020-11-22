@@ -82,11 +82,11 @@ export default class MatchView extends React.Component {
     }
   }
 
-  onSelectTeam(target, team) {
+  onSelectTeam(event, team) {
     try {
       let newMatch = Object.assign({}, this.state.match);
 
-      if (target.id === "cmbTeam1") {
+      if (event.target.id === "cmbTeam1") {
         newMatch.host = Object.assign({}, this.state.match.host, team);
       } else {
         newMatch.guest = Object.assign({}, this.state.match.guest, team);

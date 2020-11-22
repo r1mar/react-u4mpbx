@@ -19,7 +19,7 @@ export default class RapidComboBox extends React.Component {
     try {
       if (this.props.options) {
         let metadata = await service.readMetadata(this.props.meta);
-
+alert(JSON.stringify(metadata));
         this.setState({
           options: await service.readEntities(metadata.valueList.path),
           metadata: metadata
@@ -40,6 +40,10 @@ export default class RapidComboBox extends React.Component {
       id: id,
       value: value
     };
+  }
+
+  onChange(event){
+    this.props.onChange(event, this.state.options.find(option => this.mapOptions(option).value === event.target.value));
   }
 
   render() {
