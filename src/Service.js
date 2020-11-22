@@ -199,11 +199,41 @@ class Service {
         }
       ]
     };
+
+    this.batch =[];
+    this.interrupt = 0;
+    this.pending = 0;
+    this.executeBatch = this.executeBatch.bind(this);
+  }
+
+  startBatch() {
+    if(!this.pending) {
+      this.pending = setTimeout(this.executeBatch, this.interrupt);
+    }
+  }
+
+  executeBatch() {
+    this.batch.forEach(batchRequest => {
+      try {
+
+        batchRequest.resolve(result);
+      } catch(e) {
+        batchRequest.reject(e);
+      }
+    });
   }
 
   createEntity(path, data) {
     return new Promise((resolve, reject) => {
       try {
+        this.batch.push({
+          method: "post",
+          path: path,
+          resolve: resolve,
+          reject: reject
+        });
+        this.startBatch();
+
         let metadataPath = this.getMetaPath(path),
           collection = this.getCollection(path, metadataPath);
 
@@ -313,7 +343,7 @@ class Service {
           result = this.metaRecursiv(result, parts.splice(1));
 
         resolve(result);
-        
+
       } catch (e) {
         reject(e);
       }
