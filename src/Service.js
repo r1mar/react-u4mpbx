@@ -223,6 +223,10 @@ class Service {
     });
   }
 
+  post() {
+    
+  }
+
   createEntity(path, data) {
     return new Promise((resolve, reject) => {
       try {
