@@ -1,23 +1,37 @@
 import React from "react";
-import FormGroup from "./FormGroup";
+import DateBox from "./DateBox";
+import service from "./Service";
 
-export default function DateBox(props) {
+export default class RapidDateBox extends React.Component {
+  constructor(props) {
+    this.state = {
+      metadata:{},
+      errors: peops.error ?? []
+    }
+  } 
+
+  async componentDidMount() {
+    try {
+      this.setState({
+        metadata: await service.readMeta(this.props.meta)
+      });
+    } catch(e) {
+      this.setState({
+        errors: [e]
+      });
+    }
+  }
+  
+  render() {
   return (
-    <FormGroup
-      forId={props.id}
-      label={props.label}
-      errors={props.errors}
+    <DateBox
+      label={this.state.metadata.label}
+      errors={this.state.errors}
       inline={props.inline}
-    >
-      <input
         id={props.id}
-        name={props.id}
-        type="date"
-        className="form-control"
         onChange={props.onChange}
         value={props.value}
-        required={props.required}
-      />
-    </FormGroup>
+        required={this.state.metadata.required}
+    </DateBox>
   );
-}
+}}
