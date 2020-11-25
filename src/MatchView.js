@@ -3,7 +3,7 @@ import service from "./Service";
 import Form from "./Form";
 import RapidComboBox from "./RapidComboBox";
 import NumberBox from "./NumberBox";
-import DateBox from "./DateBox";
+import RapidDateBox from "./RapidDateBox";
 import NotFoundError from "./NotFoundError";
 import FieldError from "./FieldError";
 import PageHeader from "./PageHeader";
@@ -160,12 +160,11 @@ export default class MatchView extends React.Component {
         <PageHeader title={title} history={this.props.history} />
 
         <Form onSubmit={this.save} errors={errors} validated={this.state.sent}>
-          <DateBox
+          <RapidDateBox
             id="txtGameday"
-            label="Spieltag"
+            meta="/match/gameDay"
             onChange={this.onChangeGameDay}
             value={this.state.match.gameDay}
-            required
             errors={errors.filter(
               error => error instanceof FieldError && error.field === "gameDay"
             )}

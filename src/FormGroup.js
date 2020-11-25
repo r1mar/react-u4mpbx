@@ -9,6 +9,7 @@ export default function FormGroup(props) {
         {props.errors.map(error => error.message)}
       </div>
     ) : null;
+    alert(JSON.stringify(props.errors));
   } catch (e) {
     errors = <div className="invalid-feedback">{e.message}</div>;
   }
