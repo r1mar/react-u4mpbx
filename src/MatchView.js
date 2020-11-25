@@ -43,7 +43,6 @@ export default class MatchView extends React.Component {
           )
         });
       }
-
     } catch (e) {
       if (e instanceof NotFoundError) {
         this.props.history.push("/not-found");

@@ -8,14 +8,15 @@ export default class RapidDateBox extends React.Component {
 
     this.state = {
       metadata: {},
-      errors: props.error ?? []
+      errors: []
     };
   }
 
   async componentDidMount() {
     try {
       this.setState({
-        metadata: await service.readMeta(this.props.meta)
+        metadata: await service.readMeta(this.props.meta),
+        errors: this.props.errors ?? []
       });
     } catch (e) {
       this.setState({
@@ -34,6 +35,7 @@ export default class RapidDateBox extends React.Component {
         onChange={this.props.onChange}
         value={this.props.value}
         required={this.state.metadata.required}
+        onInternalError={this.props.onInternalError}
       />
     );
   }

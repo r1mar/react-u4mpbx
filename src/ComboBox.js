@@ -1,40 +1,63 @@
 import React from "react";
 import FormGroup from "./FormGroup";
 
-export default function ComboBox(props) {
-  let options, spaceOption, errors;
+export default class ComboBox extends React.Component {
+  constructor(props) {
+    super(props);
 
-  try {
-    options = props.options.map(option => (
-      <option key={option.id} value={option.id}>
-        {option.value}
-      </option>
-    ));
-    spaceOption =
-      !props.required || !props.value ? <option key="-1" id="" /> : null;
-    errors = props.errors;
-  } catch (e) {
-    errors = [e];
+    this.state = {
+      errors: props.errors
+    };
   }
 
-  return (
-    <FormGroup
-      forId={props.id}
-      label={props.label}
-      errors={errors}
-      inline={props.inline}
-    >
-      <select
-        id={props.id}
-        name={props.id}
-        onChange={props.onChange}
-        value={props.value}
-        className={errors.length ? "form-control is-invalid" : "form-control"}
-        required={props.required}
+  onInternalError(e) {
+    this.setState({
+      errors: [e]
+    });
+  }
+
+  render() {
+    let options, spaceOption;
+
+    try {
+      options = this.props.options.map(option => (
+        <option key={option.id} value={option.id}>
+          {option.value}
+        </option>
+      ));
+      spaceOption =
+        !this.props.required || !this.props.value ? (
+          <option key="-1" id="" />
+        ) : null;
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
+
+    return (
+      <FormGroup
+        forId={this.props.id}
+        label={this.props.label}
+        errors={this.state.errors}
+        inline={this.props.inline}
       >
-        {spaceOption}
-        {options}
-      </select>
-    </FormGroup>
-  );
+        <select
+          id={this.props.id}
+          name={this.props.id}
+          onChange={this.props.onChange}
+          value={this.props.value}
+          className={
+            this.state.errors.length
+              ? "form-control is-invalid"
+              : "form-control"
+          }
+          required={this.props.required}
+        >
+          {spaceOption}
+          {options}
+        </select>
+      </FormGroup>
+    );
+  }
 }

@@ -4,13 +4,16 @@ export default function FormGroup(props) {
   let errors;
 
   try {
-    errors = props.errors ? (
-      <div className="invalid-feedback">
-        {props.errors.map(error => error.message)}
-      </div>
-    ) : null;
-    alert(JSON.stringify(props.errors));
+    errors = props.errors.length
+      ? props.errors.map((error, index) => (
+          <div key={index} className="invalid-feedback">
+            {error.message}
+          </div>
+        ))
+      : null;
+    //alert(JSON.stringify( props.errors.length));
   } catch (e) {
+    props.onInternalError(e);
     errors = <div className="invalid-feedback">{e.message}</div>;
   }
 

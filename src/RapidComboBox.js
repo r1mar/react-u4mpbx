@@ -8,8 +8,9 @@ export default class RapidComboBox extends React.Component {
 
     this.state = {
       options: [],
-      errors: props.errors,
-      metadata: {}
+      errors: [],
+      metadata: {},
+      valid: props.errors.length === 0
     };
 
     this.mapOptions = this.mapOptions.bind(this);
@@ -22,12 +23,14 @@ export default class RapidComboBox extends React.Component {
 
         this.setState({
           options: await service.readEntities(metadata.valueList.path),
-          metadata: metadata
+          metadata: metadata,
+          errors: this.props.errors ?? []
         });
       }
     } catch (e) {
       this.setState({
-        errors: [e]
+        errors: [e],
+        valid: false
       });
     }
   }
@@ -61,6 +64,7 @@ export default class RapidComboBox extends React.Component {
         value={this.props.value}
         required={this.state.metadata.required}
         errors={this.state.errors}
+        valid={this.state.valid}
       />
     );
   }
