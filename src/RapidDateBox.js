@@ -15,7 +15,7 @@ export default class RapidDateBox extends React.Component {
   async componentDidMount() {
     try {
       this.setState({
-        metadata: await service.readMeta(this.props.meta),
+        metadata: await service.readMetadata(this.props.meta),
         errors: this.props.errors ?? []
       });
     } catch (e) {
@@ -26,6 +26,7 @@ export default class RapidDateBox extends React.Component {
   }
 
   render() {
+    
     return (
       <DateBox
         label={this.state.metadata.label}

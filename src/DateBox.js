@@ -12,16 +12,6 @@ export default class DateBox extends React.Component {
     this.onInternalError = this.onInternalError.bind(this);
   }
 
-  componentDidMount() {
-    if (this.props.errors.length) {
-      this.setState({
-        errors: this.props.errors
-      });
-    }
-
-    alert(JSON.stringify(this.props.errors.length));
-  }
-
   onInternalError(e) {
     this.setState({
       errors: [e]
@@ -29,11 +19,13 @@ export default class DateBox extends React.Component {
   }
 
   render() {
+    let errors = [...this.props.errors, ...this.state.errors];
+    
     return (
       <FormGroup
         forId={this.props.id}
         label={this.props.label}
-        errors={this.state.errors}
+        errors={errors}
         inline={this.props.inline}
         onInternalError={this.onInternalError}
       >
@@ -42,7 +34,7 @@ export default class DateBox extends React.Component {
           name={this.props.id}
           type="date"
           className={
-            this.state.errors.length
+            errors.length
               ? "form-control is-invalid"
               : "form-control"
           }
