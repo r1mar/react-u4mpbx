@@ -2,7 +2,7 @@ import React from "react";
 import service from "./Service";
 import Form from "./Form";
 import RapidComboBox from "./RapidComboBox";
-import NumberBox from "./NumberBox";
+import RapidNumberBox from "./RapidNumberBox";
 import RapidDateBox from "./RapidDateBox";
 import NotFoundError from "./NotFoundError";
 import FieldError from "./FieldError";
@@ -187,29 +187,27 @@ export default class MatchView extends React.Component {
             )}
           />
           <div className="form-row">
-            <NumberBox
+            <RapidNumberBox
               id="txtGoals1"
               onChange={this.onChangeGoal}
               value={this.state.match.host.goals}
-              required
+              meta="/participant/goals"
               errors={errors.filter(
                 error =>
                   error instanceof FieldError && error.field === "host.goals"
               )}
-              min="0"
               inline={true}
             />
-            <NumberBox
+            <RapidNumberBox
               id="txtGoals2"
               onChange={this.onChangeGoal}
               value={this.state.match.guest.goals}
-              required
+              meta="/participant/goals"
               errors={errors.filter(
                 error =>
                   error instanceof FieldError && error.field === "guest.goals"
               )}
               inline={true}
-              min="0"
             />
           </div>
         </Form>

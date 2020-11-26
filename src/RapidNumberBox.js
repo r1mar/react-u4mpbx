@@ -1,24 +1,44 @@
 import React from "react";
-import FormGroup from "./FormGroup";
+import NumberBox from "./NumberBox";
+import service from "./Service";
 
-export default function RapidNumberBox(props) {
+export default class RapidNumberBox extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state ={
+      metadata: {},
+      errors: []
+    }
+  }
+
+  async componentDidMount() {
+    try {
+      this.setState({
+        metadata: await service.readMetadata(this.props.meta)
+      })
+    } catch(e) {
+      this.setState({
+        errors: [e]
+      })
+    }
+  }
+  
+  render() {
+    let errors = [...this.props.errors, this.state.errors];
+
   return (
-    <FormGroup
-      forId={props.id}
-      label={props.label}
-      errors={props.errors}
-      inline={props.inline}
-    >
-      <input
-        id={props.id}
-        name={props.id}
-        type="number"
-        className="form-control"
-        onChange={props.onChange}
-        value={props.value}
-        required={props.required}
-        min={props.min}
+    <NumberBox
+      label={this.state.metadata.label}
+      errors={errors}
+      inline={this.props.inline}
+        id={this.props.id}
+        className={ errors.length ? "form-control is-invalid" : "form-control" }
+        onChange={this.props.onChange}
+        value={this.props.value}
+        required={this.state.metadata.required}
+        min={this.state.metadata.min}
       />
-    </FormGroup>
   );
+}
 }

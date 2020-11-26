@@ -15,8 +15,7 @@ export default class RapidDateBox extends React.Component {
   async componentDidMount() {
     try {
       this.setState({
-        metadata: await service.readMetadata(this.props.meta),
-        errors: this.props.errors ?? []
+        metadata: await service.readMetadata(this.props.meta)
       });
     } catch (e) {
       this.setState({
