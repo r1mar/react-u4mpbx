@@ -6,8 +6,8 @@ export default class RapidForm extends React.Component {
     super(props);
 
     this.state = {
-      object: {},
-      metadata: {},
+      value: {},
+      properties: [],
       errors: []
     };
 
@@ -16,9 +16,24 @@ export default class RapidForm extends React.Component {
 
   async componentDidMount() {
     try {
-      this.setState({
-        metadata: await service.readMetadata(this.props.meta)
+      let value;
+
+      if(this.props.operation != "create") {
+        value = await service.readEntity(this.props.value);
+
+        this.setState({
+          value: value
+        })
+      }
+
+      this.props.properties.forEach(property => {
+        this.setState(async (state, props) => ({
+          properties: [ ...this.state.properties, {
+          path: property.path,
+          metadata: await service.readMetadata(property.meta) 
+        }]}));
       });
+
     } catch (e) {
       this.setState({
         errors: [e]
@@ -34,7 +49,7 @@ export default class RapidForm extends React.Component {
     return (
       <Form
         onSubmit={this.onSubmit}
-        className={props.validated ? "form-validated" : ""}
+        errors={this.state.errors}
       >
         {props.children}
 
