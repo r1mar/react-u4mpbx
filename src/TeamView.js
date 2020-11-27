@@ -1,7 +1,7 @@
 import React from "react";
 import service from "./Service";
 import FieldError from "./FieldError";
-import TextBox from "./TextBox";
+import RapidTextBox from "./RapidTextBox";
 import Form from "./Form";
 import PageHeader from "./PageHeader";
 import NotFoundError from "./NotFoundError";
@@ -104,12 +104,11 @@ export default class TeamView extends React.Component {
           onSubmit={this.save}
           errors={errors.filter(error => !(error instanceof FieldError))}
         >
-          <TextBox
+          <RapidTextBox
             id="txtName"
-            label="Name:"
+            meta="/team/name"
             onChange={this.onChange}
             value={this.state.team.name}
-            required
             errors={errors.filter(error => error instanceof FieldError)}
           />
         </Form>

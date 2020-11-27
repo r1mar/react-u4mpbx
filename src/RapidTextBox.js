@@ -1,18 +1,40 @@
 import React from "react";
-import FormGroup from "./FormGroup";
+import TextBox from "./TextBox";
 
-export default function RapidTextBox(props) {
-  return (
-    <FormGroup forId={props.id} label={props.label} errors={props.errors}>
-      <input
-        id={props.id}
-        name={props.id}
-        type="text"
-        className="form-control"
-        onChange={props.onChange}
-        value={props.value}
-        required={props.required}
+export default class RapidTextBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      metadata: {},
+      errors: []
+    };
+  }
+
+  async componentDidMount() {
+    try {
+      this.setState({
+        metadata: await service.readMetadata(this.props.meta)
+      });
+    } catch (e) {
+      this.setState({
+        errors: [e]
+      });
+    }
+  }
+
+  render() {
+    let errors = [...this.props.errors, this.state.errors];
+    return (
+      <TextBox
+        label={this.state.metadata.label}
+        errors={errors}
+        id={this.props.id}
+        className={errors.length ? "form-control is-invalid" : "form-control"}
+        onChange={this.props.onChange}
+        value={this.props.value}
+        required={this.state.metadata.required}
       />
-    </FormGroup>
-  );
+    );
+  }
 }
