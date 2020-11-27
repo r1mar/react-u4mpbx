@@ -1,5 +1,6 @@
 import React from "react";
 import Form from "./Form";
+import NotFoundError from "./NotFoundError";
 
 export default class RapidForm extends React.Component {
   constructor(props) {
@@ -35,14 +36,27 @@ export default class RapidForm extends React.Component {
       });
 
     } catch (e) {
+      if(e instanceof NotFoundError) {
+        this.props.history.push(this.props.notFound);
+      } else {
+      this.setState({
+        errors: [e]
+      });}
+    }
+  }
+
+  async onSubmit() {
+    try {
+      if(this.props.operation === "create") {
+        this.props.created(await service.createEntity(this.props.value, this.state.value));
+      } else {
+        await service.updateEntity(this.props.value, this.state.value);
+      }
+    } catch(e) {
       this.setState({
         errors: [e]
       });
     }
-  }
-
-  onSubmit() {
-
   }
 
   render() {
