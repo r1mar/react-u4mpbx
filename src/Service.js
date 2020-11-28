@@ -92,24 +92,24 @@ class Service {
     this.metadata = {
       paths: [
         {
-          name: "/team/:id",
+          name: "team/:id",
           type: "team",
           collection: "teams"
         },
         {
-          name: "/teams",
+          name: "teams",
           type: "team",
           sort: this.sortTeams,
           collection: "teams"
         },
         {
-          name: "/match/:id",
+          name: "match/:id",
           type: "match",
           validate: this.validateMatch,
           collection: "matches"
         },
         {
-          name: "/matches",
+          name: "matches",
           type: "match",
           sort: this.sortMatch,
           collection: "matches"
@@ -138,7 +138,7 @@ class Service {
               label: "Gastgeber",
               required: true,
               valueList: {
-                path: "/teams",
+                path: "teams",
                 id: "id",
                 value: "name"
               }
@@ -158,6 +158,11 @@ class Service {
         },
         {
           name: "team",
+          form: [{
+            path: "name",
+            meta: "team/name",
+            type: "TextBox"
+          }],
           properties: [
             {
               name: "id",

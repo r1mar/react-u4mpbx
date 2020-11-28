@@ -9,7 +9,8 @@ export default class RapidForm extends React.Component {
 
     this.state = {
       value: {},
-      errors: []
+      errors: [],
+      metadata: {}
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -27,6 +28,10 @@ export default class RapidForm extends React.Component {
           value: value
         })
       }
+
+      this.setState({
+        metadata: await service.readMetadata(this.props.meta)
+      });
 
     } catch (e) {
       if(e instanceof NotFoundError) {
@@ -52,8 +57,14 @@ export default class RapidForm extends React.Component {
     }
   }
 
-  getValue() {
+  getValue(path, value) {
+    let parts = path.split("/");
 
+    if(parts.length > 1) {
+      value = value[parts[0]]
+    } else {
+      return value[parts[0]];
+    }
   }
 
   onChange() {
@@ -61,9 +72,9 @@ export default class RapidForm extends React.Component {
   }
 
   render() {
-    let children = this.props.properties.map(property => {
-      switch(property.metadata.type) {
-        case "string": return (
+    let children = this.props.metadata.form.map(property => {
+      switch(property.type) {
+        case "TextBox": return (
           <TextBox id={property.path} value={this.getValue(property.path)} onChange={this.onChange} errors={this.state.errors.filter(error => error.path === property.path)} meta={property.meta} />
         );
       }
