@@ -1,8 +1,7 @@
 import React from "react";
 import service from "./Service";
 import FieldError from "./FieldError";
-import RapidTextBox from "./RapidTextBox";
-import Form from "./Form";
+import RapidForm from "./RapidForm";
 import PageHeader from "./PageHeader";
 import NotFoundError from "./NotFoundError";
 
@@ -11,16 +10,16 @@ export default class TeamView extends React.Component {
     super(props);
 
     this.state = {
-      team: {
+      /*team: {
         name: ""
-      },
+      },*/
       errors: []
     };
-    this.save = this.save.bind(this);
-    this.onChange = this.onChange.bind(this);
+    //this.save = this.save.bind(this);
+    //this.onChange = this.onChange.bind(this);
   }
 
-  async componentDidMount() {
+  /*async componentDidMount() {
     try {
       if (this.props.match.params.id) {
         let team = await service.readEntity(
@@ -84,7 +83,7 @@ export default class TeamView extends React.Component {
         errors: [e]
       });
     }
-  }
+  }*/
 
   render() {
     let errors = this.state.errors,
@@ -100,18 +99,11 @@ export default class TeamView extends React.Component {
     return (
       <div>
         <PageHeader title={title} history={this.props.history} />
-        <Form
-          onSubmit={this.save}
-          errors={errors.filter(error => !(error instanceof FieldError))}
-        >
-          <RapidTextBox
-            id="txtName"
-            meta="/team/name"
-            onChange={this.onChange}
-            value={this.state.team.name}
-            errors={errors.filter(error => error instanceof FieldError)}
-          />
-        </Form>
+        <RapidForm
+          meta="team"
+          operation={this.props.match.id ? "update" : "create"}
+          errors={errors}
+        />
       </div>
     );
   }
