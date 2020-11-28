@@ -57,18 +57,32 @@ export default class RapidForm extends React.Component {
     }
   }
 
-  getValue(path, value) {
+  getValue(path, obj) {
     let parts = path.split("/");
 
     if(parts.length > 1) {
-      value = value[parts[0]]
+      obj = obj[parts[0]];
+      path = path.replace(parts[0] + "/", "");
+      return this.getValue(path, obj);
     } else {
       return value[parts[0]];
     }
   }
 
-  onChange() {
-    
+  setValue(path, obj, value) {
+    let parts = path.split("/");
+
+    if(parts.length > 1) {
+      obj = obj[parts[0]];
+      path = path.replace(parts[0] + "/", "");
+      this.setValue(path, obj, value);
+    } else {
+      obj[parts[0]] = value;
+    }
+  }
+
+  onChange(event, item) {
+    this.setValue(event.target.id, this.state.value, event.target.value);
   }
 
   render() {
