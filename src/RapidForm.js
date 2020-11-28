@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "./Form";
 import NotFoundError from "./NotFoundError";
+import RapidTextBox from "./RapidTextBox";
 
 export default class RapidForm extends React.Component {
   constructor(props) {
@@ -8,11 +9,11 @@ export default class RapidForm extends React.Component {
 
     this.state = {
       value: {},
-      properties: [],
       errors: []
     };
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   async componentDidMount() {
@@ -26,14 +27,6 @@ export default class RapidForm extends React.Component {
           value: value
         })
       }
-
-      this.props.properties.forEach(property => {
-        this.setState(async (state, props) => ({
-          properties: [ ...this.state.properties, {
-          path: property.path,
-          metadata: await service.readMetadata(property.meta) 
-        }]}));
-      });
 
     } catch (e) {
       if(e instanceof NotFoundError) {
@@ -59,16 +52,29 @@ export default class RapidForm extends React.Component {
     }
   }
 
+  getValue() {
+
+  }
+
+  onChange() {
+    
+  }
+
   render() {
+    let children = this.props.properties.map(property => {
+      switch(property.metadata.type) {
+        case "string": return (
+          <TextBox id={property.path} value={this.getValue(property.path)} onChange={this.onChange} errors={this.state.errors.filter(error => error.path === property.path)} meta={property.meta} />
+        );
+      }
+    });
+
     return (
       <Form
         onSubmit={this.onSubmit}
         errors={this.state.errors}
       >
-        {props.children}
-
-        <input type="submit" className="btn btn-primary" />
-        <Alert messages={props.errors} />
+        {children}
       </Form>
     );
   }
