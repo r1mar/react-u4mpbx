@@ -508,11 +508,16 @@ class Service {
 
   determineEntity(metadataPath, collection, operation, data) {
     let type = this.metadata.types.find(
-      type => type.name === metadataPath.type
-    ),
-      uri = type.properties.find(property => property.name === "$uri");
+        type => type.name === metadataPath.type
+      ),
+      uri = type.properties.find(property => property.name === "$uri").value;
+    alert(uri);
 
-    type.properties.forEach(property => )
+    type.properties.forEach(
+      property =>
+        (uri = uri.replace("{" + property.name + "}", data[property.name]))
+    );
+    data["$uri"] = uri;
 
     if (operation === "create") {
       type.properties.forEach(property => {
