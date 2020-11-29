@@ -43,12 +43,17 @@ export default class RapidForm extends React.Component {
     }
   }
 
-  async onSubmit() {
+  async onSubmit(event) {
     try {
+      event.preventDefault();
+
       if (this.props.operation === "create") {
-        this.props.created(
-          await service.createEntity(this.props.value, this.state.value)
+        let value = await service.createEntity(
+          this.props.value,
+          this.state.value
         );
+
+        this.props.history.replace(value["$path"]);
       } else {
         await service.updateEntity(this.props.value, this.state.value);
       }
@@ -79,16 +84,27 @@ export default class RapidForm extends React.Component {
     parts = parts.filter(part => part);
 
     if (parts.length > 1) {
-      obj = obj[parts[0]];
-      path = path.replace(parts[0] + "/", "");
-      this.setValue(path, obj, value);
+      let subObj = obj[parts[0]],
+        subPath = path.replace(parts[0] + "/", "");
+
+      this.setValue(subPath, subObj, value);
+
+      return obj;
     } else {
       obj[parts[0]] = value;
+
+      return obj;
     }
   }
 
   onChange(event, item) {
-    this.setValue(event.target.id, this.state.value, event.target.value);
+    let value = JSON.parse(JSON.stringify(this.state.value));
+
+    this.setValue(event.target.id, value, event.target.value);
+
+    this.setState({
+      value: Object.assign({}, this.state.value, value)
+    });
   }
 
   render() {

@@ -158,12 +158,18 @@ class Service {
         },
         {
           name: "team",
-          form: [{
-            path: "name",
-            meta: "/team/name",
-            type: "TextBox"
-          }],
+          form: [
+            {
+              path: "name",
+              meta: "/team/name",
+              type: "TextBox"
+            }
+          ],
           properties: [
+            {
+              name: "$uri",
+              value: "/team/{id}"
+            },
             {
               name: "id",
               type: "number",
@@ -205,14 +211,14 @@ class Service {
       ]
     };
 
-    this.batch =[];
+    this.batch = [];
     this.interrupt = 0;
     this.pending = 0;
     this.executeBatch = this.executeBatch.bind(this);
   }
 
   startBatch() {
-    if(!this.pending) {
+    if (!this.pending) {
       this.pending = setTimeout(this.executeBatch, this.interrupt);
     }
   }
@@ -220,17 +226,14 @@ class Service {
   executeBatch() {
     this.batch.forEach(batchRequest => {
       try {
-
         batchRequest.resolve(result);
-      } catch(e) {
+      } catch (e) {
         batchRequest.reject(e);
       }
     });
   }
 
-  post() {
-    
-  }
+  post() {}
 
   createEntity(path, data) {
     return new Promise((resolve, reject) => {
@@ -316,18 +319,20 @@ class Service {
   }
 
   metaRecursiv(metadata, parts) {
-    if(!parts.length) {
+    if (!parts.length) {
       return metadata;
     }
-    let property = metadata.properties.find(property => property.name === parts[0]);
+    let property = metadata.properties.find(
+      property => property.name === parts[0]
+    );
 
-    if(parts.length === 1) {
+    if (parts.length === 1) {
       return property;
     } else {
       let type = this.metadata.type.find(type => type.name === property.type);
       parts.splice(1);
-      
-      if(!type) {
+
+      if (!type) {
         throw new Error(`Pfad "${parts[0]}" nicht auflösbar`);
       } else {
         return this.metaRecursiv(type, parts);
@@ -338,21 +343,20 @@ class Service {
   readMetadata(path) {
     return new Promise((resolve, reject) => {
       try {
-        let parts = path.split('/').filter(part => part),
+        let parts = path.split("/").filter(part => part),
           result;
-          if(!parts.length) {
-            throw new Error("Metadatenpfad nicht angegeben");
-          } 
-          
-          result = this.metadata.types.find(type => type.name === parts[0]);
-          if(!result) {
-            throw new Error(`Pfad "${parts[0]}" konnte nicht aufgelöst werden`);
-          }
-          
-          result = this.metaRecursiv(result, parts.splice(1));
+        if (!parts.length) {
+          throw new Error("Metadatenpfad nicht angegeben");
+        }
+
+        result = this.metadata.types.find(type => type.name === parts[0]);
+        if (!result) {
+          throw new Error(`Pfad "${parts[0]}" konnte nicht aufgelöst werden`);
+        }
+
+        result = this.metaRecursiv(result, parts.splice(1));
 
         resolve(result);
-
       } catch (e) {
         reject(e);
       }
@@ -505,7 +509,10 @@ class Service {
   determineEntity(metadataPath, collection, operation, data) {
     let type = this.metadata.types.find(
       type => type.name === metadataPath.type
-    );
+    ),
+      uri = type.properties.find(property => property.name === "$uri");
+
+    type.properties.forEach(property => )
 
     if (operation === "create") {
       type.properties.forEach(property => {
