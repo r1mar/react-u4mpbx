@@ -2,6 +2,7 @@ import React from "react";
 import Form from "./Form";
 import NotFoundError from "./NotFoundError";
 import RapidTextBox from "./RapidTextBox";
+import service from "./Service";
 
 export default class RapidForm extends React.Component {
   constructor(props) {
@@ -10,7 +11,9 @@ export default class RapidForm extends React.Component {
     this.state = {
       value: {},
       errors: [],
-      metadata: {}
+      metadata: {
+        form:[]
+      }
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -60,17 +63,21 @@ export default class RapidForm extends React.Component {
   getValue(path, obj) {
     let parts = path.split("/");
 
+    parts = parts.filter(part => part);
+
     if(parts.length > 1) {
       obj = obj[parts[0]];
       path = path.replace(parts[0] + "/", "");
       return this.getValue(path, obj);
     } else {
-      return value[parts[0]];
+      return obj[parts[0]];
     }
   }
 
   setValue(path, obj, value) {
     let parts = path.split("/");
+
+    parts =part.filter(part => part);
 
     if(parts.length > 1) {
       obj = obj[parts[0]];
@@ -86,10 +93,11 @@ export default class RapidForm extends React.Component {
   }
 
   render() {
-    let children = this.props.metadata.form.map(property => {
+    let children = this.state.metadata.form.map(property => {
       switch(property.type) {
-        case "TextBox": return (
-          <TextBox id={property.path} value={this.getValue(property.path)} onChange={this.onChange} errors={this.state.errors.filter(error => error.path === property.path)} meta={property.meta} />
+        case "TextBox": 
+          return (
+          <RapidTextBox id={property.path} key={property.path} value={this.getValue(property.path, this.state.value)} onChange={this.onChange} errors={this.state.errors.filter(error => error.path === property.path)} meta={property.meta} />
         );
       }
     });

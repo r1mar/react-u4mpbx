@@ -20,7 +20,7 @@ export default class TeamsView extends React.Component {
 
   async componentDidMount() {
     try {
-      let teams = await service.readEntities("teams");
+      let teams = await service.readEntities("/teams");
 
       this.setState({
         teams: teams
@@ -35,7 +35,7 @@ export default class TeamsView extends React.Component {
   async deleteTeams(ids, items) {
     try {
       ids.map(async id => {
-        await service.deleteEntity("team/" + id);
+        await service.deleteEntity("/team/" + id);
       });
 
       this.setState({
