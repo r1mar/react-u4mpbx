@@ -12,7 +12,7 @@ export default class RapidForm extends React.Component {
       value: {},
       errors: [],
       metadata: {
-        form:[]
+        form: []
       }
     };
 
@@ -22,38 +22,37 @@ export default class RapidForm extends React.Component {
 
   async componentDidMount() {
     try {
-      let value;
-
-      if(this.props.operation != "create") {
-        value = await service.readEntity(this.props.value);
-
+      if (this.props.operation != "create") {
+        let value = await service.readEntity(this.props.value);
         this.setState({
           value: value
-        })
+        });
       }
 
       this.setState({
         metadata: await service.readMetadata(this.props.meta)
       });
-
     } catch (e) {
-      if(e instanceof NotFoundError) {
+      if (e instanceof NotFoundError) {
         this.props.history.push(this.props.notFound);
       } else {
-      this.setState({
-        errors: [e]
-      });}
+        this.setState({
+          errors: [e]
+        });
+      }
     }
   }
 
   async onSubmit() {
     try {
-      if(this.props.operation === "create") {
-        this.props.created(await service.createEntity(this.props.value, this.state.value));
+      if (this.props.operation === "create") {
+        this.props.created(
+          await service.createEntity(this.props.value, this.state.value)
+        );
       } else {
         await service.updateEntity(this.props.value, this.state.value);
       }
-    } catch(e) {
+    } catch (e) {
       this.setState({
         errors: [e]
       });
@@ -65,7 +64,7 @@ export default class RapidForm extends React.Component {
 
     parts = parts.filter(part => part);
 
-    if(parts.length > 1) {
+    if (parts.length > 1) {
       obj = obj[parts[0]];
       path = path.replace(parts[0] + "/", "");
       return this.getValue(path, obj);
@@ -77,9 +76,9 @@ export default class RapidForm extends React.Component {
   setValue(path, obj, value) {
     let parts = path.split("/");
 
-    parts =part.filter(part => part);
+    parts = parts.filter(part => part);
 
-    if(parts.length > 1) {
+    if (parts.length > 1) {
       obj = obj[parts[0]];
       path = path.replace(parts[0] + "/", "");
       this.setValue(path, obj, value);
@@ -94,19 +93,25 @@ export default class RapidForm extends React.Component {
 
   render() {
     let children = this.state.metadata.form.map(property => {
-      switch(property.type) {
-        case "TextBox": 
+      switch (property.type) {
+        case "TextBox":
           return (
-          <RapidTextBox id={property.path} key={property.path} value={this.getValue(property.path, this.state.value)} onChange={this.onChange} errors={this.state.errors.filter(error => error.path === property.path)} meta={property.meta} />
-        );
+            <RapidTextBox
+              id={property.path}
+              key={property.path}
+              value={this.getValue(property.path, this.state.value)}
+              onChange={this.onChange}
+              errors={this.state.errors.filter(
+                error => error.path === property.path
+              )}
+              meta={property.meta}
+            />
+          );
       }
     });
 
     return (
-      <Form
-        onSubmit={this.onSubmit}
-        errors={this.state.errors}
-      >
+      <Form onSubmit={this.onSubmit} errors={this.state.errors}>
         {children}
       </Form>
     );

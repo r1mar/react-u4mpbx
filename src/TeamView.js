@@ -101,9 +101,13 @@ export default class TeamView extends React.Component {
         <PageHeader title={title} history={this.props.history} />
         <RapidForm
           meta="/team"
-          operation={this.props.match.id ? "update" : "create"}
+          operation={this.props.match.params.id ? "update" : "create"}
           errors={errors}
-          value={this.props.match.id ? "/team/" + this.props.match.id : "/teams"}
+          value={
+            this.props.match.params.id
+              ? "/team/" + this.props.match.params.id
+              : "/teams"
+          }
         />
       </div>
     );
